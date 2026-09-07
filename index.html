@@ -14764,6 +14764,63 @@
                     transform: translateY(-1px);
                 }
 
+                .creator-credit-link {
+                    width: fit-content;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 7px;
+                    padding: 8px 11px;
+                    color: rgba(255, 255, 255, .52);
+                    text-decoration: none;
+                    font-size: .68rem;
+                    font-weight: 750;
+                    line-height: 1;
+                    border: 1px solid rgba(215, 183, 101, .17);
+                    border-radius: 999px;
+                    background: rgba(215, 183, 101, .055);
+                    transition: color .2s ease, border-color .2s ease, background .2s ease, transform .2s ease;
+                }
+
+                .creator-credit-link strong {
+                    color: rgba(255, 255, 255, .9);
+                    font-weight: 900;
+                }
+
+                .creator-credit-link .creator-instagram-icon {
+                    width: 15px;
+                    height: 15px;
+                    flex-basis: 15px;
+                }
+
+                .creator-credit-link > svg {
+                    width: 13px;
+                    height: 13px;
+                    color: rgba(215, 183, 101, .78);
+                }
+
+                .creator-credit-link:hover {
+                    color: rgba(255, 255, 255, .78);
+                    border-color: rgba(215, 183, 101, .43);
+                    background: rgba(215, 183, 101, .11);
+                    transform: translateY(-1px);
+                }
+
+                .page-creator-credit {
+                    margin: 3px auto 0;
+                }
+
+                .sidebar-creator-credit {
+                    width: 100%;
+                    justify-content: center;
+                    box-sizing: border-box;
+                    margin-top: 10px;
+                    font-size: .61rem;
+                }
+
+                #splash.fx-minimal-intro .splash-creator {
+                    text-decoration: none;
+                }
+
                 /* Keep the off-canvas mobile menu from leaking into desktop layout. */
                 .mobile-drawer {
                     overflow: hidden;
@@ -15984,14 +16041,14 @@
             </div>
             <div class="splash-credit">
                 <span>Created by</span>
-                <strong class="splash-creator">
+                <a class="splash-creator" href="https://www.instagram.com/armxnworldwide/" target="_blank" rel="noopener noreferrer" aria-label="Open @armxnworldwide on Instagram">
                     <svg class="splash-insta" viewBox="0 0 24 24" aria-hidden="true">
                         <rect x="3" y="3" width="18" height="18" rx="5"></rect>
                         <circle cx="12" cy="12" r="4"></circle>
                         <circle cx="17.5" cy="6.5" r="1.1"></circle>
                     </svg>
                     @armxnworldwide
-                </strong>
+                </a>
             </div>
         </div>
     </div>
@@ -16106,6 +16163,11 @@
                     <div id="userEmailMain" class="user-bar-email"></div>
                 </div>
             </div>
+            <a class="creator-credit-link sidebar-creator-credit" href="https://www.instagram.com/armxnworldwide/" target="_blank" rel="noopener noreferrer" aria-label="Created by @armxnworldwide on Instagram">
+                <span class="creator-instagram-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1.1"></circle></svg></span>
+                <span>Created by <strong>@armxnworldwide</strong></span>
+            </a>
+        </div>
 
 
     </aside>
@@ -25196,6 +25258,10 @@
             updatePeak();
         }
 
+        function creatorCreditHTML(extraClass = '') {
+            return `<a class="creator-credit-link ${extraClass}" href="https://www.instagram.com/armxnworldwide/" target="_blank" rel="noopener noreferrer" aria-label="Created by @armxnworldwide on Instagram"><span class="creator-instagram-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1.1"></circle></svg></span><span>Created by <strong>@armxnworldwide</strong></span>${uiIcon('external-link')}</a>`;
+        }
+
         function renderSettingsPage() {
             document.querySelectorAll('.nav-btn').forEach((button) => button.classList.remove('active'));
             syncMobileNavActive('');
@@ -25341,6 +25407,7 @@
                         <div class="crossfade-setting-description">Remove your recently played list and shuffle history. Favorites, playlists and downloads stay untouched.</div>
                         <div style="margin-top:15px"><button class="settings-secondary-action" type="button" onclick="clearListeningHistory()">${uiIcon('trash-2')}<span>Clear listening history</span></button></div>
                     </section>
+                    ${creatorCreditHTML('page-creator-credit')}
                 </div>
             `;
             renderLucideIcons(mainArea);
@@ -25363,6 +25430,7 @@
                     <div class="as-content" id="as-visualizer"><div class="viz-container"><canvas id="as-viz-canvas"></canvas></div><div class="as-grid" style="margin-top:20px"><div class="as-card ${audioEngine.vizMode==='bars'?'active':''}" onclick="setVizMode('bars')">Spectrum Bars</div><div class="as-card ${audioEngine.vizMode==='wave'?'active':''}" onclick="setVizMode('wave')">Waveform</div><div class="as-card ${audioEngine.vizMode==='circle'?'active':''}" onclick="setVizMode('circle')">Circular</div></div></div>
                     <div class="as-content" id="as-advanced"><div class="as-grid"><div class="as-card"><div class="as-card-title">Compressor Threshold</div><input type="range" min="-60" max="0" step="1" value="${audioEngine.compressor?.threshold.value || -24}" oninput="updateCompressor('threshold', this.value)"></div><div class="as-card"><div class="as-card-title">Compressor Ratio</div><input type="range" min="1" max="20" step="1" value="${audioEngine.compressor?.ratio.value || 12}" oninput="updateCompressor('ratio', this.value)"></div></div></div>
                     <div class="as-content" id="as-stats"><div class="stats-box"><div class="stats-row"><span class="stats-label">Sample Rate</span><span class="stats-value" id="stat-sr">44100 Hz</span></div><div class="stats-row"><span class="stats-label">Channels</span><span class="stats-value">2 (Stereo)</span></div><div class="stats-row"><span class="stats-label">Context State</span><span class="stats-value" id="stat-state">Running</span></div><div class="stats-row"><span class="stats-label">Audio Latency</span><span class="stats-value" id="stat-latency">0ms</span></div><div class="stats-row"><span class="stats-label">Peak Level</span><span class="stats-value" id="stat-peak">0.00</span></div><div class="stats-row"><span class="stats-label">Audio Engine</span><span class="stats-value">FalconX Pro v3.0</span></div></div></div>
+                    ${creatorCreditHTML('page-creator-credit')}
                 </div>
             `;
             initAudioSuiteTabs(); setupAudioEngine(); updateStats(); updateCrossfadeSettingUI(); renderLucideIcons(mainArea);
@@ -25410,6 +25478,7 @@
                     <div class="chart-card"><div class="chart-title">${uiIcon('bar-chart-3')} Most Played Songs</div><div class="recent-list">${mostPlayed.length ? mostPlayed.map(s => `<div class="recent-item" onclick="playSongByFile('${escA(s.file)}')"><img src="${escH(s.poster)}" onerror="this.style.background='var(--surface3)'"><div class="recent-text"><div style="font-size:.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escH(s.title)}</div><div style="font-size:.68rem;color:var(--text2)">${escH(s.artistName)}</div></div><div style="font-size:.75rem;font-weight:800;color:var(--accent)">${s.playCount} plays</div></div>`).join('') : '<div class="empty-state" style="padding:20px 0"><p>No plays tracked yet.</p></div>'}</div></div>
                     <div class="chart-card"><div class="chart-title">${uiIcon('history')} Recently Played</div><div class="recent-list">${continueListening.length ? continueListening.slice(0, 5).map(s => `<div class="recent-item" onclick="playFromHistory('${escA(s.file)}','${escA(s.artistKey || '')}')"><img src="${escH(s.poster)}" onerror="this.style.background='var(--surface3)'"><div class="recent-text"><div style="font-size:.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escH(s.title)}</div><div style="font-size:.68rem;color:var(--text2)">${escH(s.artistName)}</div></div><div style="opacity:.4">${uiIcon('play')}</div></div>`).join('') : '<div class="empty-state" style="padding:20px 0"><p>No recent history.</p></div>'}</div></div>
                 </div>
+                ${creatorCreditHTML('page-creator-credit')}
             </div>`;
             renderLucideIcons(mainArea);
         }
