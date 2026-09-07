@@ -20659,6 +20659,10 @@
         };
 
         function savePlaybackMemory() {
+            if (!isResumePlaybackEnabled()) {
+                localStorage.removeItem('eq_last_song');
+                return;
+            }
             if (!currentSong) return;
             localStorage.setItem('eq_last_song', JSON.stringify({
                 file: currentSong.file,
@@ -20688,9 +20692,15 @@
                 const vol = parseFloat(localStorage.getItem('eq_volume') || '1');
                 audio.volume = isNaN(vol) ? 1 : vol;
                 volumeSlider.value = audio.volume;
+                isMuted = audio.volume === 0;
+                if (audio.volume > 0) prevVol = audio.volume;
                 isShuffle = localStorage.getItem('eq_shuffle') === 'true';
                 isRepeat = localStorage.getItem('eq_repeat') === 'true';
                 syncPlaybackModeUI();
+                if (!isResumePlaybackEnabled()) {
+                    localStorage.removeItem('eq_last_song');
+                    return;
+                }
                 const storedLast = JSON.parse(localStorage.getItem('eq_last_song') || 'null');
                 if (!storedLast) return;
                 const libraryMatch = findSongInLibraryByFile(storedLast.file);
@@ -21424,6 +21434,113 @@
             return isMuted ? 0 : (parseFloat(volumeSlider.value) || 1);
         }
 
+        function isAutoplayNextEnabled() {
+            return localStorage.getItem('eq_autoplay_next') !== 'false';
+        }
+
+        function isResumePlaybackEnabled() {
+            return localStorage.getItem('eq_resume_playback') !== 'false';
+        }
+
+        function getPlaybackVolume() {
+            const value = parseFloat(volumeSlider?.value || audio?.volume || '1');
+            return Math.max(0, Math.min(1, Number.isFinite(value) ? value : 1));
+        }
+
+        function updatePlaybackSettingsUI() {
+            const states = {
+                autoplay: isAutoplayNextEnabled(),
+                resume: isResumePlaybackEnabled(),
+                shuffle: isShuffle,
+                repeat: isRepeat
+            };
+            const handlers = {
+                autoplay: 'setAutoplayNext',
+                resume: 'setResumePlaybackEnabled',
+                shuffle: 'setShuffleEnabled',
+                repeat: 'setRepeatEnabled'
+            };
+            document.querySelectorAll('[data-player-toggle]').forEach((toggle) => {
+                const key = toggle.dataset.playerToggle;
+                if (!(key in states)) return;
+                const enabled = !!states[key];
+                toggle.classList.toggle('is-on', enabled);
+                toggle.setAttribute('aria-checked', String(enabled));
+                toggle.setAttribute('aria-label', `${toggle.dataset.playerLabel || key} ${enabled ? 'on' : 'off'}`);
+                toggle.setAttribute('onclick', `${handlers[key]}(${!enabled})`);
+            });
+            const volume = getPlaybackVolume();
+            document.querySelectorAll('[data-playback-volume]').forEach((slider) => {
+                slider.value = String(volume);
+                slider.setAttribute('aria-valuetext', `${Math.round(volume * 100)} percent`);
+            });
+            document.querySelectorAll('[data-playback-volume-value]').forEach((label) => {
+                label.textContent = `${Math.round(volume * 100)}%`;
+            });
+        }
+
+        function setPlaybackVolume(value) {
+            const nextVolume = Math.max(0, Math.min(1, parseFloat(value)));
+            const safeVolume = Number.isFinite(nextVolume) ? nextVolume : 1;
+            volumeSlider.value = String(safeVolume);
+            audio.volume = safeVolume;
+            if (audioFade.src) audioFade.volume = safeVolume;
+            isMuted = safeVolume === 0;
+            if (safeVolume > 0) prevVol = safeVolume;
+            localStorage.setItem('eq_volume', String(safeVolume));
+            updatePlaybackSettingsUI();
+        }
+
+        function setAutoplayNext(enabled) {
+            const nextValue = !!enabled;
+            localStorage.setItem('eq_autoplay_next', String(nextValue));
+            if (!nextValue) {
+                crossfadeAutoArmed = false;
+                if (crossfadeTimer && !crossfadeTransitionActive) {
+                    clearTimeout(crossfadeTimer);
+                    crossfadeTimer = null;
+                }
+            } else {
+                scheduleCrossfadeAuto('autoplay-enabled');
+            }
+            updatePlaybackSettingsUI();
+            updateCrossfadeSettingUI();
+        }
+
+        function setResumePlaybackEnabled(enabled) {
+            const nextValue = !!enabled;
+            localStorage.setItem('eq_resume_playback', String(nextValue));
+            if (nextValue) savePlaybackMemory();
+            else localStorage.removeItem('eq_last_song');
+            updatePlaybackSettingsUI();
+        }
+
+        function setShuffleEnabled(enabled) {
+            isShuffle = !!enabled;
+            localStorage.setItem('eq_shuffle', String(isShuffle));
+            syncPlaybackModeUI();
+            savePlaybackMemory();
+            updatePlaybackSettingsUI();
+        }
+
+        function setRepeatEnabled(enabled) {
+            isRepeat = !!enabled;
+            localStorage.setItem('eq_repeat', String(isRepeat));
+            syncPlaybackModeUI();
+            if (isRepeat) {
+                crossfadeAutoArmed = false;
+                if (crossfadeTimer && !crossfadeTransitionActive) {
+                    clearTimeout(crossfadeTimer);
+                    crossfadeTimer = null;
+                }
+            } else {
+                scheduleCrossfadeAuto('repeat-disabled');
+            }
+            savePlaybackMemory();
+            updatePlaybackSettingsUI();
+            updateCrossfadeSettingUI();
+        }
+
         function isBackgroundPlayback() {
             return document.hidden || pageFrozen;
         }
@@ -21530,11 +21647,11 @@
                 crossfadeTimer = null;
             }
             crossfadeAutoArmed = false;
-            if (crossfadeSeconds <= 0 || isRepeat || audio.paused || !Number.isFinite(audio.duration) || audio.duration <= crossfadeSeconds + 1) return;
+            if (crossfadeSeconds <= 0 || !isAutoplayNextEnabled() || isRepeat || audio.paused || !Number.isFinite(audio.duration) || audio.duration <= crossfadeSeconds + 1) return;
             const remainingMs = Math.max(0, ((audio.duration - audio.currentTime - crossfadeSeconds) * 1000) - 45);
             crossfadeTimer = window.setTimeout(() => {
                 crossfadeTimer = null;
-                if (crossfadeSeconds <= 0 || isRepeat || audio.paused || crossfadeTransitionActive) return;
+                if (crossfadeSeconds <= 0 || !isAutoplayNextEnabled() || isRepeat || audio.paused || crossfadeTransitionActive) return;
                 if (!Number.isFinite(audio.duration) || (audio.duration - audio.currentTime) > crossfadeSeconds + .65) {
                     scheduleCrossfadeAuto('late-check');
                     return;
@@ -21575,9 +21692,14 @@
                 option.classList.toggle('is-active', active);
                 option.setAttribute('aria-pressed', String(active));
             });
-            document.querySelectorAll('[data-crossfade-summary]').forEach((summary) => {
-                summary.textContent = enabled ? `The next track starts ${crossfadeSeconds} second${crossfadeSeconds === 1 ? '' : 's'} before this one ends.` : 'Turn on crossfade to blend consecutive tracks.';
-            });
+            const summaryText = isRepeat
+                ? 'Turn off Repeat for crossfade to run between tracks.'
+                : !isAutoplayNextEnabled()
+                    ? 'Turn on Autoplay next to let crossfade start the next track automatically.'
+                    : enabled
+                        ? `The next track starts ${crossfadeSeconds} second${crossfadeSeconds === 1 ? '' : 's'} before this one ends.`
+                        : 'Turn on crossfade to blend consecutive tracks.';
+            document.querySelectorAll('[data-crossfade-summary]').forEach((summary) => { summary.textContent = summaryText; });
         }
 
         function setCrossfadeEnabled(enabled) {
@@ -22039,9 +22161,9 @@
             audio.loop = !!isRepeat;
         }
 
-        function toggleShuffle() { isShuffle=!isShuffle; syncPlaybackModeUI(); localStorage.setItem('eq_shuffle',String(isShuffle)); savePlaybackMemory(); showToast(isShuffle?'Shuffle on':'Shuffle off'); }
-        function toggleRepeat() { isRepeat=!isRepeat; syncPlaybackModeUI(); localStorage.setItem('eq_repeat',String(isRepeat)); savePlaybackMemory(); }
-        function toggleMute() { if(isMuted){audio.volume=prevVol;volumeSlider.value=prevVol;isMuted=false;}else{prevVol=audio.volume||1;audio.volume=0;volumeSlider.value=0;isMuted=true;} }
+        function toggleShuffle() { setShuffleEnabled(!isShuffle); showToast(isShuffle ? 'Shuffle on' : 'Shuffle off'); }
+        function toggleRepeat() { setRepeatEnabled(!isRepeat); }
+        function toggleMute() { if (isMuted) setPlaybackVolume(prevVol || 1); else { prevVol = audio.volume || 1; setPlaybackVolume(0); } }
         function toggleQueuePanel() {
             queuePanelOpen = !queuePanelOpen;
             const panel = document.getElementById('queuePanel');
@@ -24534,7 +24656,7 @@
                 savePlaybackMemory();
             }
         });
-        audio.addEventListener('ended',()=>{ setTimelinePlaybackEffect(false); stopCrossfadeTimers(); if(!isRepeat) next(); });
+        audio.addEventListener('ended',()=>{ setTimelinePlaybackEffect(false); stopCrossfadeTimers(); if(!isRepeat && isAutoplayNextEnabled()) next(); });
         audio.addEventListener('play',()=>{ 
             setPlayButtonIcons(false);
             if(currentArtistKey) updateArtistPlayingState(false);
@@ -24584,7 +24706,7 @@
                 crossfadeTimer = null;
             }
         });
-        volumeSlider.addEventListener('input',()=>{ const nextVolume=+volumeSlider.value; audio.volume=nextVolume; if(audioFade.src)audioFade.volume=nextVolume; isMuted=nextVolume===0; localStorage.setItem('eq_volume',nextVolume); });
+        volumeSlider.addEventListener('input', () => setPlaybackVolume(volumeSlider.value));
         window.addEventListener('beforeunload',()=>savePlaybackMemory());
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) pageFrozen = false;
@@ -24919,6 +25041,56 @@
                         <div class="playback-settings-icon" aria-hidden="true">${uiIcon('audio-lines')}</div>
                     </section>
 
+                    <div class="settings-section-heading">Player essentials</div>
+                    <section class="crossfade-settings-card" aria-label="Music player settings">
+                        <div class="crossfade-setting-row">
+                            <div>
+                                <div class="crossfade-setting-title">Autoplay next</div>
+                                <div class="crossfade-setting-description">Start the next track when the current song finishes.</div>
+                            </div>
+                            <button class="crossfade-toggle ${isAutoplayNextEnabled() ? 'is-on' : ''}" type="button" role="switch" aria-checked="${isAutoplayNextEnabled()}" aria-label="Autoplay next ${isAutoplayNextEnabled() ? 'on' : 'off'}" data-player-toggle="autoplay" data-player-label="Autoplay next" onclick="setAutoplayNext(${!isAutoplayNextEnabled()})"><span></span></button>
+                        </div>
+
+                        <div class="crossfade-divider"></div>
+
+                        <div class="crossfade-setting-row">
+                            <div class="crossfade-setting-title">Player volume</div>
+                            <output class="crossfade-value" data-playback-volume-value>${Math.round(getPlaybackVolume() * 100)}%</output>
+                        </div>
+                        <input class="crossfade-duration-slider" type="range" min="0" max="1" step="0.01" value="${getPlaybackVolume()}" data-playback-volume aria-label="Player volume" aria-valuemin="0" aria-valuemax="100" aria-valuetext="${Math.round(getPlaybackVolume() * 100)} percent" oninput="setPlaybackVolume(this.value)">
+                        <div class="crossfade-field-note">Saved as your default level for the next time you open FalconX.</div>
+
+                        <div class="crossfade-divider"></div>
+
+                        <div class="crossfade-setting-row">
+                            <div>
+                                <div class="crossfade-setting-title">Remember playback position</div>
+                                <div class="crossfade-setting-description">Return to your last track and its saved timestamp when you reopen the app.</div>
+                            </div>
+                            <button class="crossfade-toggle ${isResumePlaybackEnabled() ? 'is-on' : ''}" type="button" role="switch" aria-checked="${isResumePlaybackEnabled()}" aria-label="Remember playback position ${isResumePlaybackEnabled() ? 'on' : 'off'}" data-player-toggle="resume" data-player-label="Remember playback position" onclick="setResumePlaybackEnabled(${!isResumePlaybackEnabled()})"><span></span></button>
+                        </div>
+
+                        <div class="crossfade-divider"></div>
+
+                        <div class="crossfade-setting-row">
+                            <div>
+                                <div class="crossfade-setting-title">Shuffle playback</div>
+                                <div class="crossfade-setting-description">Pick the next song at random from the active list.</div>
+                            </div>
+                            <button class="crossfade-toggle ${isShuffle ? 'is-on' : ''}" type="button" role="switch" aria-checked="${isShuffle}" aria-label="Shuffle playback ${isShuffle ? 'on' : 'off'}" data-player-toggle="shuffle" data-player-label="Shuffle playback" onclick="setShuffleEnabled(${!isShuffle})"><span></span></button>
+                        </div>
+
+                        <div class="crossfade-divider"></div>
+
+                        <div class="crossfade-setting-row">
+                            <div>
+                                <div class="crossfade-setting-title">Repeat current track</div>
+                                <div class="crossfade-setting-description">Keep the current song looping. Crossfade pauses while repeat is on.</div>
+                            </div>
+                            <button class="crossfade-toggle ${isRepeat ? 'is-on' : ''}" type="button" role="switch" aria-checked="${isRepeat}" aria-label="Repeat current track ${isRepeat ? 'on' : 'off'}" data-player-toggle="repeat" data-player-label="Repeat current track" onclick="setRepeatEnabled(${!isRepeat})"><span></span></button>
+                        </div>
+                    </section>
+
                     <div class="settings-section-heading">Crossfade settings</div>
                     <section class="crossfade-settings-card" aria-label="Crossfade settings">
                         <div class="crossfade-setting-row">
@@ -25070,7 +25242,7 @@
         window.playSong = playSong; window.next = next; window.previous = previous; window.togglePlay = togglePlay; window.toggleShuffle = toggleShuffle; window.toggleRepeat = toggleRepeat; window.toggleMute = toggleMute;
         window.toggleQueuePanel = toggleQueuePanel; window.addToQueue = addToQueue; window.openArtist = openArtist; window.loadArtists = loadArtists; window.showLikedSongs = showLikedSongs; window.showDownloads = showDownloads; window.showPlaylists = showPlaylists; window.refreshLikedDisplay = refreshLikedDisplay;
         window.playArtist = playArtist; window.shuffleArtist = shuffleArtist; window.toggleLike = toggleLike; window.globalSearch = globalSearch; window.desktopHeaderSearch = desktopHeaderSearch; window.clearSearch = clearSearch; window.clearDesktopSearch = clearDesktopSearch; window.toggleEqPanel = () => renderAudioPage(); window.setEqMode = (mode) => applyAudioPreset(mode.charAt(0).toUpperCase() + mode.slice(1));
-        window.renderStatsPage = renderStatsPage; window.renderAudioPage = renderAudioPage; window.renderSettingsPage = renderSettingsPage; window.setVizMode = setVizMode; window.updateEffect = updateEffect; window.updateEQBand = updateEQBand; window.applyAudioPreset = applyAudioPreset; window.resetEQ = resetEQ; window.updatePreamp = updatePreamp; window.updatePan = updatePan; window.updateCompressor = updateCompressor; window.saveCustomPreset = saveCustomPreset; window.setCrossfadeSeconds = setCrossfadeSeconds; window.setCrossfadeEnabled = setCrossfadeEnabled; window.setCrossfadeCurve = setCrossfadeCurve;
+        window.renderStatsPage = renderStatsPage; window.renderAudioPage = renderAudioPage; window.renderSettingsPage = renderSettingsPage; window.setVizMode = setVizMode; window.updateEffect = updateEffect; window.updateEQBand = updateEQBand; window.applyAudioPreset = applyAudioPreset; window.resetEQ = resetEQ; window.updatePreamp = updatePreamp; window.updatePan = updatePan; window.updateCompressor = updateCompressor; window.saveCustomPreset = saveCustomPreset; window.setCrossfadeSeconds = setCrossfadeSeconds; window.setCrossfadeEnabled = setCrossfadeEnabled; window.setCrossfadeCurve = setCrossfadeCurve; window.setAutoplayNext = setAutoplayNext; window.setResumePlaybackEnabled = setResumePlaybackEnabled; window.setPlaybackVolume = setPlaybackVolume; window.setShuffleEnabled = setShuffleEnabled; window.setRepeatEnabled = setRepeatEnabled;
 
         // -- INIT --
         initLucideSystem();
