@@ -15860,6 +15860,87 @@
                     font-size: .8rem;
                 }
 
+                .settings-shortcut-grid {
+                    display: grid;
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                    gap: 10px;
+                }
+
+                .settings-shortcut {
+                    min-height: 100px;
+                    padding: 14px;
+                    display: grid;
+                    grid-template-columns: auto minmax(0, 1fr);
+                    align-content: center;
+                    align-items: center;
+                    gap: 10px;
+                    border: 1px solid rgba(255, 255, 255, .1);
+                    border-radius: 14px;
+                    color: var(--text);
+                    background: rgba(255, 255, 255, .045);
+                    font: inherit;
+                    text-align: left;
+                    cursor: pointer;
+                    transition: transform .18s var(--ease-premium), border-color .18s ease, background .18s ease;
+                }
+
+                .settings-shortcut:hover {
+                    transform: translateY(-2px);
+                    border-color: rgba(var(--ambient-rgb), .42);
+                    background: rgba(var(--ambient-rgb), .1);
+                }
+
+                .settings-shortcut svg {
+                    width: 19px;
+                    height: 19px;
+                    color: rgb(var(--ambient-rgb));
+                }
+
+                .settings-shortcut strong,
+                .settings-shortcut small {
+                    display: block;
+                }
+
+                .settings-shortcut strong {
+                    font-size: .8rem;
+                    font-weight: 900;
+                }
+
+                .settings-shortcut small {
+                    margin-top: 3px;
+                    color: var(--text2);
+                    font-size: .66rem;
+                    font-weight: 650;
+                    line-height: 1.3;
+                }
+
+                .settings-secondary-action {
+                    width: 100%;
+                    min-height: 44px;
+                    padding: 10px 13px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    border: 1px solid rgba(255, 175, 175, .2);
+                    border-radius: 11px;
+                    color: rgba(255, 203, 203, .95);
+                    background: rgba(255, 112, 112, .06);
+                    font: inherit;
+                    font-size: .77rem;
+                    font-weight: 850;
+                    cursor: pointer;
+                }
+
+                .settings-secondary-action:hover {
+                    background: rgba(255, 112, 112, .12);
+                }
+
+                .settings-secondary-action svg {
+                    width: 16px;
+                    height: 16px;
+                }
+
                 @media (max-width: 560px) {
                     .playback-settings-shell {
                         padding: 16px 14px calc(var(--player-h) + 26px);
@@ -15881,6 +15962,10 @@
                     }
 
                     .crossfade-curve-options {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .settings-shortcut-grid {
                         grid-template-columns: 1fr;
                     }
                 }
@@ -20347,6 +20432,8 @@
             crossfadeFadeGain = null,
             crossfadeFadeSource = null,
             crossfadeEngineReady = false;
+        let sleepTimerId = null,
+            sleepTimerMode = 'off';
         let pageFrozen = false;
         let queuePanelOpen = false,
             modalCallback = null,
@@ -21541,6 +21628,90 @@
             updateCrossfadeSettingUI();
         }
 
+        function getSleepTimerLabel() {
+            if (sleepTimerMode === 'end') return 'End of track';
+            const minutes = parseInt(sleepTimerMode, 10);
+            return Number.isFinite(minutes) && minutes > 0 ? `${minutes} min` : 'Off';
+        }
+
+        function updateSleepTimerUI() {
+            const label = getSleepTimerLabel();
+            document.querySelectorAll('[data-sleep-timer-value]').forEach((value) => { value.textContent = label; });
+            document.querySelectorAll('[data-sleep-timer-option]').forEach((option) => {
+                const active = option.dataset.sleepTimerOption === sleepTimerMode;
+                option.classList.toggle('is-active', active);
+                option.setAttribute('aria-pressed', String(active));
+            });
+        }
+
+        function stopSecondaryCrossfadeAudio() {
+            crossfadeTransitionActive = false;
+            crossfadeAutoArmed = false;
+            stopCrossfadeTimers();
+            try {
+                audioFade.pause();
+                audioFade.removeAttribute('src');
+                audioFade.load();
+            } catch (e) {}
+            setCrossfadeGain(crossfadeMainGain, 1);
+            setCrossfadeGain(crossfadeFadeGain, 0);
+        }
+
+        function clearSleepTimer(notify = false) {
+            if (sleepTimerId) {
+                clearTimeout(sleepTimerId);
+                sleepTimerId = null;
+            }
+            const wasActive = sleepTimerMode !== 'off';
+            sleepTimerMode = 'off';
+            updateSleepTimerUI();
+            if (notify && wasActive) showToast('Sleep timer cleared');
+        }
+
+        function setSleepTimer(value) {
+            const mode = String(value || 'off');
+            clearSleepTimer(false);
+            if (mode === 'off') {
+                showToast('Sleep timer off');
+                return;
+            }
+            if (mode === 'end') {
+                if (isRepeat) setRepeatEnabled(false);
+                sleepTimerMode = 'end';
+                if (crossfadeTimer && !crossfadeTransitionActive) {
+                    clearTimeout(crossfadeTimer);
+                    crossfadeTimer = null;
+                }
+                crossfadeAutoArmed = false;
+                updateSleepTimerUI();
+                showToast('Playback will stop at the end of this track');
+                return;
+            }
+            const parsedMinutes = parseInt(mode, 10);
+            if (!Number.isFinite(parsedMinutes) || parsedMinutes <= 0) return;
+            const minutes = Math.max(1, Math.min(120, parsedMinutes));
+            sleepTimerMode = String(minutes);
+            sleepTimerId = window.setTimeout(() => {
+                sleepTimerId = null;
+                sleepTimerMode = 'off';
+                stopSecondaryCrossfadeAudio();
+                audio.pause();
+                updateSleepTimerUI();
+                showToast('Sleep timer finished');
+            }, minutes * 60 * 1000);
+            updateSleepTimerUI();
+            showToast(`Sleep timer set for ${minutes} minutes`);
+        }
+
+        function clearListeningHistory() {
+            if (!confirm('Clear your recently played history? This does not remove favorites, playlists, or downloads.')) return;
+            continueListening = [];
+            shuffleHistory = [];
+            saveContinueListening();
+            localStorage.setItem('eq_shuffle_history', '[]');
+            showToast('Recently played history cleared');
+        }
+
         function isBackgroundPlayback() {
             return document.hidden || pageFrozen;
         }
@@ -21647,11 +21818,11 @@
                 crossfadeTimer = null;
             }
             crossfadeAutoArmed = false;
-            if (crossfadeSeconds <= 0 || !isAutoplayNextEnabled() || isRepeat || audio.paused || !Number.isFinite(audio.duration) || audio.duration <= crossfadeSeconds + 1) return;
+            if (crossfadeSeconds <= 0 || sleepTimerMode === 'end' || !isAutoplayNextEnabled() || isRepeat || audio.paused || !Number.isFinite(audio.duration) || audio.duration <= crossfadeSeconds + 1) return;
             const remainingMs = Math.max(0, ((audio.duration - audio.currentTime - crossfadeSeconds) * 1000) - 45);
             crossfadeTimer = window.setTimeout(() => {
                 crossfadeTimer = null;
-                if (crossfadeSeconds <= 0 || !isAutoplayNextEnabled() || isRepeat || audio.paused || crossfadeTransitionActive) return;
+                if (crossfadeSeconds <= 0 || sleepTimerMode === 'end' || !isAutoplayNextEnabled() || isRepeat || audio.paused || crossfadeTransitionActive) return;
                 if (!Number.isFinite(audio.duration) || (audio.duration - audio.currentTime) > crossfadeSeconds + .65) {
                     scheduleCrossfadeAuto('late-check');
                     return;
@@ -24656,7 +24827,16 @@
                 savePlaybackMemory();
             }
         });
-        audio.addEventListener('ended',()=>{ setTimelinePlaybackEffect(false); stopCrossfadeTimers(); if(!isRepeat && isAutoplayNextEnabled()) next(); });
+        audio.addEventListener('ended', () => {
+            setTimelinePlaybackEffect(false);
+            stopCrossfadeTimers();
+            if (sleepTimerMode === 'end') {
+                clearSleepTimer(false);
+                showToast('Sleep timer finished');
+                return;
+            }
+            if (!isRepeat && isAutoplayNextEnabled()) next();
+        });
         audio.addEventListener('play',()=>{ 
             setPlayButtonIcons(false);
             if(currentArtistKey) updateArtistPlayingState(false);
@@ -25089,6 +25269,24 @@
                             </div>
                             <button class="crossfade-toggle ${isRepeat ? 'is-on' : ''}" type="button" role="switch" aria-checked="${isRepeat}" aria-label="Repeat current track ${isRepeat ? 'on' : 'off'}" data-player-toggle="repeat" data-player-label="Repeat current track" onclick="setRepeatEnabled(${!isRepeat})"><span></span></button>
                         </div>
+
+                        <div class="crossfade-divider"></div>
+
+                        <div class="crossfade-setting-row">
+                            <div>
+                                <div class="crossfade-setting-title">Sleep timer</div>
+                                <div class="crossfade-setting-description">Pause music after a chosen time, or at the end of this track.</div>
+                            </div>
+                            <output class="crossfade-value" data-sleep-timer-value>Off</output>
+                        </div>
+                        <div class="crossfade-presets" aria-label="Sleep timer options">
+                            <button class="crossfade-preset is-active" type="button" data-sleep-timer-option="off" aria-pressed="true" onclick="setSleepTimer('off')">Off</button>
+                            <button class="crossfade-preset" type="button" data-sleep-timer-option="15" aria-pressed="false" onclick="setSleepTimer('15')">15 min</button>
+                            <button class="crossfade-preset" type="button" data-sleep-timer-option="30" aria-pressed="false" onclick="setSleepTimer('30')">30 min</button>
+                            <button class="crossfade-preset" type="button" data-sleep-timer-option="45" aria-pressed="false" onclick="setSleepTimer('45')">45 min</button>
+                            <button class="crossfade-preset" type="button" data-sleep-timer-option="60" aria-pressed="false" onclick="setSleepTimer('60')">60 min</button>
+                            <button class="crossfade-preset" type="button" data-sleep-timer-option="end" aria-pressed="false" onclick="setSleepTimer('end')">End of track</button>
+                        </div>
                     </section>
 
                     <div class="settings-section-heading">Crossfade settings</div>
@@ -25129,9 +25327,25 @@
                         ${uiIcon('circle-info')}
                         <div><strong>Smart playback guard</strong><span data-crossfade-summary>${enabled ? `The next track starts ${crossfadeSeconds} second${crossfadeSeconds === 1 ? '' : 's'} before this one ends.` : 'Turn on crossfade to blend consecutive tracks.'}</span> Crossfade stays off for repeat mode and for tracks that are too short to overlap cleanly.</div>
                     </aside>
+
+                    <div class="settings-section-heading">Music controls</div>
+                    <section class="settings-shortcut-grid" aria-label="Music controls">
+                        <button class="settings-shortcut" type="button" onclick="renderAudioPage()">${uiIcon('sliders-horizontal')}<span><strong>Sound & equalizer</strong><small>EQ, presets, effects and visualizer</small></span></button>
+                        <button class="settings-shortcut" type="button" onclick="showDownloads()">${uiIcon('download')}<span><strong>Downloads</strong><small>Manage your offline music</small></span></button>
+                        <button class="settings-shortcut" type="button" onclick="openAppearance()">${uiIcon('palette')}<span><strong>Appearance</strong><small>Theme, accent and visual style</small></span></button>
+                    </section>
+
+                    <div class="settings-section-heading">Library & privacy</div>
+                    <section class="crossfade-settings-card" aria-label="Library and privacy settings">
+                        <div class="crossfade-setting-title">Recently played</div>
+                        <div class="crossfade-setting-description">Remove your recently played list and shuffle history. Favorites, playlists and downloads stay untouched.</div>
+                        <div style="margin-top:15px"><button class="settings-secondary-action" type="button" onclick="clearListeningHistory()">${uiIcon('trash-2')}<span>Clear listening history</span></button></div>
+                    </section>
                 </div>
             `;
             renderLucideIcons(mainArea);
+            updatePlaybackSettingsUI();
+            updateSleepTimerUI();
             updateCrossfadeSettingUI();
         }
 
@@ -25242,7 +25456,7 @@
         window.playSong = playSong; window.next = next; window.previous = previous; window.togglePlay = togglePlay; window.toggleShuffle = toggleShuffle; window.toggleRepeat = toggleRepeat; window.toggleMute = toggleMute;
         window.toggleQueuePanel = toggleQueuePanel; window.addToQueue = addToQueue; window.openArtist = openArtist; window.loadArtists = loadArtists; window.showLikedSongs = showLikedSongs; window.showDownloads = showDownloads; window.showPlaylists = showPlaylists; window.refreshLikedDisplay = refreshLikedDisplay;
         window.playArtist = playArtist; window.shuffleArtist = shuffleArtist; window.toggleLike = toggleLike; window.globalSearch = globalSearch; window.desktopHeaderSearch = desktopHeaderSearch; window.clearSearch = clearSearch; window.clearDesktopSearch = clearDesktopSearch; window.toggleEqPanel = () => renderAudioPage(); window.setEqMode = (mode) => applyAudioPreset(mode.charAt(0).toUpperCase() + mode.slice(1));
-        window.renderStatsPage = renderStatsPage; window.renderAudioPage = renderAudioPage; window.renderSettingsPage = renderSettingsPage; window.setVizMode = setVizMode; window.updateEffect = updateEffect; window.updateEQBand = updateEQBand; window.applyAudioPreset = applyAudioPreset; window.resetEQ = resetEQ; window.updatePreamp = updatePreamp; window.updatePan = updatePan; window.updateCompressor = updateCompressor; window.saveCustomPreset = saveCustomPreset; window.setCrossfadeSeconds = setCrossfadeSeconds; window.setCrossfadeEnabled = setCrossfadeEnabled; window.setCrossfadeCurve = setCrossfadeCurve; window.setAutoplayNext = setAutoplayNext; window.setResumePlaybackEnabled = setResumePlaybackEnabled; window.setPlaybackVolume = setPlaybackVolume; window.setShuffleEnabled = setShuffleEnabled; window.setRepeatEnabled = setRepeatEnabled;
+        window.renderStatsPage = renderStatsPage; window.renderAudioPage = renderAudioPage; window.renderSettingsPage = renderSettingsPage; window.setVizMode = setVizMode; window.updateEffect = updateEffect; window.updateEQBand = updateEQBand; window.applyAudioPreset = applyAudioPreset; window.resetEQ = resetEQ; window.updatePreamp = updatePreamp; window.updatePan = updatePan; window.updateCompressor = updateCompressor; window.saveCustomPreset = saveCustomPreset; window.setCrossfadeSeconds = setCrossfadeSeconds; window.setCrossfadeEnabled = setCrossfadeEnabled; window.setCrossfadeCurve = setCrossfadeCurve; window.setAutoplayNext = setAutoplayNext; window.setResumePlaybackEnabled = setResumePlaybackEnabled; window.setPlaybackVolume = setPlaybackVolume; window.setShuffleEnabled = setShuffleEnabled; window.setRepeatEnabled = setRepeatEnabled; window.setSleepTimer = setSleepTimer; window.clearListeningHistory = clearListeningHistory;
 
         // -- INIT --
         initLucideSystem();
