@@ -15614,6 +15614,277 @@
                     }
                 }
 
+                /* Playback settings: a focused home for crossfade controls. */
+                .playback-settings-shell {
+                    max-width: 980px;
+                    margin: 0 auto;
+                    padding: 20px 24px calc(var(--player-h) + 34px);
+                    display: grid;
+                    gap: 18px;
+                }
+
+                .playback-settings-hero,
+                .crossfade-settings-card,
+                .crossfade-status-card {
+                    border: 1px solid rgba(255, 255, 255, .1);
+                    background: linear-gradient(135deg, rgba(var(--ambient-rgb), .13), rgba(255, 255, 255, .035)), rgba(17, 17, 17, .78);
+                    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), 0 20px 48px rgba(0, 0, 0, .2);
+                }
+
+                .playback-settings-hero {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 18px;
+                    padding: 22px;
+                    border-radius: 18px;
+                }
+
+                .playback-settings-eyebrow {
+                    margin-bottom: 7px;
+                    color: rgba(255, 255, 255, .58);
+                    font-size: .67rem;
+                    font-weight: 900;
+                    letter-spacing: .15em;
+                    text-transform: uppercase;
+                }
+
+                .playback-settings-title {
+                    margin: 0;
+                    font-size: clamp(1.5rem, 3.7vw, 2.45rem);
+                    line-height: 1.05;
+                    font-weight: 900;
+                }
+
+                .playback-settings-copy {
+                    max-width: 610px;
+                    margin: 8px 0 0;
+                    color: var(--text2);
+                    font-size: .9rem;
+                    line-height: 1.5;
+                }
+
+                .playback-settings-icon {
+                    width: 52px;
+                    height: 52px;
+                    flex: 0 0 auto;
+                    display: grid;
+                    place-items: center;
+                    border: 1px solid rgba(var(--ambient-rgb), .38);
+                    border-radius: 16px;
+                    color: rgb(var(--ambient-rgb));
+                    background: rgba(var(--ambient-rgb), .11);
+                    box-shadow: 0 0 24px rgba(var(--ambient-rgb), .12);
+                }
+
+                .playback-settings-icon svg {
+                    width: 25px;
+                    height: 25px;
+                }
+
+                .settings-section-heading {
+                    margin: 4px 2px -6px;
+                    color: rgba(255, 255, 255, .58);
+                    font-size: .68rem;
+                    font-weight: 900;
+                    letter-spacing: .13em;
+                    text-transform: uppercase;
+                }
+
+                .crossfade-settings-card {
+                    padding: 20px;
+                    border-radius: 16px;
+                }
+
+                .crossfade-setting-row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 16px;
+                }
+
+                .crossfade-setting-title {
+                    font-size: 1rem;
+                    font-weight: 900;
+                }
+
+                .crossfade-setting-description,
+                .crossfade-field-note {
+                    margin-top: 5px;
+                    color: var(--text2);
+                    font-size: .78rem;
+                    line-height: 1.45;
+                }
+
+                .crossfade-toggle {
+                    width: 50px;
+                    height: 29px;
+                    padding: 3px;
+                    flex: 0 0 auto;
+                    border: 1px solid rgba(255, 255, 255, .16);
+                    border-radius: 999px;
+                    background: rgba(255, 255, 255, .09);
+                    cursor: pointer;
+                    transition: background .2s ease, border-color .2s ease;
+                }
+
+                .crossfade-toggle span {
+                    width: 21px;
+                    height: 21px;
+                    display: block;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, .82);
+                    box-shadow: 0 2px 7px rgba(0, 0, 0, .32);
+                    transition: transform .2s var(--ease-premium), background .2s ease;
+                }
+
+                .crossfade-toggle.is-on {
+                    border-color: rgba(var(--ambient-rgb), .62);
+                    background: rgba(var(--ambient-rgb), .7);
+                }
+
+                .crossfade-toggle.is-on span {
+                    transform: translateX(21px);
+                    background: #fff;
+                }
+
+                .crossfade-divider {
+                    height: 1px;
+                    margin: 19px 0;
+                    background: rgba(255, 255, 255, .09);
+                }
+
+                .crossfade-value {
+                    color: rgb(var(--ambient-rgb));
+                    font-size: 1.1rem;
+                    font-weight: 900;
+                }
+
+                .crossfade-duration-slider {
+                    width: 100%;
+                    margin: 15px 0 2px;
+                    accent-color: rgb(var(--ambient-rgb));
+                }
+
+                .crossfade-duration-slider:disabled {
+                    cursor: not-allowed;
+                    opacity: .42;
+                }
+
+                .crossfade-presets {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 8px;
+                    margin-top: 15px;
+                }
+
+                .crossfade-preset,
+                .crossfade-curve-option {
+                    border: 1px solid rgba(255, 255, 255, .13);
+                    border-radius: 10px;
+                    color: var(--text);
+                    background: rgba(255, 255, 255, .045);
+                    font: inherit;
+                    font-size: .76rem;
+                    font-weight: 800;
+                    cursor: pointer;
+                    transition: transform .16s var(--ease-premium), border-color .16s ease, background .16s ease;
+                }
+
+                .crossfade-preset {
+                    padding: 8px 11px;
+                    border-radius: 999px;
+                }
+
+                .crossfade-preset:hover,
+                .crossfade-curve-option:hover {
+                    transform: translateY(-1px);
+                    border-color: rgba(var(--ambient-rgb), .48);
+                }
+
+                .crossfade-preset.is-active,
+                .crossfade-curve-option.is-active {
+                    border-color: rgba(var(--ambient-rgb), .65);
+                    color: #fff;
+                    background: rgba(var(--ambient-rgb), .18);
+                }
+
+                .crossfade-curve-options {
+                    display: grid;
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 10px;
+                    margin-top: 13px;
+                }
+
+                .crossfade-curve-option {
+                    min-height: 62px;
+                    padding: 10px 12px;
+                    text-align: left;
+                }
+
+                .crossfade-curve-option strong,
+                .crossfade-curve-option small {
+                    display: block;
+                }
+
+                .crossfade-curve-option small {
+                    margin-top: 4px;
+                    color: var(--text2);
+                    font-size: .66rem;
+                    font-weight: 650;
+                    line-height: 1.3;
+                }
+
+                .crossfade-status-card {
+                    display: grid;
+                    grid-template-columns: auto minmax(0, 1fr);
+                    align-items: start;
+                    gap: 11px;
+                    padding: 14px 16px;
+                    border-radius: 14px;
+                    color: var(--text2);
+                    font-size: .78rem;
+                    line-height: 1.45;
+                }
+
+                .crossfade-status-card svg {
+                    width: 18px;
+                    height: 18px;
+                    color: rgb(var(--ambient-rgb));
+                }
+
+                .crossfade-status-card strong {
+                    display: block;
+                    margin-bottom: 2px;
+                    color: var(--text);
+                    font-size: .8rem;
+                }
+
+                @media (max-width: 560px) {
+                    .playback-settings-shell {
+                        padding: 16px 14px calc(var(--player-h) + 26px);
+                    }
+
+                    .playback-settings-hero,
+                    .crossfade-settings-card {
+                        padding: 17px;
+                    }
+
+                    .playback-settings-hero {
+                        align-items: flex-start;
+                    }
+
+                    .playback-settings-icon {
+                        width: 44px;
+                        height: 44px;
+                        border-radius: 13px;
+                    }
+
+                    .crossfade-curve-options {
+                        grid-template-columns: 1fr;
+                    }
+                }
+
     </style>
 </head>
 
@@ -15992,8 +16263,9 @@
             <button class="mobile-drawer-link" onclick="closeMobileDrawer();loadArtists()"><i data-lucide="house" aria-hidden="true"></i><span>Home</span></button>
             <button class="mobile-drawer-link" onclick="closeMobileDrawer();showLikedSongs()"><i data-lucide="heart" aria-hidden="true"></i><span>Favorites</span></button>
             <button class="mobile-drawer-link" onclick="closeMobileDrawer();showPlaylists()"><i data-lucide="list-music" aria-hidden="true"></i><span>Playlists</span></button>
-            <button class="mobile-drawer-link" onclick="closeMobileDrawer();showStatsDashboard()"><i data-lucide="chart-no-axes-column-increasing" aria-hidden="true"></i><span>Stats</span></button>
-            <button class="mobile-drawer-link" onclick="closeMobileDrawer();showAudioSettings()"><i data-lucide="sliders-horizontal" aria-hidden="true"></i><span>Audio</span></button>
+            <button class="mobile-drawer-link" onclick="closeMobileDrawer();renderStatsPage()"><i data-lucide="chart-no-axes-column-increasing" aria-hidden="true"></i><span>Stats</span></button>
+            <button class="mobile-drawer-link" onclick="closeMobileDrawer();renderAudioPage()"><i data-lucide="sliders-horizontal" aria-hidden="true"></i><span>Audio</span></button>
+            <button class="mobile-drawer-link" onclick="closeMobileDrawer();renderSettingsPage()"><i data-lucide="settings-2" aria-hidden="true"></i><span>Settings</span></button>
             <button class="mobile-drawer-link" onclick="closeMobileDrawer();showDownloads()"><i data-lucide="download" aria-hidden="true"></i><span>Downloads</span></button>
             <a class="mobile-drawer-link mobile-drawer-creator" href="https://www.instagram.com/armxnworldwide/" target="_blank" rel="noopener noreferrer" aria-label="Created by @armxnworldwide on Instagram">
                 <span class="creator-instagram-icon" aria-hidden="true">
@@ -21191,13 +21463,33 @@
             return true;
         }
 
+        function getCrossfadeCurve() {
+            return localStorage.getItem('eq_crossfade_curve') === 'linear' ? 'linear' : 'smooth';
+        }
+
+        function crossfadeProgress(progress, isRising) {
+            if (getCrossfadeCurve() === 'linear') return progress;
+            return isRising ? Math.sin(progress * Math.PI / 2) : 1 - Math.cos(progress * Math.PI / 2);
+        }
+
         function rampCrossfadeGain(gainNode, from, to, durationMs, onComplete) {
             if (gainNode && visualizerCtx) {
                 const now = visualizerCtx.currentTime;
                 const duration = Math.max(.08, (durationMs || 0) / 1000);
                 gainNode.gain.cancelScheduledValues(now);
                 gainNode.gain.setValueAtTime(from, now);
-                gainNode.gain.linearRampToValueAtTime(to, now + duration);
+                if (getCrossfadeCurve() === 'smooth' && from !== to && typeof gainNode.gain.setValueCurveAtTime === 'function') {
+                    const points = 48;
+                    const curve = new Float32Array(points);
+                    const isRising = to > from;
+                    for (let i = 0; i < points; i++) {
+                        const progress = i / (points - 1);
+                        curve[i] = from + ((to - from) * crossfadeProgress(progress, isRising));
+                    }
+                    gainNode.gain.setValueCurveAtTime(curve, now, duration);
+                } else {
+                    gainNode.gain.linearRampToValueAtTime(to, now + duration);
+                }
                 const timerId = window.setTimeout(() => {
                     clearCrossfadeFallbackTimer(timerId);
                     gainNode.gain.cancelScheduledValues(visualizerCtx.currentTime);
@@ -21215,7 +21507,7 @@
             const startedAt = performance.now();
             const tick = () => {
                 const t = Math.min(1, (performance.now() - startedAt) / duration);
-                const eased = Math.sin(t * Math.PI / 2);
+                const eased = crossfadeProgress(t, to >= from);
                 mediaEl.volume = from + ((to - from) * eased);
                 if (t >= 1) {
                     mediaEl.volume = to;
@@ -21252,20 +21544,65 @@
             }, Math.max(0, remainingMs));
         }
 
+        function getCrossfadeDraftSeconds() {
+            if (crossfadeSeconds > 0) return crossfadeSeconds;
+            const saved = parseInt(localStorage.getItem('eq_crossfade_last_seconds') || '5', 10);
+            return Math.max(1, Math.min(12, Number.isFinite(saved) ? saved : 5));
+        }
+
         function updateCrossfadeSettingUI() {
-            const slider = document.getElementById('crossfadeSlider');
-            const value = document.getElementById('crossfadeValue');
-            if (slider) slider.value = String(crossfadeSeconds);
-            if (value) value.textContent = crossfadeSeconds === 0 ? 'Off' : `${crossfadeSeconds}s`;
+            const enabled = crossfadeSeconds > 0;
+            const duration = getCrossfadeDraftSeconds();
+            const curve = getCrossfadeCurve();
+            const valueText = enabled ? `${crossfadeSeconds}s` : 'Off';
+            document.querySelectorAll('[data-crossfade-slider]').forEach((slider) => {
+                slider.value = String(duration);
+                slider.disabled = !enabled;
+                slider.setAttribute('aria-valuetext', `${duration} seconds`);
+            });
+            document.querySelectorAll('[data-crossfade-value]').forEach((value) => { value.textContent = valueText; });
+            document.querySelectorAll('[data-crossfade-toggle]').forEach((toggle) => {
+                toggle.classList.toggle('is-on', enabled);
+                toggle.setAttribute('aria-checked', String(enabled));
+                toggle.setAttribute('aria-label', `Crossfade ${enabled ? 'on' : 'off'}`);
+                toggle.setAttribute('onclick', `setCrossfadeEnabled(${!enabled})`);
+            });
+            document.querySelectorAll('[data-crossfade-preset]').forEach((preset) => {
+                preset.classList.toggle('is-active', enabled && Number(preset.dataset.crossfadePreset) === crossfadeSeconds);
+            });
+            document.querySelectorAll('[data-crossfade-curve]').forEach((option) => {
+                const active = option.dataset.crossfadeCurve === curve;
+                option.classList.toggle('is-active', active);
+                option.setAttribute('aria-pressed', String(active));
+            });
+            document.querySelectorAll('[data-crossfade-summary]').forEach((summary) => {
+                summary.textContent = enabled ? `The next track starts ${crossfadeSeconds} second${crossfadeSeconds === 1 ? '' : 's'} before this one ends.` : 'Turn on crossfade to blend consecutive tracks.';
+            });
+        }
+
+        function setCrossfadeEnabled(enabled) {
+            if (enabled) {
+                setCrossfadeSeconds(getCrossfadeDraftSeconds());
+                return;
+            }
+            if (crossfadeSeconds > 0) localStorage.setItem('eq_crossfade_last_seconds', String(crossfadeSeconds));
+            setCrossfadeSeconds(0);
+        }
+
+        function setCrossfadeCurve(curve) {
+            localStorage.setItem('eq_crossfade_curve', curve === 'linear' ? 'linear' : 'smooth');
+            updateCrossfadeSettingUI();
         }
 
         function setCrossfadeSeconds(value) {
             const nextValue = Math.max(0, Math.min(12, parseInt(value, 10) || 0));
             crossfadeSeconds = nextValue;
             localStorage.setItem('eq_crossfade_seconds', String(crossfadeSeconds));
+            if (crossfadeSeconds > 0) localStorage.setItem('eq_crossfade_last_seconds', String(crossfadeSeconds));
             updateCrossfadeSettingUI();
             if (crossfadeSeconds === 0) {
                 stopCrossfadeTimers();
+                crossfadeTransitionActive = false;
                 releaseAudioObjectUrl(audioFade.src);
                 audioFade.pause();
                 audioFade.removeAttribute('src');
@@ -23588,7 +23925,7 @@
         let bassFilter, vocalFilter, trebleFilter;
 
         function toggleEqPanel() {
-            showAudioSettings();
+            renderAudioPage();
         }
 
         function setEqMode(mode) {
@@ -24557,6 +24894,75 @@
             updatePeak();
         }
 
+        function renderSettingsPage() {
+            document.querySelectorAll('.nav-btn').forEach((button) => button.classList.remove('active'));
+            syncMobileNavActive('');
+            setMobileBack(true);
+            const mainArea = document.getElementById('mainArea');
+            if (!mainArea) return;
+            const enabled = crossfadeSeconds > 0;
+            const duration = getCrossfadeDraftSeconds();
+            const curve = getCrossfadeCurve();
+            mainArea.innerHTML = `
+                <div class="main-topbar">
+                    <div class="nav-arrows"><button class="nav-arrow-btn" onclick="loadArtists()" aria-label="Back to home">${uiIcon('chevron-left')}</button></div>
+                    <div style="flex:1"><div style="font-size:1.2rem;font-weight:800">Settings</div></div>
+                    <div class="topbar-actions"><button class="topbar-menu-btn" onclick="openMobileDrawer()" title="Menu" aria-label="Open menu">${uiIcon('menu')}</button></div>
+                </div>
+                <div class="playback-settings-shell">
+                    <section class="playback-settings-hero">
+                        <div>
+                            <div class="playback-settings-eyebrow">Playback</div>
+                            <h1 class="playback-settings-title">Crossfade</h1>
+                            <p class="playback-settings-copy">Make track changes feel continuous by blending the end of one song into the beginning of the next.</p>
+                        </div>
+                        <div class="playback-settings-icon" aria-hidden="true">${uiIcon('audio-lines')}</div>
+                    </section>
+
+                    <div class="settings-section-heading">Crossfade settings</div>
+                    <section class="crossfade-settings-card" aria-label="Crossfade settings">
+                        <div class="crossfade-setting-row">
+                            <div>
+                                <div class="crossfade-setting-title">Enable crossfade</div>
+                                <div class="crossfade-setting-description">Blend only when moving to the next track.</div>
+                            </div>
+                            <button class="crossfade-toggle ${enabled ? 'is-on' : ''}" type="button" role="switch" aria-checked="${enabled}" aria-label="Crossfade ${enabled ? 'on' : 'off'}" data-crossfade-toggle onclick="setCrossfadeEnabled(${!enabled})"><span></span></button>
+                        </div>
+
+                        <div class="crossfade-divider"></div>
+
+                        <div class="crossfade-setting-row">
+                            <div class="crossfade-setting-title">Blend duration</div>
+                            <output class="crossfade-value" data-crossfade-value>${enabled ? `${crossfadeSeconds}s` : 'Off'}</output>
+                        </div>
+                        <input class="crossfade-duration-slider" type="range" min="1" max="12" step="1" value="${duration}" ${enabled ? '' : 'disabled'} data-crossfade-slider aria-label="Crossfade duration" aria-valuemin="1" aria-valuemax="12" aria-valuetext="${duration} seconds" oninput="setCrossfadeSeconds(this.value)">
+                        <div class="crossfade-field-note">Choose how long the two songs overlap. Five seconds is a balanced default.</div>
+                        <div class="crossfade-presets" aria-label="Crossfade duration presets">
+                            <button class="crossfade-preset ${enabled && crossfadeSeconds === 2 ? 'is-active' : ''}" type="button" data-crossfade-preset="2" onclick="setCrossfadeSeconds(2)">Quick · 2s</button>
+                            <button class="crossfade-preset ${enabled && crossfadeSeconds === 5 ? 'is-active' : ''}" type="button" data-crossfade-preset="5" onclick="setCrossfadeSeconds(5)">Balanced · 5s</button>
+                            <button class="crossfade-preset ${enabled && crossfadeSeconds === 8 ? 'is-active' : ''}" type="button" data-crossfade-preset="8" onclick="setCrossfadeSeconds(8)">Long · 8s</button>
+                        </div>
+
+                        <div class="crossfade-divider"></div>
+
+                        <div class="crossfade-setting-title">Fade curve</div>
+                        <div class="crossfade-setting-description">Smooth keeps the perceived volume more even while both tracks play.</div>
+                        <div class="crossfade-curve-options">
+                            <button class="crossfade-curve-option ${curve === 'smooth' ? 'is-active' : ''}" type="button" data-crossfade-curve="smooth" aria-pressed="${curve === 'smooth'}" onclick="setCrossfadeCurve('smooth')"><strong>Smooth</strong><small>Equal-power blend, recommended</small></button>
+                            <button class="crossfade-curve-option ${curve === 'linear' ? 'is-active' : ''}" type="button" data-crossfade-curve="linear" aria-pressed="${curve === 'linear'}" onclick="setCrossfadeCurve('linear')"><strong>Linear</strong><small>Direct, steady volume ramp</small></button>
+                        </div>
+                    </section>
+
+                    <aside class="crossfade-status-card">
+                        ${uiIcon('circle-info')}
+                        <div><strong>Smart playback guard</strong><span data-crossfade-summary>${enabled ? `The next track starts ${crossfadeSeconds} second${crossfadeSeconds === 1 ? '' : 's'} before this one ends.` : 'Turn on crossfade to blend consecutive tracks.'}</span> Crossfade stays off for repeat mode and for tracks that are too short to overlap cleanly.</div>
+                    </aside>
+                </div>
+            `;
+            renderLucideIcons(mainArea);
+            updateCrossfadeSettingUI();
+        }
+
         function renderAudioPage() {
             setNavActive('navAudio'); setMobileBack(true);
             const mainArea = document.getElementById('mainArea'); if (!mainArea) return;
@@ -24567,7 +24973,7 @@
                     <div class="as-tabs"><div class="as-tab active" data-target="eq">Equalizer</div><div class="as-tab" data-target="presets">Presets</div><div class="as-tab" data-target="effects">Effects</div><div class="as-tab" data-target="visualizer">Visualizer</div><div class="as-tab" data-target="advanced">Advanced</div><div class="as-tab" data-target="stats">Statistics</div></div>
                     <div class="as-content active" id="as-eq"><div class="eq-grid">${audioEngine.bands.map((freq, i) => `<div class="eq-band"><input type="range" class="eq-slider-vertical" min="-15" max="15" step="0.5" value="${audioEngine.filters[i]?.gain.value || 0}" oninput="updateEQBand(${i}, this.value)"><span class="eq-label-freq">${freq >= 1000 ? (freq/1000) + 'kHz' : freq + 'Hz'}</span><span class="eq-label-db" id="eq-db-${i}">${(audioEngine.filters[i]?.gain.value || 0).toFixed(1)}dB</span></div>`).join('')}</div><div style="display:flex; gap:15px; justify-content:center;"><button class="btn btn-outline" onclick="resetEQ()">Reset EQ</button><button class="btn btn-accent" onclick="saveCustomPreset()">Save Custom</button></div></div>
                     <div class="as-content" id="as-presets"><div class="as-grid">${Object.keys(allPresets).map(name => `<div class="as-card ${localStorage.getItem('as_active_preset') === name ? 'active' : ''}" onclick="applyAudioPreset('${name}')"><div class="as-card-icon">${uiIcon('music')}</div><div class="as-card-title">${name}</div></div>`).join('')}</div></div>
-                    <div class="as-content" id="as-effects"><div class="as-grid"><div class="as-card"><div class="as-card-title">Preamp (Gain)</div><input type="range" min="0" max="2" step="0.05" value="${audioEngine.preamp?.gain.value || 1}" oninput="updatePreamp(this.value)"><span id="preamp-val">${(audioEngine.preamp?.gain.value || 1).toFixed(2)}x</span></div><div class="as-card"><div class="as-card-title">Stereo Pan</div><input type="range" min="-1" max="1" step="0.1" value="${audioEngine.panner?.pan.value || 0}" oninput="updatePan(this.value)"><span id="pan-val">${(audioEngine.panner?.pan.value || 0).toFixed(1)}</span></div><div class="as-card"><div class="as-card-title">Reverb (Space)</div><input type="range" min="0" max="1" step="0.05" value="${localStorage.getItem('as_reverb') || 0}" oninput="updateEffect('reverb', this.value)"></div><div class="as-card"><div class="as-card-title">Delay (Echo)</div><input type="range" min="0" max="1" step="0.05" value="${localStorage.getItem('as_delay') || 0}" oninput="updateEffect('delay', this.value)"></div><div class="as-card wide"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><div class="as-card-title">Crossfade</div><span id="crossfadeValue" style="font-size:.82rem;font-weight:900;color:var(--accent)">Off</span></div><input id="crossfadeSlider" type="range" min="0" max="12" step="1" value="${crossfadeSeconds}" oninput="setCrossfadeSeconds(this.value)"><div style="font-size:.78rem;color:var(--text2);line-height:1.45">Blend the end of one song into the beginning of the next.</div></div></div></div>
+                    <div class="as-content" id="as-effects"><div class="as-grid"><div class="as-card"><div class="as-card-title">Preamp (Gain)</div><input type="range" min="0" max="2" step="0.05" value="${audioEngine.preamp?.gain.value || 1}" oninput="updatePreamp(this.value)"><span id="preamp-val">${(audioEngine.preamp?.gain.value || 1).toFixed(2)}x</span></div><div class="as-card"><div class="as-card-title">Stereo Pan</div><input type="range" min="-1" max="1" step="0.1" value="${audioEngine.panner?.pan.value || 0}" oninput="updatePan(this.value)"><span id="pan-val">${(audioEngine.panner?.pan.value || 0).toFixed(1)}</span></div><div class="as-card"><div class="as-card-title">Reverb (Space)</div><input type="range" min="0" max="1" step="0.05" value="${localStorage.getItem('as_reverb') || 0}" oninput="updateEffect('reverb', this.value)"></div><div class="as-card"><div class="as-card-title">Delay (Echo)</div><input type="range" min="0" max="1" step="0.05" value="${localStorage.getItem('as_delay') || 0}" oninput="updateEffect('delay', this.value)"></div></div></div>
                     <div class="as-content" id="as-visualizer"><div class="viz-container"><canvas id="as-viz-canvas"></canvas></div><div class="as-grid" style="margin-top:20px"><div class="as-card ${audioEngine.vizMode==='bars'?'active':''}" onclick="setVizMode('bars')">Spectrum Bars</div><div class="as-card ${audioEngine.vizMode==='wave'?'active':''}" onclick="setVizMode('wave')">Waveform</div><div class="as-card ${audioEngine.vizMode==='circle'?'active':''}" onclick="setVizMode('circle')">Circular</div></div></div>
                     <div class="as-content" id="as-advanced"><div class="as-grid"><div class="as-card"><div class="as-card-title">Compressor Threshold</div><input type="range" min="-60" max="0" step="1" value="${audioEngine.compressor?.threshold.value || -24}" oninput="updateCompressor('threshold', this.value)"></div><div class="as-card"><div class="as-card-title">Compressor Ratio</div><input type="range" min="1" max="20" step="1" value="${audioEngine.compressor?.ratio.value || 12}" oninput="updateCompressor('ratio', this.value)"></div></div></div>
                     <div class="as-content" id="as-stats"><div class="stats-box"><div class="stats-row"><span class="stats-label">Sample Rate</span><span class="stats-value" id="stat-sr">44100 Hz</span></div><div class="stats-row"><span class="stats-label">Channels</span><span class="stats-value">2 (Stereo)</span></div><div class="stats-row"><span class="stats-label">Context State</span><span class="stats-value" id="stat-state">Running</span></div><div class="stats-row"><span class="stats-label">Audio Latency</span><span class="stats-value" id="stat-latency">0ms</span></div><div class="stats-row"><span class="stats-label">Peak Level</span><span class="stats-value" id="stat-peak">0.00</span></div><div class="stats-row"><span class="stats-label">Audio Engine</span><span class="stats-value">FalconX Pro v3.0</span></div></div></div>
@@ -24664,7 +25070,7 @@
         window.playSong = playSong; window.next = next; window.previous = previous; window.togglePlay = togglePlay; window.toggleShuffle = toggleShuffle; window.toggleRepeat = toggleRepeat; window.toggleMute = toggleMute;
         window.toggleQueuePanel = toggleQueuePanel; window.addToQueue = addToQueue; window.openArtist = openArtist; window.loadArtists = loadArtists; window.showLikedSongs = showLikedSongs; window.showDownloads = showDownloads; window.showPlaylists = showPlaylists; window.refreshLikedDisplay = refreshLikedDisplay;
         window.playArtist = playArtist; window.shuffleArtist = shuffleArtist; window.toggleLike = toggleLike; window.globalSearch = globalSearch; window.desktopHeaderSearch = desktopHeaderSearch; window.clearSearch = clearSearch; window.clearDesktopSearch = clearDesktopSearch; window.toggleEqPanel = () => renderAudioPage(); window.setEqMode = (mode) => applyAudioPreset(mode.charAt(0).toUpperCase() + mode.slice(1));
-        window.renderStatsPage = renderStatsPage; window.renderAudioPage = renderAudioPage; window.setVizMode = setVizMode; window.updateEffect = updateEffect; window.updateEQBand = updateEQBand; window.applyAudioPreset = applyAudioPreset; window.resetEQ = resetEQ; window.updatePreamp = updatePreamp; window.updatePan = updatePan; window.updateCompressor = updateCompressor; window.saveCustomPreset = saveCustomPreset; window.setCrossfadeSeconds = setCrossfadeSeconds;
+        window.renderStatsPage = renderStatsPage; window.renderAudioPage = renderAudioPage; window.renderSettingsPage = renderSettingsPage; window.setVizMode = setVizMode; window.updateEffect = updateEffect; window.updateEQBand = updateEQBand; window.applyAudioPreset = applyAudioPreset; window.resetEQ = resetEQ; window.updatePreamp = updatePreamp; window.updatePan = updatePan; window.updateCompressor = updateCompressor; window.saveCustomPreset = saveCustomPreset; window.setCrossfadeSeconds = setCrossfadeSeconds; window.setCrossfadeEnabled = setCrossfadeEnabled; window.setCrossfadeCurve = setCrossfadeCurve;
 
         // -- INIT --
         initLucideSystem();
