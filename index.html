@@ -15810,69 +15810,6 @@
                     box-shadow: 0 0 18px rgba(var(--progress-primary-rgb), .42);
                 }
 
-                @keyframes fxTimelineWaveFlow {
-                    from {
-                        -webkit-mask-position: 0 0;
-                        mask-position: 0 0;
-                    }
-                    to {
-                        -webkit-mask-position: 96px 0;
-                        mask-position: 96px 0;
-                    }
-                }
-
-                @keyframes fxTimelineLiquidGlow {
-                    0%, 100% { background-position: 0% 50%; }
-                    50% { background-position: 100% 50%; }
-                }
-
-                @media (max-width: 768px) {
-                    .player .progress-fill {
-                        background: linear-gradient(90deg,
-                            rgb(var(--progress-primary-rgb)) 0%,
-                            rgb(var(--progress-secondary-rgb)) 52%,
-                            rgb(var(--progress-primary-rgb)) 100%);
-                        background-size: 200% 100%;
-                        animation: none;
-                        box-shadow:
-                            0 0 6px rgba(var(--progress-primary-rgb), .76),
-                            0 0 14px rgba(var(--progress-primary-rgb), .3);
-                    }
-
-                    .player.is-playing .progress-fill {
-                        animation: fxTimelineLiquidGlow 3.4s ease-in-out infinite;
-                    }
-
-                    .player.is-playing .progress-fill::before {
-                        opacity: 1;
-                        animation: fxTimelineWaveFlow 2.1s linear infinite;
-                    }
-
-                    .player:not(.is-playing) .progress-fill {
-                        animation: none !important;
-                        background-position: 0 50%;
-                    }
-
-                    .player:not(.is-playing) .progress-fill::before {
-                        opacity: 0 !important;
-                        animation: none !important;
-                    }
-
-                    .player .progress-fill::after {
-                        box-shadow:
-                            0 0 0 2px rgba(5, 5, 7, .74),
-                            0 0 0 3px rgba(var(--progress-primary-rgb), .2),
-                            0 0 12px rgba(var(--progress-primary-rgb), .62);
-                    }
-                }
-
-                @media (prefers-reduced-motion: reduce) {
-                    .player .progress-fill,
-                    .player .progress-fill::before {
-                        animation: none !important;
-                    }
-                }
-
                 .song-row.unavailable {
                     opacity: .62;
                     cursor: not-allowed;
@@ -16333,7 +16270,7 @@
                     }
                 }
 
-                /* Keep the mini-player timeline calm and easy to scan. */
+                /* Lightweight liquid-glass timeline: one static glass layer, no running effects. */
                 .player .player-progress {
                     min-height: 0;
                     height: auto;
@@ -16382,35 +16319,39 @@
                 .player .progress-track:hover,
                 .player .progress-track:active,
                 .player .progress-track.dragging {
-                    height: 4px;
-                    min-height: 4px;
-                    border: 0;
-                    background: rgba(255, 255, 255, .18);
-                    box-shadow: none;
+                    height: 6px;
+                    min-height: 6px;
+                    border: 1px solid rgba(255, 255, 255, .26);
+                    background: linear-gradient(135deg, rgba(255, 255, 255, .28), rgba(255, 255, 255, .08));
+                    box-shadow: inset 0 1px 1px rgba(255, 255, 255, .22), inset 0 -1px 1px rgba(0, 0, 0, .28);
+                    backdrop-filter: blur(10px) saturate(130%);
+                    -webkit-backdrop-filter: blur(10px) saturate(130%);
                 }
 
                 .player .progress-fill,
                 .player .progress-track:hover .progress-fill,
                 .player .progress-track .progress-fill {
-                    background: var(--accent) !important;
+                    background: linear-gradient(90deg, rgba(255, 255, 255, .9), rgb(var(--progress-primary-rgb)) 30%, rgb(var(--progress-secondary-rgb))) !important;
                     background-size: auto;
                     animation: none !important;
-                    box-shadow: none;
+                    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .42), 0 0 8px rgba(var(--progress-primary-rgb), .28);
                 }
 
                 .player .progress-fill::after {
-                    width: 8px;
-                    height: 8px;
-                    border: 0;
-                    background: var(--accent);
-                    box-shadow: none;
-                    opacity: 0;
+                    right: -5px;
+                    width: 10px;
+                    height: 10px;
+                    border: 1px solid rgba(255, 255, 255, .78);
+                    background: rgba(255, 255, 255, .92);
+                    box-shadow: 0 1px 5px rgba(0, 0, 0, .38), 0 0 0 2px rgba(var(--progress-primary-rgb), .18);
+                    opacity: .94;
                 }
 
                 .player .progress-track:hover .progress-fill::after,
                 .player .progress-track:active .progress-fill::after,
                 .player .progress-track.dragging .progress-fill::after {
                     opacity: 1;
+                    transform: translateY(-50%) scale(1.12);
                 }
 
                 /* Keep the liked-songs download action beside the sort control. */
