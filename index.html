@@ -3257,7 +3257,313 @@
         .playlist-page-actions {
             display: flex;
             gap: 12px;
-            align-items: center
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .playlist-add-songs-sheet {
+            position: fixed;
+            inset: 0;
+            z-index: 10005;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(0, 0, 0, .68);
+            backdrop-filter: blur(9px);
+            -webkit-backdrop-filter: blur(9px);
+        }
+
+        .playlist-add-songs-dialog {
+            width: min(760px, 100%);
+            max-height: min(760px, calc(100vh - 48px));
+            display: grid;
+            grid-template-rows: auto auto auto minmax(0, 1fr);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, .14);
+            border-radius: 20px;
+            background: linear-gradient(160deg, rgba(38, 38, 38, .99), rgba(17, 17, 17, .99));
+            box-shadow: 0 30px 90px rgba(0, 0, 0, .68), inset 0 1px 0 rgba(255, 255, 255, .05);
+        }
+
+        .playlist-add-songs-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 22px 22px 14px;
+        }
+
+        .playlist-add-songs-kicker {
+            margin: 0 0 4px;
+            color: var(--text2);
+            font-size: .7rem;
+            font-weight: 800;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+        }
+
+        .playlist-add-songs-title {
+            margin: 0;
+            color: var(--text);
+            font-size: clamp(1.2rem, 3vw, 1.55rem);
+            font-weight: 900;
+            line-height: 1.15;
+        }
+
+        .playlist-add-songs-close {
+            width: 36px;
+            height: 36px;
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, .14);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .06);
+            color: var(--text);
+            cursor: pointer;
+            transition: background .16s ease, border-color .16s ease, transform .16s ease;
+        }
+
+        .playlist-add-songs-close:hover {
+            background: rgba(255, 255, 255, .12);
+            border-color: rgba(255, 255, 255, .28);
+            transform: scale(1.04);
+        }
+
+        .playlist-add-songs-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 0 22px 14px;
+        }
+
+        .playlist-add-songs-tab {
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .045);
+            color: var(--text2);
+            font-family: inherit;
+            font-size: .78rem;
+            font-weight: 800;
+            padding: 9px 13px;
+            cursor: pointer;
+            transition: background .16s ease, color .16s ease, border-color .16s ease;
+        }
+
+        .playlist-add-songs-tab:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, .09);
+        }
+
+        .playlist-add-songs-tab.active {
+            border-color: rgba(200, 245, 66, .48);
+            background: rgba(200, 245, 66, .14);
+            color: var(--accent);
+        }
+
+        .playlist-add-songs-search-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin: 0 22px 14px;
+        }
+
+        .playlist-add-songs-search-wrap > .lucide {
+            position: absolute;
+            left: 13px;
+            width: 17px;
+            height: 17px;
+            color: var(--text2);
+            pointer-events: none;
+        }
+
+        .playlist-add-songs-search {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, .14);
+            border-radius: 11px;
+            outline: none;
+            background: rgba(0, 0, 0, .22);
+            color: var(--text);
+            padding: 12px 14px 12px 42px;
+            font: inherit;
+            font-size: .88rem;
+            transition: border-color .16s ease, background .16s ease, box-shadow .16s ease;
+        }
+
+        .playlist-add-songs-search::placeholder {
+            color: var(--text2);
+        }
+
+        .playlist-add-songs-search:focus {
+            border-color: rgba(200, 245, 66, .62);
+            background: rgba(0, 0, 0, .34);
+            box-shadow: 0 0 0 3px rgba(200, 245, 66, .1);
+        }
+
+        .playlist-add-songs-results {
+            min-height: 0;
+            overflow-y: auto;
+            padding: 0 12px 16px;
+        }
+
+        .playlist-add-songs-summary {
+            padding: 0 10px 10px;
+            color: var(--text2);
+            font-size: .76rem;
+            font-weight: 600;
+        }
+
+        .playlist-add-song-row {
+            display: grid;
+            grid-template-columns: 48px minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 12px;
+            min-height: 66px;
+            padding: 8px 10px;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            transition: background .16s ease, border-color .16s ease;
+        }
+
+        .playlist-add-song-row:hover {
+            background: rgba(255, 255, 255, .065);
+            border-color: rgba(255, 255, 255, .08);
+        }
+
+        .playlist-add-song-cover {
+            width: 48px;
+            height: 48px;
+            border-radius: 7px;
+            object-fit: cover;
+            background: var(--surface3);
+        }
+
+        .playlist-add-song-copy {
+            min-width: 0;
+        }
+
+        .playlist-add-song-copy h4,
+        .playlist-add-song-copy p {
+            overflow: hidden;
+            margin: 0;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .playlist-add-song-copy h4 {
+            color: var(--text);
+            font-size: .88rem;
+            font-weight: 800;
+        }
+
+        .playlist-add-song-copy p {
+            margin-top: 4px;
+            color: var(--text2);
+            font-size: .76rem;
+        }
+
+        .playlist-add-song-btn {
+            min-width: 76px;
+            min-height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border: 1px solid rgba(200, 245, 66, .56);
+            border-radius: 999px;
+            background: var(--accent);
+            color: #101500;
+            font-family: inherit;
+            font-size: .75rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: transform .16s ease, background .16s ease, color .16s ease;
+        }
+
+        .playlist-add-song-btn:hover:not(:disabled) {
+            background: var(--accent2);
+            transform: scale(1.03);
+        }
+
+        .playlist-add-song-btn:disabled,
+        .playlist-add-song-btn.is-added {
+            border-color: rgba(255, 255, 255, .14);
+            background: rgba(255, 255, 255, .08);
+            color: var(--text2);
+            cursor: default;
+        }
+
+        .playlist-add-song-btn .lucide {
+            width: 15px;
+            height: 15px;
+        }
+
+        .playlist-add-songs-empty {
+            display: grid;
+            min-height: 180px;
+            place-content: center;
+            gap: 8px;
+            padding: 24px;
+            color: var(--text2);
+            text-align: center;
+        }
+
+        .playlist-add-songs-empty .lucide {
+            width: 28px;
+            height: 28px;
+            justify-self: center;
+            color: var(--accent);
+        }
+
+        @media (max-width: 560px) {
+            .playlist-add-songs-sheet {
+                align-items: flex-end;
+                padding: 0;
+            }
+
+            .playlist-add-songs-dialog {
+                width: 100%;
+                max-height: min(84vh, calc(100vh - 24px));
+                border-radius: 20px 20px 0 0;
+            }
+
+            .playlist-add-songs-head {
+                padding: 18px 16px 12px;
+            }
+
+            .playlist-add-songs-tabs {
+                padding: 0 16px 12px;
+            }
+
+            .playlist-add-songs-search-wrap {
+                margin: 0 16px 12px;
+            }
+
+            .playlist-add-songs-results {
+                padding: 0 8px calc(12px + env(safe-area-inset-bottom, 0px));
+            }
+
+            .playlist-add-song-row {
+                grid-template-columns: 44px minmax(0, 1fr) auto;
+                gap: 9px;
+                padding: 8px;
+            }
+
+            .playlist-add-song-cover {
+                width: 44px;
+                height: 44px;
+            }
+
+            .playlist-add-song-btn {
+                min-width: 38px;
+                width: 38px;
+                padding: 0;
+            }
+
+            .playlist-add-song-btn span {
+                display: none;
+            }
         }
         
         .playlist-sort-row {
@@ -21246,6 +21552,7 @@
                     <div class="playlist-page-actions">
                         <button class="playlist-play-btn" title="Play playlist" onclick="playPlaylistById('${escA(id)}')">${uiIcon('play')}</button>
                         <button class="playlist-shuffle-btn" title="Shuffle playlist" onclick="shufflePlaylistById('${escA(id)}')">${uiIcon('shuffle')}<span>Shuffle</span></button>
+                        <button class="btn btn-accent" onclick="openPlaylistAddSongs('${escA(id)}')">${uiIcon('plus')}<span>Add songs</span></button>
                         <button class="btn btn-outline" onclick="openRenamePlaylistModal('${escA(id)}')">${uiIcon('pencil')}<span>Rename</span></button>
                         <button class="btn btn-outline" style="color:rgba(255,85,85,.7);border-color:rgba(255,85,85,.2)" onclick="deletePlaylist('${escA(id)}')">${uiIcon('trash-2')}</button>
                     </div>
@@ -21283,7 +21590,7 @@
             }
         };
 
-        function openCreatePlaylistModal() { openModal('Create Playlist','Playlist name…','Create',()=>{ const name=document.getElementById('modalInput').value.trim(); if(!name)return; const id='pl_'+Date.now()+'_'+Math.random().toString(36).slice(2,7); playlists[id]={name,createdAt:Date.now(),songs:[]}; savePlaylists(); showToast(`"${name}" created`); showPlaylists(); }); }
+        function openCreatePlaylistModal() { openModal('Create Playlist','Playlist name…','Create',()=>{ const name=document.getElementById('modalInput').value.trim(); if(!name)return; const id='pl_'+Date.now()+'_'+Math.random().toString(36).slice(2,7); playlists[id]={name,createdAt:Date.now(),songs:[]}; savePlaylists(); showToast(`"${name}" created`); openPlaylist(id); }); }
         window.openRenamePlaylistModal = (id) => { const pl=playlists[id]; if(!pl)return; document.getElementById('modalInput').value=pl.name; openModal('Rename Playlist',pl.name,'Save',()=>{ const name=document.getElementById('modalInput').value.trim(); if(!name)return; playlists[id].name=name; savePlaylists(); showToast('Renamed'); openPlaylist(id); }); };
         window.openCreatePlaylistModal = openCreatePlaylistModal;
 
@@ -21295,6 +21602,142 @@
 
         function addSongToPlaylistById(song,artistName,plId) { if(!playlists[plId])return; if(playlists[plId].songs.some(s=>s.file===song.file)){showToast('Already in playlist');return;} const payload=normalizeSongForSorting({...song,artistName,artist:artistName,addedAt:Date.now()},0,{scope:'playlist',artistName}); delete payload.__baseIndex; delete payload.likedAt; delete payload.downloadedAt; playlists[plId].songs.push(payload); savePlaylists(); showToast(`Added to "${playlists[plId].name}"`); }
         window.addSongToPlaylistById = addSongToPlaylistById;
+
+        let playlistAddSongsSheet = null;
+        let playlistAddSongsKeyHandler = null;
+        let playlistAddSongsState = { playlistId: '', mode: 'liked', query: '' };
+
+        function getPlaylistAddSongsLibrary() {
+            const files = new Set();
+            return buildLibrarySongPool().filter((song) => {
+                const file = String(song?.file || '');
+                if (!file || files.has(file)) return false;
+                files.add(file);
+                return true;
+            });
+        }
+
+        function getPlaylistAddSongsResults() {
+            const allSongs = getPlaylistAddSongsLibrary();
+            const query = normalizeSearchText(playlistAddSongsState.query);
+            const source = playlistAddSongsState.mode === 'liked'
+                ? allSongs.filter((song) => likedSongs.has(song.file))
+                : allSongs;
+            const matching = query
+                ? source.filter((song) => normalizeSearchText(`${song.title || ''} ${song.artistName || song.artist || ''} ${song.album || ''} ${song.genre || ''}`).includes(query))
+                : source;
+            const ordered = [...matching].sort((a, b) => {
+                if (playlistAddSongsState.mode === 'liked') {
+                    const likedOrder = (likedSongMeta[b.file] || 0) - (likedSongMeta[a.file] || 0);
+                    if (likedOrder) return likedOrder;
+                }
+                return compareText(a.title, b.title) || compareText(a.artistName || a.artist, b.artistName || b.artist);
+            });
+            return { allSongs, source, matching: ordered };
+        }
+
+        function playlistAddSongRowHTML(plId, song) {
+            const added = playlistContainsSong(plId, song.file);
+            const artist = song.artistName || song.artist || 'Unknown artist';
+            return `<div class="playlist-add-song-row"><img class="playlist-add-song-cover" src="${escH(song.poster || '')}" alt="" onerror="this.style.background='var(--surface3)'"><div class="playlist-add-song-copy"><h4>${songTitleHTML(song)}</h4><p>${escH(artist)}${song.album ? ` • ${escH(song.album)}` : ''}</p></div><button class="playlist-add-song-btn${added ? ' is-added' : ''}" type="button" ${added ? 'disabled' : ''} onclick="addSongFromPlaylistSheet('${escA(plId)}','${escA(song.file)}')" title="${added ? 'Already in playlist' : 'Add to playlist'}">${uiIcon(added ? 'check' : 'plus')}<span>${added ? 'Added' : 'Add'}</span></button></div>`;
+        }
+
+        function renderPlaylistAddSongsSheet(focusSearch = false) {
+            if (!playlistAddSongsSheet) return;
+            const plId = playlistAddSongsState.playlistId;
+            const playlist = playlists[plId];
+            if (!playlist) {
+                closePlaylistAddSongsSheet();
+                return;
+            }
+            const { allSongs, matching } = getPlaylistAddSongsResults();
+            const visibleSongs = matching.slice(0, 100);
+            const addedCount = Array.isArray(playlist.songs) ? playlist.songs.length : 0;
+            const likedCount = allSongs.filter((song) => likedSongs.has(song.file)).length;
+            const isLikedMode = playlistAddSongsState.mode === 'liked';
+            const query = playlistAddSongsState.query;
+            const emptyMessage = isLikedMode
+                ? (query ? 'No liked songs match this search.' : 'Like songs first, then add them here in one tap.')
+                : (query ? 'No songs match this search.' : 'Your music library is empty.');
+            const summary = matching.length > visibleSongs.length
+                ? `Showing the first ${visibleSongs.length} of ${matching.length} songs`
+                : `${matching.length} song${matching.length === 1 ? '' : 's'} available · ${addedCount} already in this playlist`;
+            playlistAddSongsSheet.innerHTML = `
+                <section class="playlist-add-songs-dialog" role="dialog" aria-modal="true" aria-labelledby="playlistAddSongsTitle">
+                    <div class="playlist-add-songs-head">
+                        <div><p class="playlist-add-songs-kicker">Add to playlist</p><h2 class="playlist-add-songs-title" id="playlistAddSongsTitle">${escH(playlist.name)}</h2></div>
+                        <button class="playlist-add-songs-close" type="button" onclick="closePlaylistAddSongsSheet()" title="Close" aria-label="Close">${uiIcon('x')}</button>
+                    </div>
+                    <div class="playlist-add-songs-tabs" role="tablist" aria-label="Song source">
+                        <button class="playlist-add-songs-tab${isLikedMode ? ' active' : ''}" type="button" role="tab" aria-selected="${isLikedMode}" onclick="setPlaylistAddSongsMode('liked')">Liked Songs (${likedCount})</button>
+                        <button class="playlist-add-songs-tab${!isLikedMode ? ' active' : ''}" type="button" role="tab" aria-selected="${!isLikedMode}" onclick="setPlaylistAddSongsMode('search')">Search library</button>
+                    </div>
+                    <label class="playlist-add-songs-search-wrap" aria-label="${isLikedMode ? 'Search liked songs' : 'Search library'}">${uiIcon('search')}<input id="playlistAddSongsSearch" class="playlist-add-songs-search" type="search" value="${escH(query)}" placeholder="${isLikedMode ? 'Search your liked songs' : 'Search songs, artists, albums…'}" autocomplete="off"></label>
+                    <div class="playlist-add-songs-results">
+                        <div class="playlist-add-songs-summary">${summary}</div>
+                        ${visibleSongs.length ? visibleSongs.map((song) => playlistAddSongRowHTML(plId, song)).join('') : `<div class="playlist-add-songs-empty">${uiIcon(isLikedMode ? 'heart-off' : 'search-x')}<span>${emptyMessage}</span></div>`}
+                    </div>
+                </section>`;
+            const searchInput = document.getElementById('playlistAddSongsSearch');
+            searchInput?.addEventListener('input', () => {
+                playlistAddSongsState.query = searchInput.value;
+                renderPlaylistAddSongsSheet(true);
+            });
+            renderLucideIcons(playlistAddSongsSheet);
+            if (focusSearch) {
+                window.requestAnimationFrame(() => {
+                    const nextInput = document.getElementById('playlistAddSongsSearch');
+                    if (!nextInput) return;
+                    nextInput.focus();
+                    nextInput.setSelectionRange(nextInput.value.length, nextInput.value.length);
+                });
+            }
+        }
+
+        function openPlaylistAddSongs(plId) {
+            if (!playlists[plId]) return;
+            closePlaylistAddSongsSheet(false);
+            playlistAddSongsState = { playlistId: plId, mode: 'liked', query: '' };
+            playlistAddSongsSheet = document.createElement('div');
+            playlistAddSongsSheet.className = 'playlist-add-songs-sheet';
+            playlistAddSongsSheet.addEventListener('click', (event) => {
+                if (event.target === playlistAddSongsSheet) closePlaylistAddSongsSheet();
+            });
+            document.body.appendChild(playlistAddSongsSheet);
+            playlistAddSongsKeyHandler = (event) => {
+                if (event.key === 'Escape') {
+                    event.preventDefault();
+                    closePlaylistAddSongsSheet();
+                }
+            };
+            document.addEventListener('keydown', playlistAddSongsKeyHandler);
+            renderPlaylistAddSongsSheet(true);
+        }
+
+        function closePlaylistAddSongsSheet(refreshPlaylist = true) {
+            const plId = playlistAddSongsState.playlistId;
+            if (playlistAddSongsKeyHandler) document.removeEventListener('keydown', playlistAddSongsKeyHandler);
+            playlistAddSongsKeyHandler = null;
+            playlistAddSongsSheet?.remove();
+            playlistAddSongsSheet = null;
+            playlistAddSongsState = { playlistId: '', mode: 'liked', query: '' };
+            if (refreshPlaylist && plId && currentPlaylistId === plId && playlists[plId]) openPlaylist(plId);
+        }
+
+        window.openPlaylistAddSongs = openPlaylistAddSongs;
+        window.closePlaylistAddSongsSheet = closePlaylistAddSongsSheet;
+        window.setPlaylistAddSongsMode = (mode) => {
+            if (!playlistAddSongsSheet || !['liked', 'search'].includes(mode)) return;
+            playlistAddSongsState.mode = mode;
+            playlistAddSongsState.query = '';
+            renderPlaylistAddSongsSheet(true);
+        };
+        window.addSongFromPlaylistSheet = (plId, fileId) => {
+            const found = findSongInLibraryByFile(fileId);
+            if (!found || !playlists[plId]) return;
+            addSongToPlaylistById(found.song, found.artistName, plId);
+            renderPlaylistAddSongsSheet(true);
+        };
 
         let openDropdownEl = null;
         function closeDropdown() {
