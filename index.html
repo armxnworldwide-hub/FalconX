@@ -16684,6 +16684,146 @@
                     }
                 }
 
+                /* Mobile home redesign — presentation only; every existing action stays intact. */
+                @media (max-width: 768px) {
+                    .fx-home-v2 {
+                        gap: 18px;
+                        padding: 14px 12px 42px;
+                        background:
+                            radial-gradient(circle at 88% 2%, rgba(215, 183, 101, .12), transparent 25%),
+                            linear-gradient(180deg, #0a0a0b 0%, #070708 42%, #090909 100%);
+                    }
+
+                    .fx-home-intro {
+                        display: grid;
+                        grid-template-columns: 1fr;
+                        gap: 14px;
+                        padding: 16px;
+                        border: 1px solid rgba(255, 255, 255, .085);
+                        border-radius: 20px;
+                        background: linear-gradient(145deg, rgba(255, 255, 255, .065), rgba(255, 255, 255, .015));
+                        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .055);
+                    }
+
+                    .fx-home-intro-copy h1 {
+                        max-width: none;
+                        font-size: clamp(1.75rem, 8.5vw, 2.2rem);
+                        line-height: .98;
+                    }
+
+                    .fx-home-metrics {
+                        width: 100%;
+                        grid-template-columns: repeat(3, minmax(0, 1fr));
+                        gap: 7px;
+                    }
+
+                    .fx-home-metrics > div {
+                        min-height: 54px;
+                        padding: 10px 6px;
+                        border-radius: 13px;
+                        background: rgba(0, 0, 0, .22);
+                    }
+
+                    .fx-home-metrics strong {
+                        font-size: .92rem;
+                    }
+
+                    .fx-home-v2 .hx-stage {
+                        gap: 12px;
+                    }
+
+                    .fx-home-v2 .hx-feature-card {
+                        min-height: 238px;
+                        padding: 18px;
+                        grid-template-columns: minmax(0, 1fr) 106px;
+                        border-radius: 23px;
+                        background:
+                            radial-gradient(circle at 86% 12%, rgba(240, 217, 141, .19), transparent 28%),
+                            linear-gradient(145deg, #211c10 0%, #121212 54%, #0a0a0b 100%);
+                    }
+
+                    .fx-home-v2 .hx-feature-art {
+                        width: 106px;
+                        border-radius: 18px;
+                    }
+
+                    .fx-home-v2 .hx-feature-copy h1 {
+                        font-size: clamp(1.42rem, 7.1vw, 1.78rem);
+                    }
+
+                    .fx-home-v2 .hx-command-strip {
+                        display: grid;
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                        gap: 9px;
+                        overflow: visible;
+                    }
+
+                    .fx-home-v2 .hx-action-tile {
+                        min-width: 0;
+                        min-height: 78px;
+                        padding: 11px;
+                        grid-template-columns: 36px minmax(0, 1fr);
+                        gap: 8px;
+                        border-radius: 16px;
+                    }
+
+                    .fx-home-v2 .hx-action-tile > span {
+                        width: 36px;
+                        height: 36px;
+                        border-radius: 11px;
+                    }
+
+                    .fx-home-v2 .hx-action-tile strong {
+                        font-size: .69rem;
+                    }
+
+                    .fx-home-v2 .hx-action-tile em {
+                        font-size: .53rem;
+                    }
+
+                    .fx-home-v2 .hx-grid-block {
+                        gap: 12px;
+                    }
+
+                    .fx-home-v2 .hx-chart-panel,
+                    .fx-home-v2 .hx-station-panel,
+                    .fx-home-v2 > .home-section:not(.hx-command-strip):not(.hx-grid-block) {
+                        padding: 15px;
+                        border-radius: 20px;
+                    }
+
+                    .fx-home-v2 .hx-trend-list {
+                        grid-template-columns: 1fr;
+                        gap: 7px;
+                    }
+
+                    .fx-home-v2 .hx-trend-card {
+                        min-height: 62px;
+                        grid-template-columns: 24px 42px minmax(0, 1fr) 30px;
+                        border-radius: 13px;
+                    }
+
+                    .fx-home-v2 .hx-station-grid {
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                        gap: 8px;
+                    }
+
+                    .fx-home-v2 .hx-station-card {
+                        min-width: 0;
+                        min-height: 104px;
+                        padding: 10px;
+                        grid-template-columns: 42px minmax(0, 1fr);
+                        column-gap: 8px;
+                        border-radius: 14px;
+                    }
+
+                    .fx-home-v2 .hx-station-card img {
+                        width: 42px;
+                        height: 42px;
+                        border-radius: 10px;
+                    }
+                }
+
     </style>
 </head>
 
