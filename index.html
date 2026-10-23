@@ -16527,6 +16527,163 @@
                     }
                 }
 
+                /* Clean mobile home layout: preserve every module, simplify its presentation. */
+                @media (max-width: 768px) {
+                    .fx-home-v2 {
+                        padding: 16px 12px 38px;
+                        gap: 20px;
+                    }
+
+                    .fx-home-intro {
+                        padding: 2px 2px 0;
+                        align-items: flex-start;
+                    }
+
+                    .fx-home-intro-copy h1 {
+                        max-width: 195px;
+                        font-size: clamp(1.5rem, 7.4vw, 1.9rem);
+                        line-height: 1.03;
+                    }
+
+                    .fx-home-intro-copy > span {
+                        color: rgba(240, 217, 141, .88);
+                    }
+
+                    .fx-home-metrics {
+                        grid-template-columns: repeat(3, minmax(44px, 1fr));
+                        gap: 5px;
+                    }
+
+                    .fx-home-metrics > div {
+                        min-height: 48px;
+                        padding: 8px 5px;
+                        border-color: rgba(255, 255, 255, .09);
+                        background: rgba(255, 255, 255, .035);
+                    }
+
+                    .fx-home-v2 .hx-feature-card {
+                        min-height: 230px;
+                        padding: 17px;
+                        border-color: rgba(215, 183, 101, .25);
+                        box-shadow: 0 12px 28px rgba(0, 0, 0, .22), inset 0 1px 0 rgba(255, 255, 255, .055);
+                    }
+
+                    .fx-home-v2 .hx-feature-copy h1 {
+                        letter-spacing: -.045em;
+                        max-width: 100%;
+                        overflow: visible;
+                        white-space: normal;
+                        text-overflow: clip;
+                        font-size: clamp(1.45rem, 7.2vw, 1.8rem);
+                        line-height: 1;
+                    }
+
+                    .fx-home-v2 .hx-feature-art {
+                        box-shadow: 0 10px 22px rgba(0, 0, 0, .3);
+                    }
+
+                    .fx-home-v2 .hx-now-card,
+                    .fx-home-v2 .hx-chart-panel,
+                    .fx-home-v2 .hx-station-panel,
+                    .fx-home-v2 > .home-section:not(.hx-command-strip):not(.hx-grid-block) {
+                        border-color: rgba(255, 255, 255, .09);
+                        background: linear-gradient(145deg, rgba(255, 255, 255, .045), rgba(255, 255, 255, .018));
+                        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .035);
+                    }
+
+                    .fx-home-v2 .home-section-headline {
+                        margin-bottom: 10px;
+                        padding: 0 2px;
+                    }
+
+                    .fx-home-v2 .home-section-title {
+                        letter-spacing: -.025em;
+                    }
+
+                    .fx-home-v2 .hx-command-strip,
+                    .fx-home-v2 .hx-now-list,
+                    .fx-home-v2 .hx-trend-list,
+                    .fx-home-v2 .hx-station-grid,
+                    .fx-home-v2 .hx-rec-grid,
+                    .fx-home-v2 .home-album-grid {
+                        scroll-padding-inline: 2px;
+                    }
+
+                    .fx-home-v2 .hx-action-tile,
+                    .fx-home-v2 .home-mini-row,
+                    .fx-home-v2 .hx-trend-card,
+                    .fx-home-v2 .hx-station-card,
+                    .fx-home-v2 .hx-rec-card,
+                    .fx-home-v2 .home-album-card {
+                        border-color: rgba(255, 255, 255, .085);
+                    }
+
+                    .fx-home-v2 .hx-action-tile:active,
+                    .fx-home-v2 .home-mini-row:active,
+                    .fx-home-v2 .hx-trend-card:active,
+                    .fx-home-v2 .hx-station-card:active,
+                    .fx-home-v2 .hx-rec-card:active,
+                    .fx-home-v2 .home-album-card:active {
+                        border-color: rgba(215, 183, 101, .38);
+                    }
+
+                    .fx-home-v2 .home-artists .artists-grid {
+                        gap: 7px;
+                    }
+                }
+
+                /* Final mobile-home readability pass: clearer touch targets and calmer surfaces. */
+                @media (max-width: 768px) {
+                    .main-topbar {
+                        padding: 10px 12px 8px;
+                        background: rgba(10, 10, 11, .94);
+                        box-shadow: none;
+                    }
+
+                    .main-topbar .search-box,
+                    .search-box {
+                        min-height: 42px;
+                        border-radius: 14px;
+                        background: linear-gradient(135deg, rgba(255, 255, 255, .065), rgba(255, 255, 255, .028));
+                    }
+
+                    .search-box input {
+                        font-size: .78rem;
+                    }
+
+                    .fx-home-v2 .hx-grid-block {
+                        gap: 12px;
+                    }
+
+                    .fx-home-v2 .hx-now-card,
+                    .fx-home-v2 .hx-chart-panel,
+                    .fx-home-v2 .hx-station-panel,
+                    .fx-home-v2 > .home-section:not(.hx-command-strip):not(.hx-grid-block) {
+                        border-radius: 18px;
+                    }
+
+                    .fx-home-v2 .hx-command-strip {
+                        margin-inline: -2px;
+                        padding-inline: 2px;
+                    }
+
+                    .fx-home-v2 .hx-action-tile {
+                        min-height: 72px;
+                        background: linear-gradient(145deg, rgba(255, 255, 255, .065), rgba(255, 255, 255, .022));
+                    }
+
+                    .fx-home-v2 .home-mini-row,
+                    .fx-home-v2 .hx-trend-card {
+                        background: rgba(255, 255, 255, .026);
+                    }
+
+                    .fx-home-v2 .home-section-meta {
+                        padding: 4px 7px;
+                        border-radius: 999px;
+                        background: rgba(255, 255, 255, .045);
+                    }
+                }
+
     </style>
 </head>
 
