@@ -1052,6 +1052,22 @@
             background: rgba(255, 255, 255, .1);
             color: var(--text)
         }
+
+        .playback-speed-btn {
+            min-width: 42px;
+            width: auto;
+            padding: 0 8px;
+            border-radius: 9px;
+            font-size: .72rem;
+            font-weight: 800;
+            letter-spacing: -.01em;
+        }
+
+        .playback-speed-btn.is-custom {
+            color: var(--accent2);
+            border: 1px solid rgba(215, 183, 101, .32);
+            background: rgba(215, 183, 101, .12);
+        }
         
         .mobile-drawer-backdrop {
             position: fixed;
@@ -16413,6 +16429,104 @@
                     }
                 }
 
+                /* Mobile polish: stronger visual hierarchy without adding weight to scrolling. */
+                @media (max-width: 768px) {
+                    body {
+                        background: radial-gradient(115% 58% at 50% -12%, rgba(215, 183, 101, .16), transparent 56%), #070708;
+                    }
+
+                    .sidebar {
+                        min-height: 64px;
+                        padding: calc(8px + var(--safe-top)) 12px 8px;
+                        border-bottom-color: rgba(215, 183, 101, .14);
+                        background: linear-gradient(115deg, rgba(15, 15, 17, .98), rgba(7, 7, 8, .98));
+                        box-shadow: 0 8px 24px rgba(0, 0, 0, .26);
+                    }
+
+                    .main {
+                        background: linear-gradient(180deg, rgba(255, 255, 255, .018), transparent 180px);
+                    }
+
+                    .fx-home-v2 .hx-artist-card,
+                    .artist-card {
+                        background: linear-gradient(150deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .025));
+                        border-color: rgba(255, 255, 255, .09);
+                        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .045);
+                    }
+
+                    .fx-home-v2 .hx-artist-card:active,
+                    .artist-card:active {
+                        border-color: rgba(215, 183, 101, .48);
+                        background: rgba(215, 183, 101, .1);
+                    }
+
+                    .song-row,
+                    .fav-song-row,
+                    .playlist-song-row {
+                        border-radius: 14px;
+                    }
+
+                    .song-row.playing,
+                    .fav-song-row.playing,
+                    .playlist-song-row.playing {
+                        background: linear-gradient(100deg, rgba(215, 183, 101, .16), rgba(215, 183, 101, .045));
+                        border-color: rgba(215, 183, 101, .24);
+                    }
+
+                    .player {
+                        border-top: 1px solid rgba(215, 183, 101, .28) !important;
+                        background: linear-gradient(145deg, rgba(25, 24, 20, .98), rgba(10, 10, 11, .99)) !important;
+                        box-shadow: 0 -14px 36px rgba(0, 0, 0, .44), inset 0 1px 0 rgba(255, 255, 255, .07);
+                    }
+
+                    .player::before {
+                        content: '';
+                        position: absolute;
+                        top: -1px;
+                        left: 14px;
+                        right: 14px;
+                        height: 1px;
+                        background: linear-gradient(90deg, transparent, rgba(240, 217, 141, .8), transparent);
+                    }
+
+                    .player .player-poster {
+                        border: 1px solid rgba(240, 217, 141, .3);
+                        box-shadow: 0 6px 16px rgba(0, 0, 0, .35);
+                    }
+
+                    .player .play-btn {
+                        background: linear-gradient(145deg, #f5da86, #c49438);
+                        color: #161109;
+                        box-shadow: 0 5px 15px rgba(215, 183, 101, .27);
+                    }
+
+                    .mobile-nav {
+                        border-top: 1px solid rgba(255, 255, 255, .08);
+                        background: linear-gradient(180deg, rgba(19, 19, 21, .98), rgba(8, 8, 9, .99));
+                        box-shadow: 0 -8px 24px rgba(0, 0, 0, .22);
+                    }
+
+                    .mnav-btn {
+                        border-radius: 12px;
+                        color: rgba(255, 255, 255, .5);
+                        transition: color .18s ease, background .18s ease, transform .18s ease;
+                    }
+
+                    .mnav-btn.active {
+                        color: #f0d98d;
+                        background: rgba(215, 183, 101, .1);
+                    }
+
+                    .mnav-btn.active span {
+                        color: #f0d98d;
+                        filter: drop-shadow(0 3px 7px rgba(215, 183, 101, .3));
+                    }
+
+                    .mnav-btn:active {
+                        transform: scale(.94);
+                    }
+                }
+
     </style>
 </head>
 
@@ -16656,6 +16770,7 @@
             </div>
         </div>
         <div class="player-right">
+            <button class="topbar-icon-btn playback-speed-btn" id="playbackSpeedBtn" type="button" onclick="cyclePlaybackRate()" title="Playback speed: 1×" aria-label="Playback speed 1×. Change speed" data-playback-rate-value>1×</button>
             <button class="topbar-icon-btn" id="eqToggleBtn" onclick="toggleEqPanel()" title="Audio Enhancement">
                 <i data-lucide="sliders-horizontal" aria-hidden="true"></i>
             </button>
@@ -20869,6 +20984,9 @@
 
         const audio = document.getElementById('audio'),
             audioFade = document.getElementById('audioFade');
+        const PLAYBACK_RATES = [0.75, 1, 1.25, 1.5, 2];
+        let playbackRate = Number.parseFloat(localStorage.getItem('eq_playback_rate') || '1');
+        if (!PLAYBACK_RATES.includes(playbackRate)) playbackRate = 1;
         const progressBar = document.getElementById('progressBar'),
             playBtn = document.getElementById('playBtn');
         const posterEl = document.getElementById('poster'),
@@ -21244,6 +21362,8 @@
 
         function loadPlaybackMemory() {
             try {
+                audio.playbackRate = playbackRate;
+                audioFade.playbackRate = playbackRate;
                 const vol = parseFloat(localStorage.getItem('eq_volume') || '1');
                 audio.volume = isNaN(vol) ? 1 : vol;
                 volumeSlider.value = audio.volume;
@@ -21341,6 +21461,7 @@
             const previousUrl = activeAudioObjectUrl;
             activeAudioObjectUrl = src && src.startsWith('blob:') ? src : '';
             audio.src = src;
+            audio.playbackRate = playbackRate;
             if (revokePrevious && previousUrl && previousUrl !== activeAudioObjectUrl) releaseAudioObjectUrl(previousUrl);
             return previousUrl;
         }
@@ -22565,6 +22686,7 @@
             if (shouldCrossfade) {
                 const fadingObjectUrl = activeAudioObjectUrl;
                 audioFade.src = audio.src;
+                audioFade.playbackRate = playbackRate;
                 audioFade.currentTime = audio.currentTime;
                 audioFade.volume = targetVol;
                 setCrossfadeGain(crossfadeFadeGain, 1);
@@ -22935,6 +23057,43 @@
             if (fsShuffle) fsShuffle.classList.toggle('active', isShuffle);
             if (fsRepeat) fsRepeat.classList.toggle('active', isRepeat);
             audio.loop = !!isRepeat;
+        }
+
+        function formatPlaybackRate(rate = playbackRate) {
+            return `${Number(rate).toFixed(Number.isInteger(Number(rate)) ? 0 : 2).replace(/0+$/, '').replace(/\.$/, '')}×`;
+        }
+
+        function updatePlaybackSpeedUI() {
+            document.querySelectorAll('[data-playback-rate-value]').forEach((el) => {
+                el.textContent = formatPlaybackRate();
+            });
+            document.querySelectorAll('[data-playback-rate-option]').forEach((button) => {
+                const active = Number(button.dataset.playbackRateOption) === playbackRate;
+                button.classList.toggle('is-active', active);
+                button.setAttribute('aria-pressed', String(active));
+            });
+            const playerButton = document.getElementById('playbackSpeedBtn');
+            if (playerButton) {
+                playerButton.classList.toggle('is-custom', playbackRate !== 1);
+                playerButton.setAttribute('aria-label', `Playback speed ${formatPlaybackRate()}. Change speed`);
+                playerButton.title = `Playback speed: ${formatPlaybackRate()}`;
+            }
+        }
+
+        function setPlaybackRate(rate, announce = true) {
+            const nextRate = Number(rate);
+            if (!PLAYBACK_RATES.includes(nextRate)) return;
+            playbackRate = nextRate;
+            audio.playbackRate = playbackRate;
+            audioFade.playbackRate = playbackRate;
+            localStorage.setItem('eq_playback_rate', String(playbackRate));
+            updatePlaybackSpeedUI();
+            if (announce) showToast(`Playback speed ${formatPlaybackRate()}`);
+        }
+
+        function cyclePlaybackRate() {
+            const currentIndex = PLAYBACK_RATES.indexOf(playbackRate);
+            setPlaybackRate(PLAYBACK_RATES[(currentIndex + 1) % PLAYBACK_RATES.length]);
         }
 
         function toggleShuffle() { setShuffleEnabled(!isShuffle); showToast(isShuffle ? 'Shuffle on' : 'Shuffle off'); }
@@ -24116,6 +24275,7 @@
             ['Ctrl K', 'Command Palette'],
             ['Ctrl F', 'Search'],
             ['M', 'Mute'],
+            ['P', 'Playback speed'],
             ['S', 'Shuffle'],
             ['R', 'Repeat'],
             ['Q', 'Queue'],
@@ -24219,6 +24379,8 @@
                     volumeSlider.dispatchEvent(new Event('input'));
                 } else if (key.toLowerCase() === 'm') {
                     toggleMute();
+                } else if (key.toLowerCase() === 'p') {
+                    cyclePlaybackRate();
                 } else if (key.toLowerCase() === 's') {
                     toggleShuffle();
                 } else if (key.toLowerCase() === 'r') {
@@ -25883,6 +26045,19 @@
 
                         <div class="crossfade-setting-row">
                             <div>
+                                <div class="crossfade-setting-title">Playback speed</div>
+                                <div class="crossfade-setting-description">Set a comfortable listening pace. Your choice is remembered.</div>
+                            </div>
+                            <output class="crossfade-value" data-playback-rate-value>${formatPlaybackRate()}</output>
+                        </div>
+                        <div class="crossfade-presets" aria-label="Playback speed options">
+                            ${PLAYBACK_RATES.map((rate) => `<button class="crossfade-preset ${rate === playbackRate ? 'is-active' : ''}" type="button" data-playback-rate-option="${rate}" aria-pressed="${rate === playbackRate}" onclick="setPlaybackRate(${rate})">${formatPlaybackRate(rate)}</button>`).join('')}
+                        </div>
+
+                        <div class="crossfade-divider"></div>
+
+                        <div class="crossfade-setting-row">
+                            <div>
                                 <div class="crossfade-setting-title">Sleep timer</div>
                                 <div class="crossfade-setting-description">Pause music after a chosen time, or at the end of this track.</div>
                             </div>
@@ -26068,13 +26243,14 @@
         window.playSong = playSong; window.next = next; window.previous = previous; window.togglePlay = togglePlay; window.toggleShuffle = toggleShuffle; window.toggleRepeat = toggleRepeat; window.toggleMute = toggleMute;
         window.toggleQueuePanel = toggleQueuePanel; window.addToQueue = addToQueue; window.openArtist = openArtist; window.loadArtists = loadArtists; window.showLikedSongs = showLikedSongs; window.showDownloads = showDownloads; window.showPlaylists = showPlaylists; window.refreshLikedDisplay = refreshLikedDisplay;
         window.playArtist = playArtist; window.shuffleArtist = shuffleArtist; window.toggleLike = toggleLike; window.globalSearch = globalSearch; window.desktopHeaderSearch = desktopHeaderSearch; window.clearSearch = clearSearch; window.clearDesktopSearch = clearDesktopSearch; window.toggleEqPanel = () => renderAudioPage(); window.setEqMode = (mode) => applyAudioPreset(mode.charAt(0).toUpperCase() + mode.slice(1));
-        window.renderStatsPage = renderStatsPage; window.renderAudioPage = renderAudioPage; window.renderSettingsPage = renderSettingsPage; window.setVizMode = setVizMode; window.updateEffect = updateEffect; window.updateEQBand = updateEQBand; window.applyAudioPreset = applyAudioPreset; window.resetEQ = resetEQ; window.updatePreamp = updatePreamp; window.updatePan = updatePan; window.updateCompressor = updateCompressor; window.saveCustomPreset = saveCustomPreset; window.setCrossfadeSeconds = setCrossfadeSeconds; window.setCrossfadeEnabled = setCrossfadeEnabled; window.setCrossfadeCurve = setCrossfadeCurve; window.setAutoplayNext = setAutoplayNext; window.setResumePlaybackEnabled = setResumePlaybackEnabled; window.setPlaybackVolume = setPlaybackVolume; window.setShuffleEnabled = setShuffleEnabled; window.setRepeatEnabled = setRepeatEnabled; window.setSleepTimer = setSleepTimer; window.clearListeningHistory = clearListeningHistory;
+        window.renderStatsPage = renderStatsPage; window.renderAudioPage = renderAudioPage; window.renderSettingsPage = renderSettingsPage; window.setVizMode = setVizMode; window.updateEffect = updateEffect; window.updateEQBand = updateEQBand; window.applyAudioPreset = applyAudioPreset; window.resetEQ = resetEQ; window.updatePreamp = updatePreamp; window.updatePan = updatePan; window.updateCompressor = updateCompressor; window.saveCustomPreset = saveCustomPreset; window.setCrossfadeSeconds = setCrossfadeSeconds; window.setCrossfadeEnabled = setCrossfadeEnabled; window.setCrossfadeCurve = setCrossfadeCurve; window.setAutoplayNext = setAutoplayNext; window.setResumePlaybackEnabled = setResumePlaybackEnabled; window.setPlaybackVolume = setPlaybackVolume; window.setShuffleEnabled = setShuffleEnabled; window.setRepeatEnabled = setRepeatEnabled; window.setPlaybackRate = setPlaybackRate; window.cyclePlaybackRate = cyclePlaybackRate; window.setSleepTimer = setSleepTimer; window.clearListeningHistory = clearListeningHistory;
 
         // -- INIT --
         initLucideSystem();
         syncPlayerProgressVisibility();
         buildSidebar();
         loadPlaybackMemory();
+        updatePlaybackSpeedUI();
         loadArtists();
         initSearchClear();
         syncLyricsPanelShell();
