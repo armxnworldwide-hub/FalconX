@@ -25095,12 +25095,25 @@
             if (!queue[i]) return;
             const [song] = queue.splice(i, 1);
             saveQueue();
+            // A queued song is an interruption, not a new playback source. Keep the
+            // active playlist / liked-songs list and its position so playback resumes
+            // at the song that would have played next after the queue is exhausted.
+            const playbackSource = {
+                songs: currentSongs,
+                index: currentIndex,
+                artistKey: currentArtistKey
+            };
             const previousSongFile = currentSong ? currentSong.file : null;
             if (isRepeat && previousSongFile && previousSongFile !== song.file) {
                 isRepeat = false;
                 localStorage.setItem('eq_repeat', 'false');
             }
             const played = await playSongByFile(song.file, true);
+            if (played && playbackSource.songs.length) {
+                currentSongs = playbackSource.songs;
+                currentIndex = Math.max(0, Math.min(playbackSource.index, currentSongs.length - 1));
+                currentArtistKey = playbackSource.artistKey;
+            }
             if (!played) {
                 const artistName = song.artistName || playerArtist.textContent || '';
                 const previousCurrent = currentSong ? currentSong.file : '';
