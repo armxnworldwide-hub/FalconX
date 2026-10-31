@@ -21642,6 +21642,7 @@
         }
 
         function scheduleSmartPreload(reason = 'playback') {
+            prepareCrossfadeNextSource();
             window.clearTimeout(preloadTimer);
             const token = ++preloadRunToken;
             preloadTimer = window.setTimeout(async () => {
@@ -22730,6 +22731,8 @@
             crossfadeFadeGain = null,
             crossfadeFadeSource = null,
             crossfadeEngineReady = false;
+        let crossfadePreparedSource = null,
+            crossfadePreloadToken = 0;
         let sleepTimerId = null,
             sleepTimerMode = 'off';
         let pageFrozen = false;
@@ -24178,6 +24181,91 @@
             });
         }
 
+        function clearPreparedCrossfadeSource() {
+            crossfadePreloadToken += 1;
+            const prepared = crossfadePreparedSource;
+            crossfadePreparedSource = null;
+            if (!prepared) return;
+            try {
+                prepared.preloader?.pause();
+                prepared.preloader?.removeAttribute('src');
+                prepared.preloader?.load();
+            } catch (e) {}
+            if (prepared.src && prepared.src !== activeAudioObjectUrl) releaseAudioObjectUrl(prepared.src);
+        }
+
+        function getCrossfadeNextSong() {
+            if (queue.length) {
+                if (!canUseNetwork()) {
+                    return queue.find((song) => isDownloaded(normalizeOfflineFileId(song?.file))) || null;
+                }
+                return queue[0] || null;
+            }
+            if (!currentSongs.length || isShuffle) return null;
+            if (!canUseNetwork()) {
+                const offlineIndex = findNextDownloadedIndex(currentIndex);
+                return offlineIndex >= 0 ? currentSongs[offlineIndex] : null;
+            }
+            return currentSongs[(currentIndex + 1) % currentSongs.length] || null;
+        }
+
+        function prepareCrossfadeNextSource() {
+            if (crossfadeSeconds <= 0 || sleepTimerMode === 'end' || !isAutoplayNextEnabled() || isRepeat) {
+                clearPreparedCrossfadeSource();
+                return;
+            }
+            const song = getCrossfadeNextSong();
+            const file = normalizeOfflineFileId(song?.file);
+            if (!file) {
+                clearPreparedCrossfadeSource();
+                return;
+            }
+            if (crossfadePreparedSource?.file === file) return;
+            clearPreparedCrossfadeSource();
+            const token = ++crossfadePreloadToken;
+            getAudioResolution('songs/' + song.file).then((resolved) => {
+                if (token !== crossfadePreloadToken) {
+                    releaseAudioObjectUrl(resolved.src);
+                    return;
+                }
+                const preloader = new Audio();
+                preloader.preload = 'auto';
+                preloader.muted = true;
+                preloader.src = resolved.src;
+                preloader.load();
+                crossfadePreparedSource = {
+                    file,
+                    src: resolved.src,
+                    source: resolved.source,
+                    preloader
+                };
+            }).catch(() => {
+                if (token === crossfadePreloadToken) crossfadePreparedSource = null;
+            });
+        }
+
+        function takePreparedCrossfadeSource(song) {
+            const file = normalizeOfflineFileId(song?.file);
+            const prepared = crossfadePreparedSource;
+            if (!file || !prepared || prepared.file !== file) return null;
+            crossfadePreparedSource = null;
+            crossfadePreloadToken += 1;
+            return prepared;
+        }
+
+        function primeCrossfadeOutgoingAudio() {
+            if (crossfadeSeconds <= 0 || sleepTimerMode === 'end' || !isAutoplayNextEnabled() || isRepeat || crossfadeTransitionActive || !audio.src) return;
+            const source = audio.currentSrc || audio.src;
+            if (!source || audioFade.src === source || audioFade.currentSrc === source) return;
+            try {
+                releaseAudioObjectUrl(audioFade.src);
+                audioFade.pause();
+                audioFade.preload = 'auto';
+                audioFade.src = source;
+                audioFade.load();
+            } catch (e) {}
+        }
+
         function stopCrossfadeTimers() {
             if (crossfadeTimer) {
                 clearTimeout(crossfadeTimer);
@@ -24282,6 +24370,9 @@
                     return;
                 }
                 crossfadeAutoArmed = true;
+                // Keep the ended handler from starting a second transition while the
+                // prepared next source is taking over the primary audio element.
+                crossfadeTransitionActive = true;
                 next();
             }, Math.max(0, remainingMs));
         }
@@ -24350,6 +24441,7 @@
             if (crossfadeSeconds === 0) {
                 stopCrossfadeTimers();
                 crossfadeTransitionActive = false;
+                clearPreparedCrossfadeSource();
                 releaseAudioObjectUrl(audioFade.src);
                 audioFade.pause();
                 audioFade.removeAttribute('src');
@@ -24358,6 +24450,8 @@
                 setCrossfadeGain(crossfadeMainGain, 1);
                 setCrossfadeGain(crossfadeFadeGain, 0);
             } else {
+                prepareCrossfadeNextSource();
+                primeCrossfadeOutgoingAudio();
                 scheduleCrossfadeAuto('setting-change');
             }
         }
@@ -24374,8 +24468,16 @@
             }
             let src = '';
             try {
-                src = await getAudioSrc('songs/' + song.file);
+                const prepared = takePreparedCrossfadeSource(song);
+                if (prepared) {
+                    src = prepared.src;
+                    currentPlaybackSource = prepared.source;
+                } else {
+                    src = await getAudioSrc('songs/' + song.file);
+                }
             } catch (err) {
+                crossfadeAutoArmed = false;
+                crossfadeTransitionActive = false;
                 updatePlayerDlBtn();
                 if (err?.code === 'TRACK_UNAVAILABLE') {
                     showToast('This track is unavailable');
@@ -24400,12 +24502,6 @@
             setupVisualizer();
             setCrossfadeGain(crossfadeMainGain, 1);
             setCrossfadeGain(crossfadeFadeGain, 0);
-            if (audioFade.src) {
-                releaseAudioObjectUrl(audioFade.src);
-                audioFade.pause();
-                audioFade.removeAttribute('src');
-                audioFade.load();
-            }
             crossfadeAutoArmed = false;
             const targetVol = getTargetVolume();
             const fadeMs = crossfadeSeconds * 1000;
@@ -24413,7 +24509,14 @@
             crossfadeTransitionActive = shouldCrossfade;
             if (shouldCrossfade) {
                 const fadingObjectUrl = activeAudioObjectUrl;
-                audioFade.src = audio.src;
+                const fadingSource = audio.currentSrc || audio.src;
+                if (audioFade.src !== fadingSource && audioFade.currentSrc !== fadingSource) {
+                    releaseAudioObjectUrl(audioFade.src);
+                    audioFade.pause();
+                    audioFade.preload = 'auto';
+                    audioFade.src = fadingSource;
+                    audioFade.load();
+                }
                 audioFade.playbackRate = playbackRate;
                 audioFade.currentTime = audio.currentTime;
                 audioFade.volume = targetVol;
@@ -24427,10 +24530,12 @@
                     crossfadeTimer = null;
                     crossfadeTransitionActive = false;
                     setCrossfadeGain(crossfadeFadeGain, 0);
+                    primeCrossfadeOutgoingAudio();
                 };
                 crossfadeTimer = crossfadeEngineReady ? rampCrossfadeGain(crossfadeFadeGain, 1, 0, fadeMs, finishFadeOut) : animateAudioVolume(audioFade, targetVol, 0, fadeMs, finishFadeOut);
             } else {
                 crossfadeTransitionActive = false;
+                releaseAudioObjectUrl(audioFade.src);
                 audioFade.pause();
                 audioFade.removeAttribute('src');
                 audioFade.load();
@@ -27343,7 +27448,7 @@
                 showToast('Sleep timer finished');
                 return;
             }
-            if (!isRepeat && isAutoplayNextEnabled()) next();
+            if (!isRepeat && isAutoplayNextEnabled() && !crossfadeAutoArmed && !crossfadeTransitionActive) next();
         });
         audio.addEventListener('play',()=>{ 
             setPlayButtonIcons(false);
@@ -27384,6 +27489,7 @@
         audio.addEventListener('playing', () => {
             setTimelinePlaybackEffect(true);
             resumeAudioContext('playing-event');
+            primeCrossfadeOutgoingAudio();
         });
         audio.addEventListener('waiting', () => setTimelinePlaybackEffect(false));
         audio.addEventListener('canplay', () => resumeAudioContext('canplay-event'));
