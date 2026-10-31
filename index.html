@@ -23567,8 +23567,17 @@
             return `<div class="playlist-add-song-row"><img class="playlist-add-song-cover" src="${escH(song.poster || '')}" alt="" onerror="this.style.background='var(--surface3)'"><div class="playlist-add-song-copy"><h4>${songTitleHTML(song)}</h4><p>${escH(artist)}${song.album ? ` • ${escH(song.album)}` : ''}</p></div><button class="playlist-add-song-btn${added ? ' is-added' : ''}" type="button" ${added ? 'disabled' : ''} onclick="addSongFromPlaylistSheet('${escA(plId)}','${escA(song.file)}')" title="${added ? 'Already in playlist' : 'Add to playlist'}">${uiIcon(added ? 'check' : 'plus')}<span>${added ? 'Added' : 'Add'}</span></button></div>`;
         }
 
-        function renderPlaylistAddSongsSheet(focusSearch = false) {
+        function isMobilePlaylistAddSongsSheet() {
+            return window.matchMedia?.('(max-width: 560px)').matches;
+        }
+
+        function renderPlaylistAddSongsSheet(options = {}) {
+            const { focusSearch = false, preserveScroll = false } = typeof options === 'boolean'
+                ? { focusSearch: options }
+                : options;
             if (!playlistAddSongsSheet) return;
+            const previousResults = playlistAddSongsSheet.querySelector('.playlist-add-songs-results');
+            const previousScrollTop = preserveScroll ? previousResults?.scrollTop || 0 : 0;
             const plId = playlistAddSongsState.playlistId;
             const playlist = playlists[plId];
             if (!playlist) {
@@ -23606,9 +23615,16 @@
             const searchInput = document.getElementById('playlistAddSongsSearch');
             searchInput?.addEventListener('input', () => {
                 playlistAddSongsState.query = searchInput.value;
-                renderPlaylistAddSongsSheet(true);
+                renderPlaylistAddSongsSheet({ focusSearch: true });
             });
             renderLucideIcons(playlistAddSongsSheet);
+            if (preserveScroll) {
+                const results = playlistAddSongsSheet.querySelector('.playlist-add-songs-results');
+                window.requestAnimationFrame(() => {
+                    if (!results) return;
+                    results.scrollTop = Math.min(previousScrollTop, Math.max(0, results.scrollHeight - results.clientHeight));
+                });
+            }
             if (focusSearch) {
                 window.requestAnimationFrame(() => {
                     const nextInput = document.getElementById('playlistAddSongsSearch');
@@ -23636,7 +23652,7 @@
                 }
             };
             document.addEventListener('keydown', playlistAddSongsKeyHandler);
-            renderPlaylistAddSongsSheet(true);
+            renderPlaylistAddSongsSheet({ focusSearch: !isMobilePlaylistAddSongsSheet() });
         }
 
         function closePlaylistAddSongsSheet(refreshPlaylist = true) {
@@ -23655,13 +23671,13 @@
             if (!playlistAddSongsSheet || !['liked', 'search'].includes(mode)) return;
             playlistAddSongsState.mode = mode;
             playlistAddSongsState.query = '';
-            renderPlaylistAddSongsSheet(true);
+            renderPlaylistAddSongsSheet({ focusSearch: !isMobilePlaylistAddSongsSheet() });
         };
         window.addSongFromPlaylistSheet = (plId, fileId) => {
             const found = findSongInLibraryByFile(fileId);
             if (!found || !playlists[plId]) return;
             addSongToPlaylistById(found.song, found.artistName, plId);
-            renderPlaylistAddSongsSheet(true);
+            renderPlaylistAddSongsSheet({ preserveScroll: true });
         };
 
         let openDropdownEl = null;
