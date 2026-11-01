@@ -18514,8 +18514,8 @@
         </div>
     </aside>
 
-    <audio id="audio"></audio>
-    <audio id="audioFade"></audio>
+    <audio id="audio" preload="metadata" playsinline webkit-playsinline="true"></audio>
+    <audio id="audioFade" preload="none" playsinline webkit-playsinline="true"></audio>
     <div id="toast"></div>
 
 
@@ -22697,6 +22697,12 @@
 
         const audio = document.getElementById('audio'),
             audioFade = document.getElementById('audioFade');
+        const USE_IOS_NATIVE_PLAYBACK = /iPad|iPhone|iPod/.test(navigator.userAgent)
+            || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        audio.preload = 'metadata';
+        audio.playsInline = true;
+        audioFade.preload = 'none';
+        audioFade.playsInline = true;
         const PLAYBACK_RATES = [0.75, 1, 1.25, 1.5, 2];
         let playbackRate = Number.parseFloat(localStorage.getItem('eq_playback_rate') || '1');
         if (!PLAYBACK_RATES.includes(playbackRate)) playbackRate = 1;
@@ -22723,7 +22729,7 @@
         let crossfadeTimer = null,
             crossfadeInTimer = null,
             crossfadeFallbackTimers = new Set(),
-            crossfadeSeconds = Math.max(0, Math.min(12, parseInt(localStorage.getItem('eq_crossfade_seconds') || '0', 10) || 0)),
+            crossfadeSeconds = USE_IOS_NATIVE_PLAYBACK ? 0 : Math.max(0, Math.min(12, parseInt(localStorage.getItem('eq_crossfade_seconds') || '0', 10) || 0)),
             crossfadeAutoArmed = false,
             crossfadeTransitionActive = false,
             crossfadePauseSuppressUntil = 0;
@@ -24181,6 +24187,39 @@
             });
         }
 
+        function updateMediaSession(song = currentSong, artistName = '') {
+            if (!song || !('mediaSession' in navigator) || !('MediaMetadata' in window)) return;
+            const poster = song.poster ? new URL(song.poster, window.location.href).href : '';
+            try {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: song.title || 'FalconX',
+                    artist: artistName || song.artistName || 'Unknown artist',
+                    album: song.album || deriveSongAlbum(song, artistName || song.artistName || ''),
+                    artwork: poster ? [{ src: poster, sizes: '512x512', type: 'image/jpeg' }] : []
+                });
+            } catch (e) {}
+        }
+
+        function updateMediaSessionPlaybackState() {
+            if (!('mediaSession' in navigator)) return;
+            try {
+                navigator.mediaSession.playbackState = audio.paused ? 'paused' : 'playing';
+            } catch (e) {}
+        }
+
+        function updateMediaSessionPosition() {
+            if (!('mediaSession' in navigator) || typeof navigator.mediaSession.setPositionState !== 'function') return;
+            const duration = audio.duration;
+            if (!Number.isFinite(duration) || duration <= 0) return;
+            try {
+                navigator.mediaSession.setPositionState({
+                    duration,
+                    playbackRate: audio.playbackRate || 1,
+                    position: Math.max(0, Math.min(audio.currentTime || 0, duration))
+                });
+            } catch (e) {}
+        }
+
         function clearPreparedCrossfadeSource() {
             crossfadePreloadToken += 1;
             const prepared = crossfadePreparedSource;
@@ -24210,7 +24249,7 @@
         }
 
         function prepareCrossfadeNextSource() {
-            if (crossfadeSeconds <= 0 || sleepTimerMode === 'end' || !isAutoplayNextEnabled() || isRepeat) {
+            if (USE_IOS_NATIVE_PLAYBACK || crossfadeSeconds <= 0 || sleepTimerMode === 'end' || !isAutoplayNextEnabled() || isRepeat) {
                 clearPreparedCrossfadeSource();
                 return;
             }
@@ -24254,7 +24293,7 @@
         }
 
         function primeCrossfadeOutgoingAudio() {
-            if (crossfadeSeconds <= 0 || sleepTimerMode === 'end' || !isAutoplayNextEnabled() || isRepeat || crossfadeTransitionActive || !audio.src) return;
+            if (USE_IOS_NATIVE_PLAYBACK || crossfadeSeconds <= 0 || sleepTimerMode === 'end' || !isAutoplayNextEnabled() || isRepeat || crossfadeTransitionActive || !audio.src) return;
             const source = audio.currentSrc || audio.src;
             if (!source || audioFade.src === source || audioFade.currentSrc === source) return;
             try {
@@ -24360,7 +24399,7 @@
                 crossfadeTimer = null;
             }
             crossfadeAutoArmed = false;
-            if (crossfadeSeconds <= 0 || sleepTimerMode === 'end' || !isAutoplayNextEnabled() || isRepeat || audio.paused || !Number.isFinite(audio.duration) || audio.duration <= crossfadeSeconds + 1) return;
+            if (USE_IOS_NATIVE_PLAYBACK || crossfadeSeconds <= 0 || sleepTimerMode === 'end' || !isAutoplayNextEnabled() || isRepeat || audio.paused || !Number.isFinite(audio.duration) || audio.duration <= crossfadeSeconds + 1) return;
             const remainingMs = Math.max(0, ((audio.duration - audio.currentTime - crossfadeSeconds) * 1000) - 45);
             crossfadeTimer = window.setTimeout(() => {
                 crossfadeTimer = null;
@@ -24408,7 +24447,9 @@
                 option.classList.toggle('is-active', active);
                 option.setAttribute('aria-pressed', String(active));
             });
-            const summaryText = isRepeat
+            const summaryText = USE_IOS_NATIVE_PLAYBACK
+                ? 'Crossfade is off on iPhone and iPad so music can continue in the background and on the Lock Screen.'
+                : isRepeat
                 ? 'Turn off Repeat for crossfade to run between tracks.'
                 : !isAutoplayNextEnabled()
                     ? 'Turn on Autoplay next to let crossfade start the next track automatically.'
@@ -24433,6 +24474,12 @@
         }
 
         function setCrossfadeSeconds(value) {
+            if (USE_IOS_NATIVE_PLAYBACK) {
+                crossfadeSeconds = 0;
+                updateCrossfadeSettingUI();
+                showToast('Crossfade is off on iPhone and iPad to keep background playback reliable');
+                return;
+            }
             const nextValue = Math.max(0, Math.min(12, parseInt(value, 10) || 0));
             crossfadeSeconds = nextValue;
             localStorage.setItem('eq_crossfade_seconds', String(crossfadeSeconds));
@@ -24505,7 +24552,7 @@
             crossfadeAutoArmed = false;
             const targetVol = getTargetVolume();
             const fadeMs = crossfadeSeconds * 1000;
-            const shouldCrossfade = crossfadeSeconds > 0 && !audio.paused && audio.currentTime > 0 && audio.src;
+            const shouldCrossfade = !USE_IOS_NATIVE_PLAYBACK && crossfadeSeconds > 0 && !audio.paused && audio.currentTime > 0 && audio.src;
             crossfadeTransitionActive = shouldCrossfade;
             if (shouldCrossfade) {
                 const fadingObjectUrl = activeAudioObjectUrl;
@@ -24630,17 +24677,7 @@
             if (lyricsPanelOpen) loadLyricsPanel(currentSong);
             else syncLyricsPanelShell();
             updateNowPlayingIndicator();
-            if ('mediaSession' in navigator) {
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: song.title,
-                    artist: artistName,
-                    artwork: [{
-                        src: song.poster,
-                        sizes: '512x512',
-                        type: 'image/jpeg'
-                    }]
-                });
-            }
+            updateMediaSession(song, artistName);
             scheduleSmartPreload('playback');
             return true;
         }
@@ -26893,7 +26930,7 @@
         }
 
         function setupVisualizer() {
-            if (visualizerReady || !fsVisualizerCanvas || !audio) return;
+            if (USE_IOS_NATIVE_PLAYBACK || visualizerReady || !fsVisualizerCanvas || !audio) return;
             const AudioCtx = window.AudioContext || window.webkitAudioContext;
             if (!AudioCtx) return;
             try {
@@ -27412,6 +27449,7 @@
             songDurationMeta[currentSong.file] = Math.round(audio.duration);
             if (currentSong) currentSong.duration = songDurationMeta[currentSong.file];
             saveSongDurationMeta();
+            updateMediaSessionPosition();
             scheduleCrossfadeAuto('loadedmetadata');
         });
 
@@ -27434,6 +27472,7 @@
             updateFullPlayerLyrics(current);
             updateLyricsPanelPlayback(current);
             setFullPlayerEnergy();
+            updateMediaSessionPosition();
             const now = performance.now();
             if (current > 0 && (now - lastPlaybackSaveAt) > 14000) {
                 lastPlaybackSaveAt = now;
@@ -27461,6 +27500,7 @@
             setFullPlayerPlaybackState(true);
             updateFullPlayerLyrics(audio.currentTime, true);
             updateNowPlayingIndicator();
+            updateMediaSessionPlaybackState();
             scheduleCrossfadeAuto('play');
         });
         audio.addEventListener('pause',()=>{ 
@@ -27485,6 +27525,7 @@
             setFullPlayerPlaybackState(false);
             savePlaybackMemory();
             updateNowPlayingIndicator();
+            updateMediaSessionPlaybackState();
         });
         audio.addEventListener('playing', () => {
             setTimelinePlaybackEffect(true);
@@ -27493,6 +27534,7 @@
         });
         audio.addEventListener('waiting', () => setTimelinePlaybackEffect(false));
         audio.addEventListener('canplay', () => resumeAudioContext('canplay-event'));
+        audio.addEventListener('ratechange', updateMediaSessionPosition);
         audio.addEventListener('seeked', () => scheduleCrossfadeAuto('seeked'));
         audio.addEventListener('seeking', () => {
             if (crossfadeTimer) {
@@ -27504,10 +27546,10 @@
         window.addEventListener('beforeunload',()=>savePlaybackMemory());
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) pageFrozen = false;
-            if (!audio.paused) resumeAudioContext('visibilitychange');
+            if (!document.hidden && !audio.paused) resumeAudioContext('visibilitychange');
         });
         window.addEventListener('pagehide', () => {
-            if (!audio.paused) resumeAudioContext('pagehide');
+            pageFrozen = true;
         });
         window.addEventListener('pageshow', () => {
             pageFrozen = false;
@@ -27515,14 +27557,33 @@
         });
         document.addEventListener('freeze', () => {
             pageFrozen = true;
-            if (!audio.paused) resumeAudioContext('freeze');
         });
         document.addEventListener('resume', () => {
             pageFrozen = false;
             if (!audio.paused) resumeAudioContext('resume');
         });
 
-        if('mediaSession' in navigator){ navigator.mediaSession.setActionHandler('play',()=>audio.play().then(()=>resumeAudioContext('media-session-play')).catch(()=>{})); navigator.mediaSession.setActionHandler('pause',()=>audio.pause()); navigator.mediaSession.setActionHandler('nexttrack',()=>next()); navigator.mediaSession.setActionHandler('previoustrack',()=>previous()); navigator.mediaSession.setActionHandler('seekto',(d)=>{if(d.seekTime)audio.currentTime=d.seekTime;}); }
+        if ('mediaSession' in navigator) {
+            const setMediaActionHandler = (action, handler) => {
+                try { navigator.mediaSession.setActionHandler(action, handler); } catch (e) {}
+            };
+            setMediaActionHandler('play', () => audio.play().then(() => resumeAudioContext('media-session-play')).catch(() => {}));
+            setMediaActionHandler('pause', () => audio.pause());
+            setMediaActionHandler('stop', () => audio.pause());
+            setMediaActionHandler('nexttrack', () => next());
+            setMediaActionHandler('previoustrack', () => previous());
+            setMediaActionHandler('seekbackward', (details) => {
+                audio.currentTime = Math.max(0, audio.currentTime - (details.seekOffset || 15));
+            });
+            setMediaActionHandler('seekforward', (details) => {
+                audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + (details.seekOffset || 15));
+            });
+            setMediaActionHandler('seekto', (details) => {
+                if (!Number.isFinite(details.seekTime)) return;
+                if (details.fastSeek && 'fastSeek' in audio) audio.fastSeek(details.seekTime);
+                else audio.currentTime = details.seekTime;
+            });
+        }
 
         window.openMobileDrawer = () => {
             if (!mobileDrawer || !mobileDrawerBackdrop) return;
