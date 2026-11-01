@@ -11,6 +11,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="FalconX">
+    <link rel="apple-touch-icon" href="images/falcon.jpeg">
     <title>FalconX</title>
     <link rel="icon" type="image/jpeg" href="images/falconn.jpeg">
     <link rel="manifest" href="./manifest.webmanifest">
@@ -18514,7 +18515,7 @@
         </div>
     </aside>
 
-    <audio id="audio" preload="metadata" playsinline webkit-playsinline="true"></audio>
+    <audio id="audio" preload="auto" playsinline webkit-playsinline="true"></audio>
     <audio id="audioFade" preload="none" playsinline webkit-playsinline="true"></audio>
     <div id="toast"></div>
 
@@ -21642,6 +21643,10 @@
         }
 
         function scheduleSmartPreload(reason = 'playback') {
+            if (USE_IOS_NATIVE_PLAYBACK) {
+                window.clearTimeout(preloadTimer);
+                return;
+            }
             prepareCrossfadeNextSource();
             window.clearTimeout(preloadTimer);
             const token = ++preloadRunToken;
@@ -22699,7 +22704,7 @@
             audioFade = document.getElementById('audioFade');
         const USE_IOS_NATIVE_PLAYBACK = /iPad|iPhone|iPod/.test(navigator.userAgent)
             || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-        audio.preload = 'metadata';
+        audio.preload = USE_IOS_NATIVE_PLAYBACK ? 'auto' : 'metadata';
         audio.playsInline = true;
         audioFade.preload = 'none';
         audioFade.playsInline = true;
@@ -23182,6 +23187,7 @@
             const previousUrl = activeAudioObjectUrl;
             activeAudioObjectUrl = src && src.startsWith('blob:') ? src : '';
             audio.src = src;
+            if (USE_IOS_NATIVE_PLAYBACK) audio.load();
             audio.playbackRate = playbackRate;
             if (revokePrevious && previousUrl && previousUrl !== activeAudioObjectUrl) releaseAudioObjectUrl(previousUrl);
             return previousUrl;
@@ -27533,7 +27539,10 @@
             primeCrossfadeOutgoingAudio();
         });
         audio.addEventListener('waiting', () => setTimelinePlaybackEffect(false));
-        audio.addEventListener('canplay', () => resumeAudioContext('canplay-event'));
+        audio.addEventListener('canplay', () => {
+            updateMediaSessionPosition();
+            resumeAudioContext('canplay-event');
+        });
         audio.addEventListener('ratechange', updateMediaSessionPosition);
         audio.addEventListener('seeked', () => scheduleCrossfadeAuto('seeked'));
         audio.addEventListener('seeking', () => {
