@@ -18219,6 +18219,145 @@
                 font-size: .5rem;
             }
         }
+
+        /* Balanced responsive finish: shared scale, spacing, and card rhythm across desktop/mobile. */
+        @media (min-width: 769px) {
+            .fx-home-v2 {
+                max-width: 1380px;
+                gap: 18px;
+            }
+
+            .fx-home-intro {
+                min-height: 148px;
+                border-radius: 22px;
+            }
+
+            .fx-home-intro-copy h1 {
+                font-size: clamp(2.25rem, 3.25vw, 3.35rem);
+            }
+
+            .fx-home-v2 .hx-feature-card {
+                min-height: 240px;
+                border-radius: 22px;
+            }
+
+            .fx-home-v2 .home-section {
+                margin-bottom: 0;
+            }
+
+            .fx-home-v2 .hx-command-strip,
+            .fx-home-v2 .hx-grid-block {
+                gap: 14px;
+            }
+
+            .hx-chart-panel,
+            .hx-station-panel {
+                border-radius: 18px;
+            }
+
+            .player {
+                background: rgba(8, 8, 8, .94);
+                box-shadow: 0 -12px 34px rgba(0, 0, 0, .34);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main {
+                padding-bottom: 112px;
+                scroll-behavior: auto;
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior-y: contain;
+            }
+
+            .fx-home-v2 {
+                gap: 12px;
+            }
+
+            .fx-home-intro {
+                grid-template-columns: minmax(0, 1fr) auto;
+                align-items: center;
+                min-height: 106px;
+            }
+
+            .fx-home-intro-copy h1 {
+                letter-spacing: -.045em;
+            }
+
+            .fx-home-metrics {
+                grid-template-columns: repeat(3, 52px);
+                gap: 5px;
+            }
+
+            .fx-home-metrics > div {
+                aspect-ratio: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                border-radius: 14px;
+            }
+
+            .fx-home-metrics strong {
+                font-size: 1rem;
+            }
+
+            .fx-home-metrics span {
+                font-size: .48rem;
+                letter-spacing: .06em;
+            }
+
+            .fx-home-v2 .hx-feature-card {
+                min-height: 218px;
+                border-radius: 20px;
+            }
+
+            .fx-home-v2 .hx-command-card {
+                min-height: 72px;
+            }
+
+            .hx-chart-panel,
+            .hx-station-panel {
+                border-radius: 16px;
+            }
+
+            .player {
+                left: 8px;
+                right: 8px;
+                bottom: calc(58px + var(--safe-bottom));
+                width: auto;
+                border-radius: 16px;
+                border: 1px solid rgba(255, 255, 255, .1);
+                box-shadow: 0 14px 38px rgba(0, 0, 0, .55);
+            }
+
+            .mobile-nav {
+                left: 0;
+                right: 0;
+                border-radius: 0;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .fx-home-intro {
+                grid-template-columns: 1fr;
+            }
+
+            .fx-home-metrics {
+                width: 100%;
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .fx-home-metrics > div {
+                aspect-ratio: auto;
+                min-height: 46px;
+                flex-direction: row;
+                gap: 5px;
+            }
+
+            .fx-home-v2 .hx-feature-card {
+                grid-template-columns: minmax(0, 1fr) 92px;
+            }
+        }
     </style>
 </head>
 
@@ -18315,7 +18454,7 @@
 
         <div class="search-box desktop-header-search">
             <span class="search-icon"><i data-lucide="search" aria-hidden="true"></i></span>
-            <input type="text" id="desktopSearchBar" placeholder="Search songs, artists, albums, playlists..." aria-label="Search" oninput="desktopHeaderSearch()">
+            <input type="text" id="desktopSearchBar" placeholder="Search songs, artists, albums, playlists..." aria-label="Search" oninput="desktopHeaderSearch(this)" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
             <button class="search-clear" id="desktopSearchClear" type="button" aria-label="Clear search" onclick="clearDesktopSearch()"><i data-lucide="x" aria-hidden="true"></i></button>
         </div>
 
@@ -20849,7 +20988,7 @@
                 <div class="nav-arrows"><button class="nav-arrow-btn" title="Back">${deps.uiIcon('chevron-left')}</button><button class="nav-arrow-btn" title="Forward">${deps.uiIcon('chevron-right')}</button></div>
                 <div class="search-box">
                     <span class="search-icon">${deps.uiIcon('search')}</span>
-                    <input type="text" id="searchBar" placeholder="Search artists or songs..." oninput="globalSearch()">
+                    <input type="text" id="searchBar" placeholder="Search artists or songs..." oninput="globalSearch(this)" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
                     <button class="search-clear" id="searchClear" onclick="clearSearch()">${deps.uiIcon('x')}</button>
                 </div>
                 <div class="topbar-actions">
@@ -20941,7 +21080,7 @@
             mainArea.innerHTML = `
             <div class="main-topbar">
                 <div class="nav-arrows"><button class="nav-arrow-btn" onclick="loadArtists()">${deps.uiIcon('chevron-left')}</button></div>
-                <div class="search-box"><span class="search-icon">${deps.uiIcon('search')}</span><input type="text" id="searchBar" placeholder="Search in ${a.name}…" oninput="globalSearch()"><button class="search-clear" id="searchClear" onclick="clearSearch()">${deps.uiIcon('x')}</button></div>
+                <div class="search-box"><span class="search-icon">${deps.uiIcon('search')}</span><input type="text" id="searchBar" placeholder="Search in ${a.name}…" oninput="globalSearch(this)" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"><button class="search-clear" id="searchClear" onclick="clearSearch()">${deps.uiIcon('x')}</button></div>
                 <div class="topbar-actions"><button class="topbar-menu-btn" onclick="openMobileDrawer()" title="Menu">${deps.uiIcon('menu')}</button></div>
             </div>
             <div class="artist-hero"><div class="artist-hero-bg" style="background-image:url('${a.image}')"></div><div class="artist-hero-overlay"></div><div class="artist-hero-content"><img class="artist-hero-img" src="${a.image}" onerror="this.style.background='#282828'"><div><div class="artist-hero-tag">Artist</div><div class="artist-hero-name">${a.name}</div><div style="font-size:.8rem;color:var(--text2);margin-bottom:16px">${a.songs.length} songs</div><div class="artist-hero-actions"><button class="btn btn-white" onclick="playArtist('${key}')">${deps.uiIcon('play')}<span>Play</span></button><button class="btn btn-outline" onclick="shuffleArtist('${key}')">${deps.uiIcon('shuffle')}<span>Shuffle</span></button></div></div></div></div>
@@ -22827,6 +22966,8 @@
         let sleepTimerId = null,
             sleepTimerMode = 'off';
         let pageFrozen = false;
+        let playbackIntended = false;
+        let iosStallRecoveryTimer = null;
         let queuePanelOpen = false,
             modalCallback = null,
             currentPlaylistId = null;
@@ -24244,7 +24385,8 @@
                 sleepTimerId = null;
                 sleepTimerMode = 'off';
                 stopSecondaryCrossfadeAudio();
-                audio.pause();
+                    playbackIntended = false;
+                    audio.pause();
                 updateSleepTimerUI();
                 showToast('Sleep timer finished');
             }, minutes * 60 * 1000);
@@ -24263,6 +24405,25 @@
 
         function isBackgroundPlayback() {
             return document.hidden || pageFrozen;
+        }
+
+        function ensureAudioPlayback(reason = 'resume') {
+            if (!USE_IOS_NATIVE_PLAYBACK || !currentSong || !playbackIntended || document.hidden || pageFrozen) return;
+            if (!audio.paused || audio.ended) return;
+            audio.play().then(() => {
+                resumeAudioContext(reason);
+            }).catch(() => {
+                // The next visibility/focus event will retry without overriding user pause intent.
+            });
+        }
+
+        function scheduleIOSStallRecovery(reason = 'stall') {
+            if (!USE_IOS_NATIVE_PLAYBACK) return;
+            window.clearTimeout(iosStallRecoveryTimer);
+            iosStallRecoveryTimer = window.setTimeout(() => {
+                if (!document.hidden && playbackIntended && !audio.paused) audio.play().catch(() => {});
+                else ensureAudioPlayback(reason);
+            }, 3500);
         }
 
         function resumeAudioContext(reason = 'playback') {
@@ -24679,6 +24840,7 @@
             audio.volume = shouldCrossfade ? 0 : targetVol;
             setCrossfadeGain(crossfadeMainGain, shouldCrossfade ? 0 : 1);
             resumeAudioContext('song-change');
+            playbackIntended = true;
             posterEl.src = song.poster;
             playerTitle.textContent = song.title;
             const artistKey = currentArtistKey || Object.keys(artists).find((k) => artists[k].songs === currentSongs);
@@ -24705,6 +24867,7 @@
             }).catch(() => {
                 audio.volume = targetVol;
                 setCrossfadeGain(crossfadeMainGain, 1);
+                playbackIntended = false;
                 if (crossfadeTimer) {
                     clearTimeout(crossfadeTimer);
                     crossfadeTimer = null;
@@ -24770,11 +24933,13 @@
 
         function togglePlay() {
             if (audio.paused) {
+                playbackIntended = true;
                 audio.play().then(() => {
                     resumeAudioContext('toggle-play');
                     setPlayButtonIcons(false);
                     updateNowPlayingIndicator();
                 }).catch(() => {
+                    playbackIntended = false;
                     setTimelinePlaybackEffect(false);
                     setPlayButtonIcons(true);
                     setFullPlayerPlaybackState(false);
@@ -24782,6 +24947,7 @@
                     showToast('Unable to play this song');
                 });
             } else {
+                playbackIntended = false;
                 audio.pause();
                 setPlayButtonIcons(true);
                 savePlaybackMemory();
@@ -25361,9 +25527,11 @@
                 try {
                     const src = await getAudioSrc('songs/' + song.file);
                     setPrimaryAudioSource(src);
+                    playbackIntended = true;
                     await audio.play();
                     setPlayButtonIcons(false);
                 } catch (e) {
+                    playbackIntended = false;
                     currentPlaybackSource = 'network';
                     updatePlayerDlBtn();
                     showToast(isDownloaded(song.file) ? 'Offline copy is unavailable' : 'This queued song is not available offline');
@@ -25988,8 +26156,8 @@
             if (desktopClear) desktopClear.classList.toggle('visible', String(value || '').length > 0);
         }
 
-        function desktopHeaderSearch() {
-            const desktop = document.getElementById('desktopSearchBar');
+        function desktopHeaderSearch(sourceEl = document.getElementById('desktopSearchBar')) {
+            const desktop = sourceEl || document.getElementById('desktopSearchBar');
             const mobile = document.getElementById('searchBar');
             if (desktop && mobile) mobile.value = desktop.value || '';
             globalSearch(desktop);
@@ -25998,6 +26166,7 @@
         function clearSearch() {
             const input = document.getElementById('searchBar');
             if (input) input.value = '';
+            lastSearchRenderQuery = '';
             syncDesktopSearchValue('');
             loadArtists();
         }
@@ -26007,18 +26176,49 @@
             const input = document.getElementById('searchBar');
             if (desktop) desktop.value = '';
             if (input) input.value = '';
+            lastSearchRenderQuery = '';
             syncDesktopSearchValue('');
             loadArtists();
         }
 
-        function globalSearch(sourceEl = null) {
+        let searchRenderTimer = 0;
+        let searchCompositionActive = false;
+        let lastSearchRenderQuery = '';
+
+        document.addEventListener('compositionstart', (event) => {
+            if (event.target?.matches?.('#searchBar,#desktopSearchBar')) searchCompositionActive = true;
+        }, true);
+        document.addEventListener('compositionend', (event) => {
+            if (!event.target?.matches?.('#searchBar,#desktopSearchBar')) return;
+            searchCompositionActive = false;
+            globalSearch(event.target, true);
+        }, true);
+
+        function globalSearch(sourceEl = null, immediate = false) {
+            const activeEl = document.activeElement;
+            const searchEl = sourceEl || (activeEl?.matches?.('#searchBar,#desktopSearchBar') ? activeEl : null) || document.getElementById('searchBar') || document.getElementById('desktopSearchBar');
+            if (!searchEl) return;
+            if (searchCompositionActive && !immediate) return;
+
+            window.clearTimeout(searchRenderTimer);
+            if (!immediate) {
+                searchRenderTimer = window.setTimeout(() => executeGlobalSearch(searchEl), 90);
+                return;
+            }
+            executeGlobalSearch(searchEl);
+        }
+
+        function executeGlobalSearch(sourceEl = null) {
             const activeEl = document.activeElement;
             const searchEl = sourceEl || (activeEl?.matches?.('#searchBar,#desktopSearchBar') ? activeEl : null) || document.getElementById('searchBar') || document.getElementById('desktopSearchBar'); if(!searchEl)return;
             const rawQuery = searchEl.value || '';
+            const selectionStart = typeof searchEl.selectionStart === 'number' ? searchEl.selectionStart : rawQuery.length;
             const q = normalizeSearchText(rawQuery);
             const clr = document.getElementById('searchClear'); if(clr)clr.classList.toggle('visible',q.length>0);
             syncDesktopSearchValue(rawQuery);
             if(!q){syncDesktopSearchValue('');loadArtists();return;}
+            if (rawQuery === lastSearchRenderQuery && document.getElementById('searchBar')) return;
+            lastSearchRenderQuery = rawQuery;
             setMobileBack(false);
             const index = getSearchIndex();
             const songResults = rankedSearchResults(index.songs, q).slice(0, SEARCH_RESULT_LIMITS.songs);
@@ -26028,7 +26228,7 @@
             const genreResults = rankedSearchResults(index.genres, q).slice(0, SEARCH_RESULT_LIMITS.genres);
             const total = songResults.length + artistResults.length + albumResults.length + playlistResults.length + genreResults.length;
             const mainArea = document.getElementById('mainArea');
-            const topbarHTML = `<div class="main-topbar"><div class="nav-arrows"><button class="nav-arrow-btn" onclick="loadArtists()">${uiIcon('chevron-left')}</button></div><div class="search-box"><span class="search-icon">${uiIcon('search')}</span><input type="text" id="searchBar" value="${escH(rawQuery)}" placeholder="Search songs, artists, albums, playlists…" oninput="globalSearch()"><button class="search-clear visible" id="searchClear" onclick="clearSearch()">${uiIcon('x')}</button></div><div class="topbar-actions"><button class="topbar-menu-btn" onclick="openMobileDrawer()" title="Menu">${uiIcon('menu')}</button></div></div>`;
+            const topbarHTML = `<div class="main-topbar"><div class="nav-arrows"><button class="nav-arrow-btn" onclick="loadArtists()">${uiIcon('chevron-left')}</button></div><div class="search-box"><span class="search-icon">${uiIcon('search')}</span><input type="text" id="searchBar" value="${escH(rawQuery)}" placeholder="Search songs, artists, albums, playlists…" oninput="globalSearch(this)" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"><button class="search-clear visible" id="searchClear" onclick="clearSearch()">${uiIcon('x')}</button></div><div class="topbar-actions"><button class="topbar-menu-btn" onclick="openMobileDrawer()" title="Menu">${uiIcon('menu')}</button></div></div>`;
             mainArea.innerHTML = topbarHTML +
                 searchSectionHTML('Songs', songResults.length, `<div class="songs-section" style="padding:0">${songResults.map((result, i) => searchSongRowHTML(result, i, rawQuery)).join('')}</div>`) +
                 searchSectionHTML('Artists', artistResults.length, artistResults.map((result) => searchArtistCardHTML(result, rawQuery)).join(''), 'artists-grid') +
@@ -26036,13 +26236,16 @@
                 searchSectionHTML('Playlists', playlistResults.length, playlistResults.map((result) => searchPlaylistCardHTML(result, rawQuery)).join(''), 'playlist-grid') +
                 searchSectionHTML('Genres', genreResults.length, genreResults.map((result) => searchGenreCardHTML(result, rawQuery)).join(''), 'artists-grid') +
                 (!total ? `<div class="empty-state"><div class="emoji">${uiIcon('search')}</div><p>No results found</p></div>` : '<div style="height:20px"></div>');
-            mainArea.scrollTop = 0;
             renderLucideIcons(mainArea);
             scheduleNewBadgeExpiryRefresh(mainArea);
             const keepDesktopFocus = searchEl.id === 'desktopSearchBar' && document.body.contains(searchEl);
             const newInp = document.getElementById('searchBar');
             const focusInp = keepDesktopFocus ? searchEl : newInp;
-            if(focusInp){focusInp.focus();focusInp.setSelectionRange(focusInp.value.length,focusInp.value.length);}
+            if(focusInp){
+                focusInp.focus({ preventScroll: true });
+                const cursor = Math.min(selectionStart, focusInp.value.length);
+                focusInp.setSelectionRange(cursor, cursor);
+            }
             initSearchClear();
             syncDesktopSearchValue(rawQuery);
         }
@@ -27569,6 +27772,7 @@
             setTimelinePlaybackEffect(false);
             stopCrossfadeTimers();
             if (sleepTimerMode === 'end') {
+                playbackIntended = false;
                 clearSleepTimer(false);
                 showToast('Sleep timer finished');
                 return;
@@ -27576,6 +27780,8 @@
             if (!isRepeat && isAutoplayNextEnabled() && !crossfadeAutoArmed && !crossfadeTransitionActive) next();
         });
         audio.addEventListener('play',()=>{ 
+            window.clearTimeout(iosStallRecoveryTimer);
+            playbackIntended = true;
             setPlayButtonIcons(false);
             if(currentArtistKey) updateArtistPlayingState(false);
             if(currentPlaylistId && document.getElementById('playlistSongsList')) updatePlaylistPlayingState(false);
@@ -27614,12 +27820,20 @@
             updateMediaSessionPlaybackState();
         });
         audio.addEventListener('playing', () => {
+            window.clearTimeout(iosStallRecoveryTimer);
             setTimelinePlaybackEffect(true);
             resumeAudioContext('playing-event');
             primeCrossfadeOutgoingAudio();
         });
         audio.addEventListener('waiting', () => setTimelinePlaybackEffect(false));
+        audio.addEventListener('waiting', () => {
+            scheduleIOSStallRecovery('waiting');
+        });
+        audio.addEventListener('stalled', () => {
+            scheduleIOSStallRecovery('stalled');
+        });
         audio.addEventListener('canplay', () => {
+            window.clearTimeout(iosStallRecoveryTimer);
             updateMediaSessionPosition();
             resumeAudioContext('canplay-event');
         });
@@ -27636,6 +27850,7 @@
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) pageFrozen = false;
             if (!document.hidden && !audio.paused) resumeAudioContext('visibilitychange');
+            if (!document.hidden) ensureAudioPlayback('visibilitychange');
         });
         window.addEventListener('pagehide', () => {
             pageFrozen = true;
@@ -27643,22 +27858,34 @@
         window.addEventListener('pageshow', () => {
             pageFrozen = false;
             if (!audio.paused) resumeAudioContext('pageshow');
+            ensureAudioPlayback('pageshow');
         });
+        window.addEventListener('focus', () => ensureAudioPlayback('window-focus'));
         document.addEventListener('freeze', () => {
             pageFrozen = true;
         });
         document.addEventListener('resume', () => {
             pageFrozen = false;
             if (!audio.paused) resumeAudioContext('resume');
+            ensureAudioPlayback('resume');
         });
 
         if ('mediaSession' in navigator) {
             const setMediaActionHandler = (action, handler) => {
                 try { navigator.mediaSession.setActionHandler(action, handler); } catch (e) {}
             };
-            setMediaActionHandler('play', () => audio.play().then(() => resumeAudioContext('media-session-play')).catch(() => {}));
-            setMediaActionHandler('pause', () => audio.pause());
-            setMediaActionHandler('stop', () => audio.pause());
+            setMediaActionHandler('play', () => {
+                playbackIntended = true;
+                audio.play().then(() => resumeAudioContext('media-session-play')).catch(() => { playbackIntended = false; });
+            });
+            setMediaActionHandler('pause', () => {
+                playbackIntended = false;
+                audio.pause();
+            });
+            setMediaActionHandler('stop', () => {
+                playbackIntended = false;
+                audio.pause();
+            });
             setMediaActionHandler('nexttrack', () => next());
             setMediaActionHandler('previoustrack', () => previous());
             setMediaActionHandler('seekbackward', (details) => {
