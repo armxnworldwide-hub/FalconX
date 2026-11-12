@@ -2,7 +2,7 @@
   "name": "FalconX",
   "short_name": "FalconX",
   "id": "./",
-  "description": "FalconX premium mobile-first music streaming experience.",
+  "description": "Install FalconX and enjoy your music in its own app window.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -14,21 +14,21 @@
   "categories": ["music", "entertainment"],
   "icons": [
     {
-      "src": "images/falcon.jpeg",
+      "src": "images/falconx-192.png",
       "sizes": "192x192",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "images/falcon.jpeg",
+      "src": "images/falconx-512.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "images/falcon.jpeg",
+      "src": "images/falconx-512.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "maskable"
     }
   ],
@@ -37,19 +37,19 @@
       "name": "Search",
       "short_name": "Search",
       "url": "./index.html#search",
-      "icons": [{ "src": "images/falcon.jpeg", "sizes": "192x192" }]
+      "icons": [{ "src": "images/falconx-192.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
       "name": "Favorites",
       "short_name": "Favorites",
       "url": "./index.html#favorites",
-      "icons": [{ "src": "images/falcon.jpeg", "sizes": "192x192" }]
+      "icons": [{ "src": "images/falconx-192.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
       "name": "Playlists",
       "short_name": "Playlists",
       "url": "./index.html#playlists",
-      "icons": [{ "src": "images/falcon.jpeg", "sizes": "192x192" }]
+      "icons": [{ "src": "images/falconx-192.png", "sizes": "192x192", "type": "image/png" }]
     }
   ],
   "prefer_related_applications": false,
