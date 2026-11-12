@@ -21666,8 +21666,6 @@ title: "Bore",
         let preloadTimer = 0;
         let preloadRunToken = 0;
         let smartPreloadedFiles = new Set();
-        const verifiedNetworkAudioFiles = new Set();
-        const unavailableNetworkAudioFiles = new Set();
         let offlineDbPromise = null;
         let networkState = {
             online: navigator.onLine !== false,
@@ -21820,6 +21818,9 @@ title: "Bore",
         async function getAudioResolution(filePath) {
             const normalized = normalizeCachePath(filePath);
             const fileId = normalizeOfflineFileId(normalized);
+            if (canUseNetwork()) {
+                return { src: normalized, source: 'network', cached: false };
+            }
             try {
                 const cached = await matchOfflineCache(fileId);
                 if (cached?.response) {
@@ -21832,29 +21833,7 @@ title: "Bore",
             if (!canUseNetwork()) {
                 throw new Error(networkState.offlineOnly ? 'Offline-only mode is enabled' : 'No internet connection');
             }
-            if (unavailableNetworkAudioFiles.has(normalized)) {
-                const error = new Error('Track file is unavailable');
-                error.code = 'TRACK_UNAVAILABLE';
-                throw error;
-            }
-            if (!verifiedNetworkAudioFiles.has(normalized)) {
-                let response;
-                try {
-                    response = await fetch(normalized, { method: 'HEAD', cache: 'no-store' });
-                } catch (error) {
-                    throw new Error('Unable to reach the audio source');
-                }
-                const contentType = (response.headers.get('content-type') || '').toLowerCase();
-                const headUnsupported = response.status === 405 || response.status === 501;
-                if (!headUnsupported && (!response.ok || contentType.includes('text/html'))) {
-                    unavailableNetworkAudioFiles.add(normalized);
-                    const error = new Error('Track file is unavailable');
-                    error.code = 'TRACK_UNAVAILABLE';
-                    throw error;
-                }
-                verifiedNetworkAudioFiles.add(normalized);
-            }
-            return { src: normalized, source: 'network', cached: false };
+            throw new Error(networkState.offlineOnly ? 'Offline-only mode is enabled' : 'No internet connection');
         }
 
         async function ensureSongPlayable(song) {
@@ -23010,7 +22989,8 @@ title: "Bore",
         let currentSongs = [],
             currentIndex = 0,
             currentSong = null,
-            currentArtistKey = null;
+            currentArtistKey = null,
+            playbackRequestId = 0;
         let isShuffle = false,
             isRepeat = false,
             isMuted = false,
@@ -24858,16 +24838,23 @@ title: "Bore",
                 showToast('This track is coming soon');
                 return false;
             }
-            let src = '';
+            const requestId = ++playbackRequestId;
+            let resolved;
+            let prepared = null;
             try {
-                const prepared = takePreparedCrossfadeSource(song);
-                if (prepared) {
-                    src = prepared.src;
-                    currentPlaybackSource = prepared.source;
-                } else {
-                    src = await getAudioSrc('songs/' + song.file);
+                prepared = takePreparedCrossfadeSource(song);
+                resolved = prepared || await getAudioResolution('songs/' + song.file);
+                if (requestId !== playbackRequestId) {
+                    if (prepared?.preloader) {
+                        prepared.preloader.pause();
+                        prepared.preloader.removeAttribute('src');
+                        prepared.preloader.load();
+                    }
+                    releaseAudioObjectUrl(resolved.src);
+                    return false;
                 }
             } catch (err) {
+                if (requestId !== playbackRequestId) return false;
                 crossfadeAutoArmed = false;
                 crossfadeTransitionActive = false;
                 updatePlayerDlBtn();
@@ -24878,6 +24865,9 @@ title: "Bore",
                 }
                 return false;
             }
+            const src = resolved.src;
+            currentPlaybackSource = resolved.source;
+            const automaticCrossfade = crossfadeAutoArmed;
             currentIndex = index;
             const previousSongFile = currentSong ? currentSong.file : null;
             if (manualSelection && isRepeat && previousSongFile && previousSongFile !== song.file) {
@@ -24896,7 +24886,7 @@ title: "Bore",
             setCrossfadeGain(crossfadeFadeGain, 0);
             crossfadeAutoArmed = false;
             const targetVol = getTargetVolume();
-            const fadeMs = crossfadeSeconds * 1000;
+            const fadeMs = automaticCrossfade ? crossfadeSeconds * 1000 : 240;
             const shouldCrossfade = !USE_IOS_NATIVE_PLAYBACK && crossfadeSeconds > 0 && !audio.paused && audio.currentTime > 0 && audio.src;
             crossfadeTransitionActive = shouldCrossfade;
             if (shouldCrossfade) {
@@ -24948,6 +24938,7 @@ title: "Bore",
             updatePlayerLikeBtn(song.file);
             updatePlayerDlBtn();
             audio.play().then(() => {
+                if (requestId !== playbackRequestId) return;
                 resumeAudioContext('song-play');
                 if (!shouldCrossfade) {
                     audio.volume = targetVol;
@@ -24963,6 +24954,7 @@ title: "Bore",
                 };
                 crossfadeInTimer = crossfadeEngineReady ? rampCrossfadeGain(crossfadeMainGain, 0, 1, fadeMs, finishFadeIn) : animateAudioVolume(audio, 0, targetVol, fadeMs, finishFadeIn);
             }).catch(() => {
+                if (requestId !== playbackRequestId) return;
                 audio.volume = targetVol;
                 setCrossfadeGain(crossfadeMainGain, 1);
                 playbackIntended = false;
