@@ -40,11 +40,22 @@ async function rangeResponse(request, response) {
   const match = /^bytes=(\d*)-(\d*)$/i.exec(range);
   if (!match) return response;
 
-  let start = match[1] ? Number(match[1]) : 0;
-  let end = match[2] ? Number(match[2]) : size - 1;
-  if (!Number.isFinite(start) || start < 0) start = 0;
-  if (!Number.isFinite(end) || end >= size) end = size - 1;
-  if (start > end || start >= size) {
+  let start;
+  let end;
+  if (!match[1]) {
+    const suffixLength = Number(match[2]);
+    if (!Number.isSafeInteger(suffixLength) || suffixLength <= 0) {
+      start = size;
+      end = size;
+    } else {
+      start = Math.max(0, size - suffixLength);
+      end = size - 1;
+    }
+  } else {
+    start = Number(match[1]);
+    end = match[2] ? Number(match[2]) : size - 1;
+  }
+  if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end) || start < 0 || end < start || start >= size) {
     return new Response(null, {
       status: 416,
       headers: {
@@ -52,6 +63,7 @@ async function rangeResponse(request, response) {
       }
     });
   }
+  end = Math.min(end, size - 1);
 
   const body = blob.slice(start, end + 1, response.headers.get('Content-Type') || 'audio/mpeg');
   return new Response(body, {

@@ -10221,8 +10221,8 @@
         }
         
         .eq-slider-vertical {
-            appearance: slider-vertical;
-            -webkit-appearance: slider-vertical;
+            writing-mode: vertical-lr;
+            direction: rtl;
             width: 6px;
             height: 100%;
             background: rgba(255, 255, 255, 0.1);
@@ -27392,6 +27392,7 @@ title: "Bore",
             const canvas = fsVisualizerCanvas;
             const ctx = canvas.getContext('2d');
             if (!ctx) return;
+            const meterBars = document.querySelectorAll('.fx-eq-meter span');
 
             const draw = () => {
                 visualizerFrame = requestAnimationFrame(draw);
@@ -27420,6 +27421,9 @@ title: "Bore",
                 const midY = h * 0.58;
                 const bars = 40;
                 const barW = w / bars;
+                const barGradient = ctx.createLinearGradient(0, midY - (h * 0.66), 0, midY + 8);
+                barGradient.addColorStop(0, `rgba(${ambientCssPrimary}, .92)`);
+                barGradient.addColorStop(1, `rgba(${ambientCssSecondary}, .16)`);
 
                 let energy = 0;
                 for (let i = 0; i < bars; i += 1) {
@@ -27430,10 +27434,7 @@ title: "Bore",
                     const barH = (h * 0.66) * eased;
                     const x = i * barW + (barW * 0.14);
                     const y = midY - barH;
-                    const grd = ctx.createLinearGradient(x, y, x, midY + 8);
-                    grd.addColorStop(0, `rgba(${ambientCssPrimary}, .92)`);
-                    grd.addColorStop(1, `rgba(${ambientCssSecondary}, .16)`);
-                    ctx.fillStyle = grd;
+                    ctx.fillStyle = barGradient;
                     const bw = Math.max(2, barW * 0.7);
                     ctx.fillRect(x, y, bw, barH + 2);
                 }
@@ -27443,7 +27444,6 @@ title: "Bore",
 
                 // Update EQ meter bars
                 if (eqPanelOpen) {
-                    const meterBars = document.querySelectorAll('.fx-eq-meter span');
                     meterBars.forEach((span, i) => {
                         const idx = Math.floor((i / meterBars.length) * visualizerFreqData.length);
                         const v = (visualizerFreqData[idx] || 0) / 255;
