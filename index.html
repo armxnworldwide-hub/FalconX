@@ -18391,6 +18391,21 @@
                 grid-template-columns: minmax(0, 1fr) 92px;
             }
         }
+
+        @media (max-width: 360px) {
+            .mobile-nav {
+                gap: 2px;
+                padding-left: 6px;
+                padding-right: 6px;
+            }
+
+            .mobile-nav .mnav-btn {
+                flex: 1 1 0;
+                min-width: 0;
+                padding-left: 2px;
+                padding-right: 2px;
+            }
+        }
     </style>
 </head>
 
