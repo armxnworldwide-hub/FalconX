@@ -24659,37 +24659,134 @@ title: "Bore",
             });
         }
 
-        function updateMediaSession(song = currentSong, artistName = '') {
-            if (!song || !('mediaSession' in navigator) || !('MediaMetadata' in window)) return;
-            const poster = song.poster ? new URL(song.poster, window.location.href).href : '';
+        let mediaSessionTrackKey = '';
+
+        function getMediaSessionArtwork(song) {
+            const fallback = {
+                src: new URL('images/falconx-512.png', document.baseURI).href,
+                sizes: '512x512',
+                type: 'image/png'
+            };
+            const poster = typeof song?.poster === 'string' ? song.poster.trim() : '';
+            if (!poster) return [fallback];
+
             try {
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: song.title || 'FalconX',
-                    artist: artistName || song.artistName || 'Unknown artist',
-                    album: song.album || deriveSongAlbum(song, artistName || song.artistName || ''),
-                    artwork: poster ? [{ src: poster, sizes: '512x512', type: 'image/jpeg' }] : []
-                });
-            } catch (e) {}
+                const url = new URL(poster, document.baseURI);
+                const isImageData = url.protocol === 'data:' && /^data:image\//i.test(poster);
+                if (!['http:', 'https:', 'blob:', 'file:'].includes(url.protocol) && !isImageData) {
+                    console.warn('Media Session artwork URL uses an unsupported protocol:', url.protocol);
+                    return [fallback];
+                }
+                const extension = url.pathname.toLowerCase().match(/\.([a-z0-9]+)$/)?.[1];
+                const mimeTypes = {
+                    avif: 'image/avif',
+                    gif: 'image/gif',
+                    jpeg: 'image/jpeg',
+                    jpg: 'image/jpeg',
+                    png: 'image/png',
+                    webp: 'image/webp'
+                };
+                const artwork = { src: url.href };
+                if (mimeTypes[extension]) artwork.type = mimeTypes[extension];
+                return [artwork];
+            } catch (error) {
+                console.warn('Unable to resolve Media Session artwork:', error);
+                return [fallback];
+            }
+        }
+
+        function clearMediaSessionPosition(mediaSession = navigator.mediaSession) {
+            if (typeof mediaSession?.setPositionState !== 'function') return;
+            try {
+                mediaSession.setPositionState();
+            } catch (error) {
+                console.warn('Unable to clear Media Session position:', error);
+            }
+        }
+
+        function updateMediaSession(song = currentSong, artistName = '') {
+            if (!('mediaSession' in navigator) || !navigator.mediaSession || typeof window.MediaMetadata !== 'function') return;
+            const mediaSession = navigator.mediaSession;
+            if (!song) {
+                try {
+                    mediaSession.metadata = null;
+                } catch (error) {
+                    console.warn('Unable to clear Media Session metadata:', error);
+                }
+                mediaSessionTrackKey = '';
+                clearMediaSessionPosition(mediaSession);
+                return;
+            }
+
+            const title = String(song.title || 'Untitled');
+            const artist = String(artistName || song.artistName || 'Unknown artist');
+            const album = String(song.album || song.albumName || deriveSongAlbum(song, artist) || 'Singles');
+            const trackKey = String(song.file || `${title}\u0000${artist}\u0000${album}`);
+            if (trackKey !== mediaSessionTrackKey) {
+                clearMediaSessionPosition(mediaSession);
+                mediaSessionTrackKey = trackKey;
+            }
+
+            const metadata = {
+                title,
+                artist,
+                album,
+                artwork: getMediaSessionArtwork(song)
+            };
+            try {
+                mediaSession.metadata = new window.MediaMetadata(metadata);
+            } catch (error) {
+                console.warn('Unable to set Media Session metadata:', error);
+                try {
+                    metadata.artwork = [{
+                        src: new URL('images/falconx-512.png', document.baseURI).href,
+                        sizes: '512x512',
+                        type: 'image/png'
+                    }];
+                    mediaSession.metadata = new window.MediaMetadata(metadata);
+                } catch (fallbackError) {
+                    console.warn('Unable to set fallback Media Session metadata:', fallbackError);
+                }
+            }
         }
 
         function updateMediaSessionPlaybackState() {
-            if (!('mediaSession' in navigator)) return;
+            if (!('mediaSession' in navigator) || !navigator.mediaSession) return;
             try {
-                navigator.mediaSession.playbackState = audio.paused ? 'paused' : 'playing';
-            } catch (e) {}
+                navigator.mediaSession.playbackState = !currentSong
+                    ? 'none'
+                    : audio.paused || audio.ended ? 'paused' : 'playing';
+            } catch (error) {
+                console.warn('Unable to update Media Session playback state:', error);
+            }
         }
 
         function updateMediaSessionPosition() {
-            if (!('mediaSession' in navigator) || typeof navigator.mediaSession.setPositionState !== 'function') return;
+            const mediaSession = navigator.mediaSession;
+            if (!mediaSession || typeof mediaSession.setPositionState !== 'function') return;
             const duration = audio.duration;
-            if (!Number.isFinite(duration) || duration <= 0) return;
+            if (!Number.isFinite(duration) || duration <= 0 || !Number.isFinite(audio.currentTime)) return;
             try {
-                navigator.mediaSession.setPositionState({
+                mediaSession.setPositionState({
                     duration,
-                    playbackRate: audio.playbackRate || 1,
-                    position: Math.max(0, Math.min(audio.currentTime || 0, duration))
+                    playbackRate: Number.isFinite(audio.playbackRate) && audio.playbackRate > 0 ? audio.playbackRate : 1,
+                    position: Math.max(0, Math.min(audio.currentTime, duration))
                 });
-            } catch (e) {}
+            } catch (error) {
+                console.warn('Unable to update Media Session position:', error);
+            }
+        }
+
+        function seekMediaSessionBy(details, direction) {
+            if (!currentSong || !Number.isFinite(audio.duration) || audio.duration <= 0 || !Number.isFinite(audio.currentTime)) return;
+            const seekOffset = Number.isFinite(details?.seekOffset) && details.seekOffset > 0 ? details.seekOffset : 15;
+            const target = Math.max(0, Math.min(audio.currentTime + seekOffset * direction, audio.duration));
+            try {
+                audio.currentTime = target;
+                updateMediaSessionPosition();
+            } catch (error) {
+                console.warn('Unable to seek from Media Session:', error);
+            }
         }
 
         function clearPreparedCrossfadeSource() {
@@ -28006,6 +28103,7 @@ title: "Bore",
             }
         });
         audio.addEventListener('ended', () => {
+            updateMediaSessionPlaybackState();
             setTimelinePlaybackEffect(false);
             stopCrossfadeTimers();
             if (sleepTimerMode === 'end') {
@@ -28029,7 +28127,9 @@ title: "Bore",
             setFullPlayerPlaybackState(true);
             updateFullPlayerLyrics(audio.currentTime, true);
             updateNowPlayingIndicator();
+            updateMediaSession(currentSong, playerArtist.textContent);
             updateMediaSessionPlaybackState();
+            updateMediaSessionPosition();
             scheduleCrossfadeAuto('play');
         });
         audio.addEventListener('pause',()=>{ 
@@ -28075,7 +28175,10 @@ title: "Bore",
             resumeAudioContext('canplay-event');
         });
         audio.addEventListener('ratechange', updateMediaSessionPosition);
-        audio.addEventListener('seeked', () => scheduleCrossfadeAuto('seeked'));
+        audio.addEventListener('seeked', () => {
+            updateMediaSessionPosition();
+            scheduleCrossfadeAuto('seeked');
+        });
         audio.addEventListener('seeking', () => {
             if (crossfadeTimer) {
                 clearTimeout(crossfadeTimer);
@@ -28107,34 +28210,45 @@ title: "Bore",
             ensureAudioPlayback('resume');
         });
 
-        if ('mediaSession' in navigator) {
+        if ('mediaSession' in navigator && navigator.mediaSession) {
+            const mediaSession = navigator.mediaSession;
             const setMediaActionHandler = (action, handler) => {
-                try { navigator.mediaSession.setActionHandler(action, handler); } catch (e) {}
+                try {
+                    mediaSession.setActionHandler(action, handler);
+                } catch (error) {
+                    if (error?.name !== 'NotSupportedError') {
+                        console.warn(`Unable to register Media Session "${action}" action:`, error);
+                    }
+                }
             };
             setMediaActionHandler('play', () => {
-                playbackIntended = true;
-                audio.play().then(() => resumeAudioContext('media-session-play')).catch(() => { playbackIntended = false; });
+                if (audio.paused) togglePlay();
+                else updateMediaSessionPlaybackState();
             });
             setMediaActionHandler('pause', () => {
                 playbackIntended = false;
-                audio.pause();
+                if (!audio.paused) audio.pause();
+                updateMediaSessionPlaybackState();
             });
             setMediaActionHandler('stop', () => {
                 playbackIntended = false;
-                audio.pause();
+                if (!audio.paused) audio.pause();
+                updateMediaSessionPlaybackState();
             });
             setMediaActionHandler('nexttrack', () => next());
             setMediaActionHandler('previoustrack', () => previous());
-            setMediaActionHandler('seekbackward', (details) => {
-                audio.currentTime = Math.max(0, audio.currentTime - (details.seekOffset || 15));
-            });
-            setMediaActionHandler('seekforward', (details) => {
-                audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + (details.seekOffset || 15));
-            });
+            setMediaActionHandler('seekbackward', (details) => seekMediaSessionBy(details, -1));
+            setMediaActionHandler('seekforward', (details) => seekMediaSessionBy(details, 1));
             setMediaActionHandler('seekto', (details) => {
-                if (!Number.isFinite(details.seekTime)) return;
-                if (details.fastSeek && 'fastSeek' in audio) audio.fastSeek(details.seekTime);
-                else audio.currentTime = details.seekTime;
+                if (!currentSong || !Number.isFinite(details?.seekTime) || !Number.isFinite(audio.duration) || audio.duration <= 0) return;
+                const seekTime = Math.max(0, Math.min(details.seekTime, audio.duration));
+                try {
+                    if (details.fastSeek && typeof audio.fastSeek === 'function') audio.fastSeek(seekTime);
+                    else audio.currentTime = seekTime;
+                    updateMediaSessionPosition();
+                } catch (error) {
+                    console.warn('Unable to seek to Media Session position:', error);
+                }
             });
         }
 
