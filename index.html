@@ -335,6 +335,10 @@
             background: #f5c842;
             animation: blink .7s infinite
         }
+
+        .sync-dot.error {
+            background: #ff6262;
+        }
         
         @keyframes blink {
             0%,
@@ -7421,7 +7425,10 @@
                 display: none;
             }
             .sync-pill {
-                display: none;
+                display: inline-flex;
+                max-width: 112px;
+                padding: 2px 6px;
+                font-size: .45rem;
             }
             /* -- Mobile Back Button -- */
             .mobile-back-btn {
@@ -11649,9 +11656,15 @@
                         letter-spacing: .08rem;
                     }
 
-                    .logo-sub,
-                    .sync-pill {
+                    .logo-sub {
                         display: none;
+                    }
+
+                    .sync-pill {
+                        display: inline-flex;
+                        max-width: 112px;
+                        padding: 2px 6px;
+                        font-size: .45rem;
                     }
 
                     .sidebar-nav-block {
@@ -21445,107 +21458,9 @@ title: "Bore",
     };
     document.head.appendChild(script);
 })();
-(async () => {
-    try {
-        const [appModule, authModule, firestoreModule] = await Promise.all([
-            import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"),
-            import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"),
-            import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js")
-        ]);
-        const { initializeApp } = appModule;
-        const { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut: fbSignOut, onAuthStateChanged, setPersistence, browserLocalPersistence } = authModule;
-        const { getFirestore, doc, setDoc, getDoc } = firestoreModule;
-        const firebaseConfig = { apiKey: "AIzaSyBGByQV7o655YvsCa8_c16P6zIaMGr7Uq0", authDomain: "falconx-f1016.firebaseapp.com", projectId: "falconx-f1016", storageBucket: "falconx-f1016.firebasestorage.app", messagingSenderId: "357270984794", appId: "1:357270984794:web:93a4c9e3502eeeeca42063" };
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        await setPersistence(auth, browserLocalPersistence);
-        await getRedirectResult(auth);
-        window.signInWithGoogle = async () => {
-            const provider = new GoogleAuthProvider();
-            try { await signInWithPopup(auth, provider); }
-            catch (err) { await signInWithRedirect(auth, provider); }
-        };
-        window.signOut = async () => { await fbSignOut(auth); };
-        window._saveToCloud = async () => {
-            if (!auth.currentUser) return;
-            const ref = doc(db, "users", auth.currentUser.uid);
-            await setDoc(ref, { likedSongs: Array.from(likedSongs), playlists: playlists }, { merge: true });
-        };
-        async function loadUserData() {
-            if (!auth.currentUser) return;
-            const snap = await getDoc(doc(db, "users", auth.currentUser.uid));
-            if (snap.exists()) {
-                const data = snap.data();
-                const cloudLiked = Array.isArray(data.likedSongs) ? data.likedSongs.filter((f) => typeof f === "string") : [];
-                cloudLiked.forEach((f) => likedSongs.add(f));
-                if (data.playlists && typeof data.playlists === "object") {
-                    for (const id in data.playlists) {
-                        const incoming = data.playlists[id];
-                        if (!incoming || typeof incoming !== "object") continue;
-                        const incomingSongs = Array.isArray(incoming.songs) ? incoming.songs.filter((s) => s && typeof s === "object" && typeof s.file === "string").map((s) => ({ ...s, file: s.file, title: typeof s.title === "string" ? s.title : "", poster: typeof s.poster === "string" ? s.poster : "", artistName: typeof s.artistName === "string" ? s.artistName : "", addedAt: validAddedAt(s.addedAt) || validAddedAt(getLibrarySongByFile(s.file)?.song?.addedAt) })) : [];
-                        if (!playlists[id]) {
-                            playlists[id] = { ...incoming, name: typeof incoming.name === "string" ? incoming.name : "Playlist", songs: incomingSongs };
-                            continue;
-                        }
-                        const localSongs = Array.isArray(playlists[id].songs) ? playlists[id].songs : [];
-                        const seen = new Set(localSongs.map((s) => s && s.file).filter((f) => typeof f === "string"));
-                        const mergedSongs = [...localSongs];
-                        incomingSongs.forEach((s) => {
-                            if (!seen.has(s.file)) {
-                                seen.add(s.file);
-                                mergedSongs.push(s);
-                            }
-                        });
-                        playlists[id] = { ...incoming, ...playlists[id], name: typeof playlists[id].name === "string" && playlists[id].name ? playlists[id].name : (typeof incoming.name === "string" ? incoming.name : "Playlist"), songs: mergedSongs };
-                    }
-                }
-                if (typeof saveAppData === "function") saveAppData();
-                else {
-                    localStorage.setItem("eq_liked", JSON.stringify([...likedSongs]));
-                    localStorage.setItem("eq_playlists", JSON.stringify(playlists));
-                }
-                try { if (typeof refreshVisibleSongLists === "function") refreshVisibleSongLists(); } catch (e) {}
-            }
-        }
-        onAuthStateChanged(auth, async user => {
-            const loginBtn = document.getElementById("loginBtn");
-            const userBar = document.getElementById("userBar");
-            const syncDot = document.getElementById("syncDot");
-            const syncLabel = document.getElementById("syncLabel");
-            const userNameEl = document.getElementById("userDisplayNameMain");
-            const userEmailEl = document.getElementById("userEmailMain");
-            const userAvatarEl = document.getElementById("userAvatarMain");
-            const mobileLoginBtn = document.getElementById("mobileLoginBtn");
-            const mobileUserBtn = document.getElementById("mobileUserBtn");
-            const mobileUserAvatar = document.getElementById("mobileUserAvatar");
-            if (user) {
-                if (loginBtn) loginBtn.style.display = "none";
-                if (userBar) userBar.style.display = "flex";
-                if (userNameEl) userNameEl.textContent = user.displayName || "User";
-                if (userEmailEl) userEmailEl.textContent = user.email || "";
-                if (userAvatarEl) userAvatarEl.src = user.photoURL || "";
-                if (mobileLoginBtn) mobileLoginBtn.style.display = "none";
-                if (mobileUserBtn) mobileUserBtn.style.display = "flex";
-                if (mobileUserAvatar) mobileUserAvatar.src = user.photoURL || "";
-                if (syncDot) syncDot.className = "sync-dot syncing";
-                if (syncLabel) syncLabel.textContent = "Syncing...";
-                await loadUserData();
-                if (syncDot) syncDot.className = "sync-dot synced";
-                if (syncLabel) syncLabel.textContent = "Synced";
-            } else {
-                if (userBar) userBar.style.display = "none";
-                if (loginBtn) loginBtn.style.display = "block";
-                if (mobileLoginBtn) mobileLoginBtn.style.display = "flex";
-                if (mobileUserBtn) mobileUserBtn.style.display = "none";
-                if (syncDot) syncDot.className = "sync-dot";
-                if (syncLabel) syncLabel.textContent = "Offline";
-            }
-        });
-    } catch (err) {
-        console.error('Firebase initialization failed:', err);
-    }
-})();
+</script>
+<script type="module" src="cloud-sync.js"></script>
+<script>
 // Appearance system: themes, accents, toggles, persistence
         (function(){
             const STORAGE_KEY = 'appearance_settings_v2';
@@ -21625,13 +21540,15 @@ title: "Bore",
             }
 
             function loadSettings(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaults; }catch(e){ return defaults; } }
+            window.__getCloudUserSettings = () => loadSettings();
+            window.__applyCloudUserSettings = (settings) => applySettings(Object.assign({}, defaults, settings || {}));
 
             // Open/close
             window.openAppearance = function(){ const bp = $('#appearanceBackdrop'); const panel = $('#appearancePanel'); if(!bp||!panel) return; bp.classList.add('open'); panel.classList.add('open'); panel.classList.toggle('desktop-modal', window.innerWidth >= 769); bp.setAttribute('aria-hidden','false'); panel.setAttribute('aria-hidden','false'); }
             window.closeAppearance = function(){ const bp = $('#appearanceBackdrop'); const panel = $('#appearancePanel'); if(!bp||!panel) return; bp.classList.remove('open'); panel.classList.remove('open'); panel.classList.remove('desktop-modal'); bp.setAttribute('aria-hidden','true'); panel.setAttribute('aria-hidden','true'); }
 
             // Reset
-            window.resetAppearance = function(){ localStorage.removeItem(STORAGE_KEY); applySettings(defaults); }
+            window.resetAppearance = function(){ localStorage.removeItem(STORAGE_KEY); applySettings(defaults); window._onLocalStateChanged?.('userSettings', loadSettings()); }
 
             // Wire up controls
             document.addEventListener('click', (e)=>{
@@ -21639,15 +21556,15 @@ title: "Bore",
                 if(!t) return;
                 // swatches: themes
                 const themeBtn = t.closest('.ap-swatch[data-theme]');
-                if(themeBtn){ const current = loadSettings(); current.theme = themeBtn.dataset.theme; applySettings(current); return; }
+                if(themeBtn){ const current = loadSettings(); current.theme = themeBtn.dataset.theme; applySettings(current); window._onLocalStateChanged?.('userSettings', loadSettings()); return; }
                 const accentBtn = t.closest('.ap-swatch[data-accent]');
-                if(accentBtn){ const current = loadSettings(); current.accent = accentBtn.dataset.accent; applySettings(current); return; }
+                if(accentBtn){ const current = loadSettings(); current.accent = accentBtn.dataset.accent; applySettings(current); window._onLocalStateChanged?.('userSettings', loadSettings()); return; }
                 const radio = t.closest('label.ap-radio');
                 if(radio && radio.querySelector('input[name="ap-mode"]')){
-                    const val = radio.querySelector('input[name="ap-mode"]').value; const current=loadSettings(); current.mode=val; applySettings(current); return;
+                    const val = radio.querySelector('input[name="ap-mode"]').value; const current=loadSettings(); current.mode=val; applySettings(current); window._onLocalStateChanged?.('userSettings', loadSettings()); return;
                 }
                 const sw = t.closest('.ap-switch');
-                if(sw){ const k = sw.dataset.key; const s = loadSettings(); s[k] = !s[k]; applySettings(s); return; }
+                if(sw){ const k = sw.dataset.key; const s = loadSettings(); s[k] = !s[k]; applySettings(s); window._onLocalStateChanged?.('userSettings', loadSettings()); return; }
             }, true);
 
             // Initialize on load
@@ -23250,9 +23167,9 @@ title: "Bore",
         ensureLibrarySongsHaveAddedAt();
         loadAppData();
 
-        function notifyCloudStateChange(scope) {
-            if (typeof window._onLocalStateChanged === 'function') {
-                window._onLocalStateChanged(scope || 'local-change');
+        function notifyCloudStateChange(scope, detail) {
+            if (!window.__applyingCloudState && typeof window._onLocalStateChanged === 'function') {
+                window._onLocalStateChanged(scope || 'local-change', detail);
             }
         }
 
@@ -23330,9 +23247,9 @@ title: "Bore",
             notifyCloudStateChange('playlists');
         }
 
-        function saveContinueListening() {
+        function saveContinueListening(options = {}) {
             saveAppData();
-            notifyCloudStateChange('recentlyPlayed');
+            notifyCloudStateChange(options.clearRemote ? 'recentlyPlayedClear' : 'recentlyPlayed');
         }
 
         function saveQueue() {
@@ -23398,8 +23315,10 @@ title: "Bore",
 
         window.__getCloudStatePayload = () => ({
             likedSongs: [...likedSongs],
+            likedSongMeta: { ...likedSongMeta },
             playlists: sanitizeCloudPlaylists(playlists),
             recentlyPlayed: sanitizeCloudSongArray(continueListening, 40),
+            songPlayCounts: { ...songPlayCounts },
             downloads: [...downloadedFiles],
             queue: sanitizeCloudSongArray(queue, 120)
         });
@@ -23410,10 +23329,18 @@ title: "Bore",
             const safePlaylists = sanitizeCloudPlaylists(incoming.playlists);
             const safeRecent = sanitizeCloudSongArray(incoming.recentlyPlayed, 40);
             const safeQueue = sanitizeCloudSongArray(incoming.queue, 120);
+            const safeLikedMeta = incoming.likedSongMeta && typeof incoming.likedSongMeta === 'object' && !Array.isArray(incoming.likedSongMeta)
+                ? Object.fromEntries(Object.entries(incoming.likedSongMeta).filter(([file, time]) => typeof file === 'string' && Number.isFinite(time) && time > 0))
+                : {};
+            const safePlayCounts = incoming.songPlayCounts && typeof incoming.songPlayCounts === 'object' && !Array.isArray(incoming.songPlayCounts)
+                ? Object.fromEntries(Object.entries(incoming.songPlayCounts).filter(([file, count]) => typeof file === 'string' && Number.isFinite(count) && count >= 0).map(([file, count]) => [file, Math.floor(count)]))
+                : {};
 
             likedSongs = new Set(safeLiked);
+            likedSongMeta = safeLikedMeta;
             playlists = safePlaylists;
             continueListening = safeRecent;
+            songPlayCounts = safePlayCounts;
             downloadedFiles = new Set(safeDownloads);
             queue = safeQueue;
             let incomingLikedSeedTs = Date.now();
@@ -23427,6 +23354,7 @@ title: "Bore",
             });
 
             saveAppData();
+            saveSongPlayCounts();
             localStorage.setItem('falcon_downloaded', JSON.stringify([...downloadedFiles]));
 
             try {
@@ -23725,6 +23653,7 @@ title: "Bore",
             if (!fileId) return;
             songPlayCounts[fileId] = (songPlayCounts[fileId] || 0) + 1;
             saveSongPlayCounts();
+            notifyCloudStateChange('listeningHistory', fileId);
         }
 
         function getPlaylistSortLabel(type) {
@@ -24515,6 +24444,7 @@ title: "Bore",
             if (nextValue) savePlaybackMemory();
             else localStorage.removeItem('eq_last_song');
             updatePlaybackSettingsUI();
+            notifyCloudStateChange('playbackPreferences');
         }
 
         function setShuffleEnabled(enabled) {
@@ -24523,6 +24453,7 @@ title: "Bore",
             syncPlaybackModeUI();
             savePlaybackMemory();
             updatePlaybackSettingsUI();
+            notifyCloudStateChange('playbackPreferences');
         }
 
         function setRepeatEnabled(enabled) {
@@ -24540,6 +24471,7 @@ title: "Bore",
             }
             savePlaybackMemory();
             updatePlaybackSettingsUI();
+            notifyCloudStateChange('playbackPreferences');
             updateCrossfadeSettingUI();
         }
 
@@ -24623,7 +24555,7 @@ title: "Bore",
             if (!confirm('Clear your recently played history? This does not remove favorites, playlists, or downloads.')) return;
             continueListening = [];
             shuffleHistory = [];
-            saveContinueListening();
+            saveContinueListening({ clearRemote: true });
             localStorage.setItem('eq_shuffle_history', '[]');
             showToast('Recently played history cleared');
         }
@@ -25544,6 +25476,7 @@ title: "Bore",
             audioFade.playbackRate = playbackRate;
             localStorage.setItem('eq_playback_rate', String(playbackRate));
             updatePlaybackSpeedUI();
+            notifyCloudStateChange('playbackPreferences');
             if (announce) showToast(`Playback speed ${formatPlaybackRate()}`);
         }
 
@@ -28819,6 +28752,18 @@ title: "Bore",
         window.toggleQueuePanel = toggleQueuePanel; window.addToQueue = addToQueue; window.openArtist = openArtist; window.loadArtists = loadArtists; window.showLikedSongs = showLikedSongs; window.showDownloads = showDownloads; window.showPlaylists = showPlaylists; window.refreshLikedDisplay = refreshLikedDisplay;
         window.playArtist = playArtist; window.shuffleArtist = shuffleArtist; window.toggleLike = toggleLike; window.globalSearch = globalSearch; window.desktopHeaderSearch = desktopHeaderSearch; window.clearSearch = clearSearch; window.clearDesktopSearch = clearDesktopSearch; window.toggleEqPanel = () => renderAudioPage(); window.setEqMode = (mode) => applyAudioPreset(mode.charAt(0).toUpperCase() + mode.slice(1));
         window.renderStatsPage = renderStatsPage; window.renderAudioPage = renderAudioPage; window.renderSettingsPage = renderSettingsPage; window.setVizMode = setVizMode; window.updateEffect = updateEffect; window.updateEQBand = updateEQBand; window.applyAudioPreset = applyAudioPreset; window.resetEQ = resetEQ; window.updatePreamp = updatePreamp; window.updatePan = updatePan; window.updateCompressor = updateCompressor; window.saveCustomPreset = saveCustomPreset; window.setCrossfadeSeconds = setCrossfadeSeconds; window.setCrossfadeEnabled = setCrossfadeEnabled; window.setCrossfadeCurve = setCrossfadeCurve; window.setAutoplayNext = setAutoplayNext; window.setResumePlaybackEnabled = setResumePlaybackEnabled; window.setPlaybackVolume = setPlaybackVolume; window.setShuffleEnabled = setShuffleEnabled; window.setRepeatEnabled = setRepeatEnabled; window.setPlaybackRate = setPlaybackRate; window.cyclePlaybackRate = cyclePlaybackRate; window.setSleepTimer = setSleepTimer; window.clearListeningHistory = clearListeningHistory;
+        window.__getCloudPlaybackPreferences = () => ({
+            playbackRate,
+            shuffle: isShuffle,
+            repeat: isRepeat,
+            resumePlayback: isResumePlaybackEnabled()
+        });
+        window.__applyCloudPlaybackPreferences = (preferences = {}) => {
+            if (Number.isFinite(preferences.playbackRate)) setPlaybackRate(preferences.playbackRate, false);
+            if (typeof preferences.shuffle === 'boolean' && preferences.shuffle !== isShuffle) setShuffleEnabled(preferences.shuffle);
+            if (typeof preferences.repeat === 'boolean' && preferences.repeat !== isRepeat) setRepeatEnabled(preferences.repeat);
+            if (typeof preferences.resumePlayback === 'boolean' && preferences.resumePlayback !== isResumePlaybackEnabled()) setResumePlaybackEnabled(preferences.resumePlayback);
+        };
 
         // -- INIT --
         initLucideSystem();
