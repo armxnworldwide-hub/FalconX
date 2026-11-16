@@ -15898,12 +15898,26 @@
                 /* Mobile scroll pipeline: keep touch movement on the compositor. */
                 @media (max-width: 768px) {
                     .main {
-                        scroll-behavior: auto !important;
+                        scroll-behavior: smooth !important;
                         scroll-snap-type: none;
                         touch-action: pan-y pinch-zoom;
                         overscroll-behavior: contain;
                         -webkit-overflow-scrolling: touch;
                         scrollbar-width: none;
+                    }
+
+                    .fx-home-v2 > .home-section {
+                        content-visibility: visible;
+                    }
+
+                    .player {
+                        transition: transform .24s cubic-bezier(.22, 1, .36, 1), opacity .18s ease;
+                    }
+
+                    body.mobile-scroll-active .player {
+                        transform: translate3d(0, 150%, 0);
+                        opacity: 0;
+                        pointer-events: none;
                     }
 
                     .main::-webkit-scrollbar {
@@ -15961,6 +15975,16 @@
                     body.mobile-scroll-active .home-mini-row:active,
                     body.mobile-scroll-active .home-album-card:active {
                         transform: none !important;
+                    }
+                }
+
+                @media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+                    .main {
+                        scroll-behavior: auto !important;
+                    }
+
+                    .player {
+                        transition: none;
                     }
                 }
 
@@ -25890,7 +25914,7 @@ title: "Bore",
                 if (!mobileQuery.matches) return;
                 document.body.classList.add('mobile-scroll-active');
                 clearTimeout(settleTimer);
-                settleTimer = window.setTimeout(finishScroll, 140);
+                settleTimer = window.setTimeout(finishScroll, 220);
             };
 
             area.addEventListener('scroll', markScrolling, { passive: true });
