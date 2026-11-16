@@ -18406,6 +18406,104 @@
                 padding-right: 2px;
             }
         }
+
+        @media (max-width: 768px) {
+            .fx-home-intro {
+                grid-template-columns: minmax(0, 1fr);
+                min-height: 0;
+                gap: 8px;
+                padding: 10px 12px;
+            }
+
+            .fx-home-intro-copy > span {
+                margin-bottom: 3px;
+            }
+
+            .fx-home-intro-copy h1 {
+                max-width: none;
+                font-size: clamp(1.22rem, 5.8vw, 1.55rem);
+                line-height: 1;
+            }
+
+            .fx-home-metrics {
+                width: 100%;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 6px;
+            }
+
+            .fx-home-metrics > div {
+                min-height: 38px;
+                aspect-ratio: auto;
+                gap: 5px;
+                padding: 6px 4px;
+                flex-direction: row;
+                border-radius: 11px;
+            }
+
+            .fx-home-metrics strong {
+                font-size: .82rem;
+            }
+
+            .fx-home-v2 .hx-stage {
+                min-height: 0;
+                align-items: start;
+                gap: 8px;
+            }
+
+            .fx-home-v2 .hx-feature-card {
+                min-height: 0;
+                grid-template-columns: minmax(0, 1fr) clamp(72px, 22vw, 86px);
+                gap: 9px;
+                padding: 12px;
+                border-radius: 17px;
+            }
+
+            .fx-home-v2 .hx-feature-copy h1 {
+                margin: 7px 0 5px;
+                font-size: clamp(1.2rem, 6.3vw, 1.52rem);
+            }
+
+            .fx-home-v2 .hx-feature-meta {
+                margin-top: 6px;
+                gap: 3px;
+            }
+
+            .fx-home-v2 .hx-feature-meta span {
+                padding: 3px 5px;
+                font-size: .48rem;
+            }
+
+            .fx-home-v2 .home-hero-actions {
+                margin-top: 8px;
+            }
+
+            .fx-home-v2 .home-play-primary,
+            .fx-home-v2 .home-action-ghost {
+                min-height: 32px;
+            }
+
+            .fx-home-v2 .hx-feature-art {
+                width: 100%;
+                max-width: none;
+                padding: 3px;
+                border-radius: 13px;
+            }
+
+            .fx-home-v2 .hx-feature-art img {
+                border-radius: 9px;
+            }
+
+            .fx-home-v2 .hx-feature-card::after {
+                display: none;
+            }
+
+            .fx-home-v2 .hx-now-card {
+                min-height: 0;
+                padding: 10px;
+                border-radius: 16px;
+            }
+        }
+
     </style>
 </head>
 
