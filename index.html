@@ -21931,16 +21931,12 @@ title: "Bore",
         }
 
         function scheduleSmartPreload(reason = 'playback') {
-            if (USE_IOS_NATIVE_PLAYBACK) {
-                window.clearTimeout(preloadTimer);
-                return;
-            }
             prepareCrossfadeNextSource();
             window.clearTimeout(preloadTimer);
             const token = ++preloadRunToken;
             preloadTimer = window.setTimeout(async () => {
                 if (token !== preloadRunToken) return;
-                const upcoming = getUpcomingSongs(SMART_PRELOAD_LIMIT);
+                const upcoming = getUpcomingSongs(USE_IOS_NATIVE_PLAYBACK ? 1 : SMART_PRELOAD_LIMIT);
                 for (const song of upcoming) {
                     if (token !== preloadRunToken) return;
                     const ok = await preloadSongForPlayback(song);
