@@ -14,22 +14,10 @@
   "categories": ["music", "entertainment"],
   "icons": [
     {
-      "src": "images/falconx-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
+      "src": "images/falconn.jpeg",
+      "sizes": "1254x1254",
+      "type": "image/jpeg",
       "purpose": "any"
-    },
-    {
-      "src": "images/falconx-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "images/falconx-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
     }
   ],
   "shortcuts": [
@@ -37,19 +25,19 @@
       "name": "Search",
       "short_name": "Search",
       "url": "./index.html#search",
-      "icons": [{ "src": "images/falconx-192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [{ "src": "images/falconn.jpeg", "sizes": "1254x1254", "type": "image/jpeg" }]
     },
     {
       "name": "Favorites",
       "short_name": "Favorites",
       "url": "./index.html#favorites",
-      "icons": [{ "src": "images/falconx-192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [{ "src": "images/falconn.jpeg", "sizes": "1254x1254", "type": "image/jpeg" }]
     },
     {
       "name": "Playlists",
       "short_name": "Playlists",
       "url": "./index.html#playlists",
-      "icons": [{ "src": "images/falconx-192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [{ "src": "images/falconn.jpeg", "sizes": "1254x1254", "type": "image/jpeg" }]
     }
   ],
   "prefer_related_applications": false,

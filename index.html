@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-title" content="FalconX">
     <link rel="apple-touch-icon" href="images/falconn.jpeg">
     <title>FalconX</title>
-    <link rel="icon" type="image/png" href="images/falconn.jpeg">
+    <link rel="icon" type="image/jpeg" href="images/falconn.jpeg">
     <link rel="manifest" href="./manifest.webmanifest">
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -24595,9 +24595,9 @@ title: "Bore",
 
         function getMediaSessionArtwork(song) {
             const fallback = {
-                src: new URL('images/falconx-512.png', document.baseURI).href,
-                sizes: '512x512',
-                type: 'image/png'
+                src: new URL('images/falconn.jpeg', document.baseURI).href,
+                sizes: '1254x1254',
+                type: 'image/jpeg'
             };
             const poster = typeof song?.poster === 'string' ? song.poster.trim() : '';
             if (!poster) return [fallback];
@@ -24671,9 +24671,9 @@ title: "Bore",
                 console.warn('Unable to set Media Session metadata:', error);
                 try {
                     metadata.artwork = [{
-                        src: new URL('images/falconx-512.png', document.baseURI).href,
-                        sizes: '512x512',
-                        type: 'image/png'
+                        src: new URL('images/falconn.jpeg', document.baseURI).href,
+                        sizes: '1254x1254',
+                        type: 'image/jpeg'
                     }];
                     mediaSession.metadata = new window.MediaMetadata(metadata);
                 } catch (fallbackError) {
