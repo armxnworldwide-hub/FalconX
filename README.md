@@ -29,3 +29,11 @@ Notes
 
 - Do not commit your `.env` file — `.gitignore` already ignores it.
 - The frontend is self-contained in `index.html`. Make purely visual changes in CSS where possible to avoid breaking JS behavior.
+- Google account sync stores likes, playlists, and library preferences in Firebase Firestore. Create the Firestore database for `falconx-f1016`, then authenticate with the Firebase CLI and deploy the checked-in rules from the repository root:
+
+```bash
+npx firebase-tools login
+npx firebase-tools deploy --only firestore:rules
+```
+
+The `.firebaserc` project alias and `firebase.json` rules mapping target the Firebase project used by `cloud-sync.js`. Firestore rules restrict each account to its own data.

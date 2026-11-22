@@ -304,7 +304,9 @@ const firebaseConfig = {
             updateSyncStatus('offline', 'Offline. Changes are saved on this device and will sync when internet returns.');
             return;
         }
-        const message = 'Cloud sync failed. Your changes are saved on this device and will retry.';
+        const message = code === 'permission-denied'
+            ? 'Cloud sync is blocked by Firestore permissions. Deploy the FalconX Firestore rules to enable account sync.'
+            : 'Cloud sync failed. Your changes are saved on this device and will retry.';
         updateSyncStatus('error', message);
         const now = Date.now();
         if (now - lastErrorToastAt > 8000 && typeof window.showToast === 'function') {
@@ -1247,6 +1249,7 @@ const firebaseConfig = {
     window.signInWithGoogle = async () => {
         try {
             const provider = new GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
             try {
                 await signInWithPopup(auth, provider);
             } catch (error) {
