@@ -25417,12 +25417,19 @@ title: "Bore",
             if (USE_IOS_NATIVE_PLAYBACK || crossfadeSeconds <= 0 || sleepTimerMode === 'end' || !isAutoplayNextEnabled() || isRepeat || crossfadeTransitionActive || !audio.src) return;
             const source = audio.currentSrc || audio.src;
             if (!source || audioFade.src === source || audioFade.currentSrc === source) return;
+            const seekToCrossfadeStart = () => {
+                if (!audioFade.src || !Number.isFinite(audio.duration) || !Number.isFinite(audioFade.duration)) return;
+                const crossfadeStart = Math.max(0, audio.duration - crossfadeSeconds);
+                if (Math.abs(audioFade.currentTime - crossfadeStart) > .75) audioFade.currentTime = crossfadeStart;
+            };
             try {
                 releaseAudioObjectUrl(audioFade.src);
                 audioFade.pause();
                 audioFade.preload = 'auto';
+                audioFade.addEventListener('loadedmetadata', seekToCrossfadeStart, { once: true });
                 audioFade.src = source;
                 audioFade.load();
+                if (audioFade.readyState >= HTMLMediaElement.HAVE_METADATA) seekToCrossfadeStart();
             } catch (e) {}
         }
 
@@ -25521,11 +25528,13 @@ title: "Bore",
             }
             crossfadeAutoArmed = false;
             if (USE_IOS_NATIVE_PLAYBACK || crossfadeSeconds <= 0 || sleepTimerMode === 'end' || !isAutoplayNextEnabled() || isRepeat || audio.paused || !Number.isFinite(audio.duration) || audio.duration <= crossfadeSeconds + 1) return;
-            const remainingMs = Math.max(0, ((audio.duration - audio.currentTime - crossfadeSeconds) * 1000) - 45);
+            const playbackRate = Number.isFinite(audio.playbackRate) && audio.playbackRate > 0 ? audio.playbackRate : 1;
+            const remainingMs = Math.max(0, (((audio.duration - audio.currentTime - crossfadeSeconds) / playbackRate) * 1000) - 45);
             crossfadeTimer = window.setTimeout(() => {
                 crossfadeTimer = null;
                 if (crossfadeSeconds <= 0 || sleepTimerMode === 'end' || !isAutoplayNextEnabled() || isRepeat || audio.paused || crossfadeTransitionActive) return;
-                if (!Number.isFinite(audio.duration) || (audio.duration - audio.currentTime) > crossfadeSeconds + .65) {
+                const activePlaybackRate = Number.isFinite(audio.playbackRate) && audio.playbackRate > 0 ? audio.playbackRate : 1;
+                if (!Number.isFinite(audio.duration) || (audio.duration - audio.currentTime) > (crossfadeSeconds + .65 * activePlaybackRate)) {
                     scheduleCrossfadeAuto('late-check');
                     return;
                 }
@@ -25810,7 +25819,7 @@ title: "Bore",
             crossfadeAutoArmed = false;
             const targetVol = getTargetVolume();
             const fadeMs = automaticCrossfade ? crossfadeSeconds * 1000 : 240;
-            const shouldCrossfade = !USE_IOS_NATIVE_PLAYBACK && crossfadeSeconds > 0 && !audio.paused && audio.currentTime > 0 && audio.src;
+            const shouldCrossfade = !USE_IOS_NATIVE_PLAYBACK && crossfadeSeconds > 0 && !audio.paused && audio.currentTime > 0 && !!audio.src;
             crossfadeTransitionActive = shouldCrossfade;
             if (shouldCrossfade) {
                 const fadingObjectUrl = activeAudioObjectUrl;
@@ -25823,7 +25832,7 @@ title: "Bore",
                     audioFade.load();
                 }
                 audioFade.playbackRate = playbackRate;
-                audioFade.currentTime = audio.currentTime;
+                if (Math.abs(audioFade.currentTime - audio.currentTime) > .75) audioFade.currentTime = audio.currentTime;
                 audioFade.volume = targetVol;
                 setCrossfadeGain(crossfadeFadeGain, 1);
                 audioFade.play().catch(() => {});
