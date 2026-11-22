@@ -124,7 +124,7 @@
             font-family: 'Circular Std', 'Circular', 'Spotify Mix', 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
             color: var(--text);
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: minmax(0, 1fr);
             grid-template-rows: 72px 1fr var(--player-h);
             height: 100dvh;
             font-weight: 400;
@@ -869,6 +869,7 @@
         .main {
             grid-column: 1;
             grid-row: 2;
+            min-width: 0;
             overflow-y: auto;
             background: var(--bg2);
             position: relative;
@@ -7351,7 +7352,7 @@
         
         @media (max-width: 768px) {
             body {
-                grid-template-columns: 1fr;
+                grid-template-columns: minmax(0, 1fr);
                 grid-template-rows: auto 1fr;
                 overflow: hidden
             }
@@ -13986,6 +13987,7 @@
                     --fx2-line: rgba(255, 255, 255, .085);
                     --fx2-soft: rgba(255, 255, 255, .55);
                     --fx2-gold: #e8c86d;
+                    min-width: 0;
                     width: min(100%, 1540px);
                     margin: 0 auto;
                     padding: 26px clamp(20px, 3vw, 46px) 54px;
@@ -15546,13 +15548,18 @@
                     backdrop-filter: none;
                     -webkit-backdrop-filter: none;
                     display: grid;
+                    grid-template-areas:
+                        "copy photo"
+                        "credit photo";
                     grid-template-columns: minmax(0, 1fr) minmax(220px, .82fr);
                     align-items: center;
-                    gap: clamp(42px, 8vw, 112px);
+                    column-gap: clamp(42px, 8vw, 112px);
+                    row-gap: 18px;
                     animation: none;
                 }
 
                 .splash-copy {
+                    grid-area: copy;
                     min-width: 0;
                     display: grid;
                     justify-items: start;
@@ -15585,6 +15592,7 @@
                 }
 
                 .splash-mark {
+                    grid-area: photo;
                     position: relative;
                     justify-self: end;
                     width: min(286px, 27vw, 54vh);
@@ -15674,6 +15682,7 @@
                 }
 
                 #splash.fx-minimal-intro .splash-credit {
+                    grid-area: credit;
                     position: static;
                     inset: auto;
                     z-index: auto;
@@ -15683,7 +15692,7 @@
                     flex-wrap: wrap;
                     pointer-events: auto;
                     gap: 9px;
-                    margin-top: 36px;
+                    margin-top: 0;
                     color: rgba(255, 255, 255, .4);
                     font-size: .58rem;
                     font-weight: 700;
@@ -15841,6 +15850,10 @@
 
                     #splash.fx-minimal-intro .splash-inner {
                         width: min(100%, 430px);
+                        grid-template-areas:
+                            "copy"
+                            "photo"
+                            "credit";
                         grid-template-columns: minmax(0, 1fr);
                         justify-items: center;
                         gap: 25px;
@@ -15874,7 +15887,6 @@
 
                     #splash.fx-minimal-intro .splash-credit {
                         justify-content: center;
-                        margin-top: 22px;
                     }
 
                     .splash-loader {
@@ -18530,7 +18542,10 @@
         /* Balanced responsive finish: shared scale, spacing, and card rhythm across desktop/mobile. */
         @media (min-width: 769px) {
             .fx-home-v2 {
-                max-width: 1380px;
+                width: min(100%, 1760px);
+                max-width: 1760px;
+                padding-left: clamp(16px, 2.4vw, 36px);
+                padding-right: clamp(16px, 2.4vw, 36px);
                 gap: 18px;
             }
 
@@ -18793,17 +18808,6 @@
                     <span>Falcon</span><span class="splash-wordmark-x">X</span>
                 </div>
                 <div class="splash-tagline">Your sound. <span>Your space.</span></div>
-                <div class="splash-credit">
-                    <span class="splash-credit-label">Created by</span>
-                    <a class="splash-creator" href="https://www.instagram.com/armxnworldwide/" target="_blank" rel="noopener noreferrer" aria-label="Open @armxnworldwide on Instagram">
-                        <svg class="splash-insta" viewBox="0 0 24 24" aria-hidden="true">
-                            <rect x="3" y="3" width="18" height="18" rx="5"></rect>
-                            <circle cx="12" cy="12" r="4"></circle>
-                            <circle cx="17.5" cy="6.5" r="1.1"></circle>
-                        </svg>
-                        @armxnworldwide
-                    </a>
-                </div>
                 <div class="splash-loader">
                     <span class="splash-loader-label">Loading your space</span>
                     <span class="splash-waveform" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
@@ -18811,6 +18815,17 @@
             </div>
             <div class="splash-mark" aria-hidden="true">
                 <img src="images/armaan.jpg" alt="">
+            </div>
+            <div class="splash-credit">
+                <span class="splash-credit-label">Created by</span>
+                <a class="splash-creator" href="https://www.instagram.com/armxnworldwide/" target="_blank" rel="noopener noreferrer" aria-label="Open @armxnworldwide on Instagram">
+                    <svg class="splash-insta" viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <circle cx="17.5" cy="6.5" r="1.1"></circle>
+                    </svg>
+                    @armxnworldwide
+                </a>
             </div>
         </div>
     </div>
