@@ -25419,7 +25419,7 @@ title: "Bore",
             const source = audio.currentSrc || audio.src;
             if (!source) return;
             if (audioFade.src === source || audioFade.currentSrc === source) {
-                if (audioFade.paused && crossfadeEngineReady) {
+                if (audioFade.paused) {
                     audioFade.currentTime = audio.currentTime;
                     audioFade.volume = 0;
                     audioFade.playbackRate = playbackRate;
@@ -25434,13 +25434,14 @@ title: "Bore",
                 audioFade.preload = 'auto';
                 audioFade.src = source;
                 audioFade.load();
-                if (!crossfadeEngineReady) return;
                 audioFade.currentTime = audio.currentTime;
                 audioFade.volume = 0;
                 audioFade.playbackRate = playbackRate;
                 setCrossfadeGain(crossfadeFadeGain, 0);
                 audioFade.play().catch((error) => console.warn('Unable to prime crossfade audio:', error));
-            } catch (e) {}
+            } catch (error) {
+                console.warn('Unable to prepare outgoing crossfade audio:', error);
+            }
         }
 
         function stopCrossfadeTimers() {
