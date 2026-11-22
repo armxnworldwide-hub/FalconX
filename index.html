@@ -18793,6 +18793,267 @@
             }
         }
 
+        .add-to-playlist-dropdown:not(.playlist-picker-overlay) {
+            min-width: 220px;
+            max-width: min(300px, calc(100vw - 24px));
+            max-height: min(65vh, 440px);
+            overflow-y: auto;
+            overscroll-behavior: contain;
+        }
+
+        @media (max-width: 768px) {
+            .add-to-playlist-dropdown.playlist-picker-overlay {
+                box-sizing: border-box;
+                position: fixed !important;
+                inset: 0 !important;
+                z-index: 3000 !important;
+                display: flex;
+                align-items: flex-end;
+                justify-content: center;
+                width: auto !important;
+                min-width: 0 !important;
+                height: 100vh;
+                height: 100dvh;
+                max-height: none !important;
+                margin: 0 !important;
+                padding: 12px;
+                overflow: hidden;
+                border: 0 !important;
+                border-radius: 0;
+                background: rgba(3, 4, 5, .68) !important;
+                box-shadow: none !important;
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                touch-action: pan-y;
+            }
+
+            .playlist-picker-sheet {
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                width: min(100%, 560px);
+                max-height: 82vh;
+                max-height: min(82dvh, 700px);
+                padding: 10px 16px max(18px, env(safe-area-inset-bottom, 0px));
+                overflow: hidden;
+                border: 1px solid rgba(239, 213, 147, .2);
+                border-radius: 26px;
+                background:
+                    radial-gradient(ellipse at 92% 0, rgba(215, 183, 101, .16), transparent 42%),
+                    linear-gradient(155deg, #22211d, #121211 58%, #0b0b0b);
+                box-shadow: 0 24px 80px rgba(0, 0, 0, .66), inset 0 1px 0 rgba(255, 255, 255, .09);
+                animation: playlistPickerSheetIn .24s cubic-bezier(.2, .8, .2, 1) both;
+            }
+
+            @keyframes playlistPickerSheetIn {
+                from { opacity: 0; transform: translateY(28px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            .playlist-picker-grabber {
+                width: 38px;
+                height: 4px;
+                flex: 0 0 4px;
+                margin: 0 auto 13px;
+                border-radius: 99px;
+                background: rgba(255, 255, 255, .24);
+            }
+
+            .playlist-picker-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+            }
+
+            .playlist-picker-heading {
+                min-width: 0;
+            }
+
+            .playlist-picker-eyebrow {
+                color: #d7b765;
+                font-size: .58rem;
+                font-weight: 850;
+                letter-spacing: .18em;
+            }
+
+            .playlist-picker-heading h2 {
+                margin: 4px 0 0;
+                color: #fff;
+                font-size: 1.22rem;
+                font-weight: 850;
+                letter-spacing: -.035em;
+            }
+
+            .playlist-picker-close {
+                display: grid !important;
+                place-items: center;
+                width: 40px !important;
+                height: 40px;
+                flex: 0 0 40px;
+                padding: 0 !important;
+                border: 1px solid rgba(255, 255, 255, .1) !important;
+                border-radius: 13px;
+                background: rgba(255, 255, 255, .055) !important;
+                color: rgba(255, 255, 255, .78) !important;
+            }
+
+            .playlist-picker-close .lucide {
+                width: 18px !important;
+                height: 18px !important;
+            }
+
+            .playlist-picker-track {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                min-width: 0;
+                margin-top: 14px;
+                padding: 10px 12px;
+                border: 1px solid rgba(255, 255, 255, .075);
+                border-radius: 16px;
+                background: rgba(255, 255, 255, .045);
+            }
+
+            .playlist-picker-track-icon,
+            .playlist-picker-option-icon {
+                display: grid;
+                place-items: center;
+                width: 42px;
+                height: 42px;
+                flex: 0 0 42px;
+                border: 1px solid rgba(215, 183, 101, .2);
+                border-radius: 13px;
+                background: rgba(215, 183, 101, .1);
+                color: #e7cb82;
+            }
+
+            .playlist-picker-track-icon .lucide,
+            .playlist-picker-option-icon .lucide {
+                width: 18px !important;
+                height: 18px !important;
+            }
+
+            .playlist-picker-track-copy,
+            .playlist-picker-option-copy {
+                display: grid;
+                min-width: 0;
+                gap: 3px;
+            }
+
+            .playlist-picker-track-copy strong,
+            .playlist-picker-option-copy strong {
+                overflow: hidden;
+                color: rgba(255, 255, 255, .94);
+                font-size: .84rem;
+                font-weight: 750;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .playlist-picker-track-copy small,
+            .playlist-picker-option-copy small {
+                overflow: hidden;
+                color: rgba(255, 255, 255, .48);
+                font-size: .7rem;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .playlist-picker-create {
+                display: flex !important;
+                align-items: center;
+                gap: 12px !important;
+                min-height: 52px;
+                margin-top: 12px;
+                padding: 0 14px !important;
+                border: 0 !important;
+                border-radius: 15px;
+                background: linear-gradient(120deg, #ecd28a, #c49a48) !important;
+                color: #17130a !important;
+                font-size: .84rem !important;
+                font-weight: 850;
+            }
+
+            .playlist-picker-create span {
+                flex: 1;
+            }
+
+            .playlist-picker-create .lucide {
+                width: 17px !important;
+                height: 17px !important;
+                color: inherit !important;
+            }
+
+            .playlist-picker-list {
+                display: grid;
+                min-height: 0;
+                margin-top: 12px;
+                padding: 1px 1px 2px;
+                overflow-y: auto;
+                overscroll-behavior: contain;
+                gap: 8px;
+                scrollbar-width: thin;
+                scrollbar-color: rgba(215, 183, 101, .36) transparent;
+            }
+
+            .playlist-picker-option {
+                display: flex !important;
+                align-items: center;
+                gap: 12px !important;
+                min-height: 62px;
+                padding: 8px 11px !important;
+                border: 1px solid rgba(255, 255, 255, .07) !important;
+                border-radius: 16px;
+                background: rgba(255, 255, 255, .035) !important;
+                text-align: left;
+            }
+
+            .playlist-picker-option-copy {
+                flex: 1;
+            }
+
+            .playlist-picker-option-arrow {
+                display: grid;
+                place-items: center;
+                width: 30px;
+                height: 30px;
+                flex: 0 0 30px;
+                border-radius: 10px;
+                background: rgba(255, 255, 255, .055);
+                color: rgba(255, 255, 255, .5);
+            }
+
+            .playlist-picker-option-arrow .lucide {
+                width: 15px !important;
+                height: 15px !important;
+            }
+
+            .playlist-picker-empty {
+                display: grid;
+                justify-items: center;
+                gap: 5px;
+                padding: 22px 12px;
+                color: rgba(255, 255, 255, .5);
+                text-align: center;
+            }
+
+            .playlist-picker-empty strong {
+                color: rgba(255, 255, 255, .88);
+                font-size: .86rem;
+            }
+
+            .playlist-picker-empty span {
+                font-size: .74rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .playlist-picker-sheet {
+                animation: none !important;
+            }
+        }
+
     </style>
 </head>
 
@@ -24314,9 +24575,22 @@ title: "Bore",
         };
 
         let openDropdownEl = null;
+        let openDropdownKeyHandler = null;
+        let playlistPickerPreviousBodyOverflow = null;
         function closeDropdown() {
             document.querySelectorAll('.profile-avatar-btn[aria-expanded="true"]').forEach((btn) => btn.setAttribute('aria-expanded', 'false'));
-            if(openDropdownEl){openDropdownEl.remove();openDropdownEl=null;}
+            if (openDropdownKeyHandler) {
+                document.removeEventListener('keydown', openDropdownKeyHandler);
+                openDropdownKeyHandler = null;
+            }
+            if (openDropdownEl) {
+                if (openDropdownEl.classList.contains('playlist-picker-overlay') && playlistPickerPreviousBodyOverflow !== null) {
+                    document.body.style.overflow = playlistPickerPreviousBodyOverflow;
+                    playlistPickerPreviousBodyOverflow = null;
+                }
+                openDropdownEl.remove();
+                openDropdownEl = null;
+            }
         }
         document.addEventListener('click',e=>{ if(openDropdownEl&&!openDropdownEl.contains(e.target))closeDropdown(); });
         window.closeDropdown = closeDropdown;
@@ -24367,7 +24641,6 @@ title: "Bore",
             });
             menu.querySelector('[data-action="playlist"]').addEventListener('click', (event) => {
                 event.stopPropagation();
-                closeDropdown();
                 showAddToPlaylistMenu({
                     stopPropagation() {},
                     preventDefault() {},
@@ -25274,7 +25547,134 @@ title: "Bore",
             }
         }
 
-        window.showAddToPlaylistMenu = (e,fileId,rowIdx) => { e.stopPropagation(); closeDropdown(); const resolved = resolveSongForRow(fileId); const song = resolved || (Number.isInteger(rowIdx) && currentSongs[rowIdx] ? currentSongs[rowIdx] : null); if(!song)return; const artistName=song.artistName || (currentArtistKey?getArtistDisplayNameByKey(currentArtistKey):''); window.__ctxSong=song; window.__ctxArtist=artistName; const ids=Object.keys(playlists); const dd=document.createElement('div'); dd.className='add-to-playlist-dropdown'; dd.style.position='fixed'; const target=e.currentTarget || e.target; const rect=target && typeof target.getBoundingClientRect==='function' ? target.getBoundingClientRect() : { bottom: window.innerHeight / 2, left: window.innerWidth / 2 }; dd.style.top=(rect.bottom+4)+'px'; dd.style.left=Math.max(10,rect.left-140)+'px'; if(!ids.length){dd.innerHTML=`<div class="no-playlists">No playlists yet.</div><button onclick="closeDropdown();openCreatePlaylistModal()">${uiIcon('plus')}<span>Create playlist</span></button>`;}else{dd.innerHTML=`<button onclick="closeDropdown();openCreatePlaylistModal()">${uiIcon('plus')}<span>New playlist</span></button>`+ids.map(id=>`<button onclick="addSongToPlaylistById(window.__ctxSong,window.__ctxArtist,'${escA(id)}');closeDropdown()">${escH(playlists[id].name)}</button>`).join('');}document.body.appendChild(dd);renderLucideIcons(dd);openDropdownEl=dd; };
+        window.showAddToPlaylistMenu = (e, fileId, rowIdx) => {
+            e.stopPropagation();
+            const target = e.currentTarget || e.target;
+            const fallbackRect = {
+                top: window.innerHeight / 2,
+                right: window.innerWidth / 2,
+                bottom: window.innerHeight / 2,
+                left: window.innerWidth / 2
+            };
+            const rect = target && target.isConnected && typeof target.getBoundingClientRect === 'function'
+                ? target.getBoundingClientRect()
+                : fallbackRect;
+            const resolved = resolveSongForRow(fileId);
+            const song = resolved || (Number.isInteger(rowIdx) && currentSongs[rowIdx] ? currentSongs[rowIdx] : null);
+            if (!song) return;
+
+            const artistName = song.artistName || (currentArtistKey ? getArtistDisplayNameByKey(currentArtistKey) : '');
+            const ids = Object.keys(playlists);
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
+            closeDropdown();
+
+            const dd = document.createElement('div');
+            dd.className = 'add-to-playlist-dropdown';
+
+            if (isMobile) {
+                dd.classList.add('playlist-picker-overlay');
+                dd.innerHTML = `
+                    <section class="playlist-picker-sheet" role="dialog" aria-modal="true" aria-labelledby="playlistPickerTitle">
+                        <div class="playlist-picker-grabber" aria-hidden="true"></div>
+                        <header class="playlist-picker-header">
+                            <div class="playlist-picker-heading">
+                                <span class="playlist-picker-eyebrow">YOUR COLLECTION</span>
+                                <h2 id="playlistPickerTitle">Add to playlist</h2>
+                            </div>
+                            <button class="playlist-picker-close" type="button" aria-label="Close playlist picker">${uiIcon('x')}</button>
+                        </header>
+                        <div class="playlist-picker-track">
+                            <span class="playlist-picker-track-icon">${uiIcon('music')}</span>
+                            <span class="playlist-picker-track-copy">
+                                <strong>${escH(song.title || 'Unknown track')}</strong>
+                                <small>${escH(artistName || 'Unknown artist')}</small>
+                            </span>
+                        </div>
+                        <button class="playlist-picker-create" type="button">${uiIcon('plus')}<span>Create a new playlist</span>${uiIcon('arrow-right')}</button>
+                        <div class="playlist-picker-list" role="group" aria-label="Your playlists">
+                            ${ids.length ? ids.map((id) => {
+                                const playlist = playlists[id];
+                                const count = Array.isArray(playlist.songs) ? playlist.songs.length : 0;
+                                return `<button class="playlist-picker-option" type="button" data-playlist-id="${escA(id)}">
+                                    <span class="playlist-picker-option-icon">${uiIcon('list-music')}</span>
+                                    <span class="playlist-picker-option-copy">
+                                        <strong>${escH(playlist.name || 'Untitled playlist')}</strong>
+                                        <small>${count} ${count === 1 ? 'track' : 'tracks'}</small>
+                                    </span>
+                                    <span class="playlist-picker-option-arrow">${uiIcon('arrow-right')}</span>
+                                </button>`;
+                            }).join('') : '<div class="playlist-picker-empty"><strong>No playlists yet</strong><span>Create one to keep this track close.</span></div>'}
+                        </div>
+                    </section>`;
+
+                dd.addEventListener('click', (event) => {
+                    if (event.target === dd) closeDropdown();
+                });
+                dd.querySelector('.playlist-picker-close').addEventListener('click', closeDropdown);
+                dd.querySelector('.playlist-picker-create').addEventListener('click', () => {
+                    closeDropdown();
+                    openCreatePlaylistModal();
+                });
+                dd.querySelectorAll('[data-playlist-id]').forEach((button) => {
+                    button.addEventListener('click', () => {
+                        addSongToPlaylistById(song, artistName, button.dataset.playlistId);
+                        closeDropdown();
+                    });
+                });
+
+                document.body.appendChild(dd);
+                renderLucideIcons(dd);
+                playlistPickerPreviousBodyOverflow = document.body.style.overflow;
+                document.body.style.overflow = 'hidden';
+                openDropdownEl = dd;
+                openDropdownKeyHandler = (event) => {
+                    if (event.key === 'Escape') {
+                        closeDropdown();
+                        return;
+                    }
+                    if (event.key !== 'Tab') return;
+                    const focusable = Array.from(dd.querySelectorAll('button:not(:disabled)'));
+                    const first = focusable[0];
+                    const last = focusable[focusable.length - 1];
+                    if (event.shiftKey && document.activeElement === first) {
+                        event.preventDefault();
+                        last?.focus();
+                    } else if (!event.shiftKey && document.activeElement === last) {
+                        event.preventDefault();
+                        first?.focus();
+                    }
+                };
+                document.addEventListener('keydown', openDropdownKeyHandler);
+                dd.querySelector('.playlist-picker-close').focus({ preventScroll: true });
+                return;
+            }
+
+            dd.innerHTML = `<button type="button" data-create-playlist>${uiIcon('plus')}<span>New playlist</span></button>` +
+                (ids.length
+                    ? ids.map((id) => `<button type="button" data-playlist-id="${escA(id)}">${escH(playlists[id].name)}</button>`).join('')
+                    : '<div class="no-playlists">No playlists yet.</div>');
+            dd.querySelector('[data-create-playlist]').addEventListener('click', () => {
+                closeDropdown();
+                openCreatePlaylistModal();
+            });
+            dd.querySelectorAll('[data-playlist-id]').forEach((button) => {
+                button.addEventListener('click', () => {
+                    addSongToPlaylistById(song, artistName, button.dataset.playlistId);
+                    closeDropdown();
+                });
+            });
+
+            document.body.appendChild(dd);
+            renderLucideIcons(dd);
+            const menuRect = dd.getBoundingClientRect();
+            const left = Math.max(12, Math.min(rect.left, window.innerWidth - menuRect.width - 12));
+            let top = rect.bottom + 8;
+            if (top + menuRect.height > window.innerHeight - 12) top = rect.top - menuRect.height - 8;
+            top = Math.max(12, Math.min(top, window.innerHeight - menuRect.height - 12));
+            dd.style.left = `${left}px`;
+            dd.style.top = `${top}px`;
+            openDropdownEl = dd;
+        };
 
       
         async function playSong(index, manualSelection = false) {
