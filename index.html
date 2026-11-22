@@ -20506,6 +20506,793 @@
             }
         }
 
+        .liked-page {
+            width: min(100%, 1540px);
+            margin: 0 auto;
+            padding: 28px 30px calc(176px + var(--safe-bottom));
+            color: #f7f4ff;
+        }
+
+        .liked-hero {
+            position: relative;
+            isolation: isolate;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 300px;
+            align-items: center;
+            gap: 24px;
+            min-height: 300px;
+            margin-bottom: 32px;
+            padding: 36px 44px;
+            overflow: hidden;
+            border: 1px solid rgba(194, 166, 255, .2);
+            border-radius: 30px;
+            background: linear-gradient(112deg, #171426 0%, #272044 54%, #153148 100%);
+            box-shadow: 0 26px 56px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(255, 255, 255, .07);
+        }
+
+        .liked-hero::before {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 78% 48%, rgba(142, 91, 246, .34), transparent 31%), radial-gradient(circle at 10% 110%, rgba(44, 170, 207, .2), transparent 36%);
+        }
+
+        .liked-hero::after {
+            content: '';
+            position: absolute;
+            inset: auto 10% 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(207, 183, 255, .62), rgba(126, 223, 239, .48), transparent);
+            pointer-events: none;
+        }
+
+        .liked-hero-copy {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+        }
+
+        .liked-kicker,
+        .liked-library-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(224, 212, 255, .78);
+            font-size: .68rem;
+            font-weight: 850;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+
+        .liked-kicker-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #a987ff;
+            box-shadow: 0 0 14px rgba(169, 135, 255, .85);
+        }
+
+        .liked-hero h1 {
+            margin: 14px 0 0;
+            color: #fff;
+            font-size: clamp(2.8rem, 5vw, 5rem);
+            font-weight: 950;
+            letter-spacing: -2.8px;
+            line-height: .96;
+            text-wrap: balance;
+        }
+
+        .liked-intro {
+            max-width: 460px;
+            margin: 12px 0 0;
+            color: rgba(238, 233, 250, .72);
+            font-size: .95rem;
+            line-height: 1.55;
+        }
+
+        .liked-metrics {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            margin-top: 20px;
+            color: rgba(238, 233, 250, .75);
+            font-size: .78rem;
+            font-weight: 650;
+        }
+
+        .liked-metrics strong {
+            margin-right: 4px;
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 900;
+        }
+
+        .liked-metric-divider {
+            width: 1px;
+            height: 19px;
+            background: rgba(255, 255, 255, .2);
+        }
+
+        .liked-hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-top: 20px;
+        }
+
+        .liked-play-button,
+        .liked-shuffle-button,
+        .liked-empty-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 42px;
+            padding: 0 17px;
+            border: 1px solid transparent;
+            border-radius: 999px;
+            font: inherit;
+            font-size: .78rem;
+            font-weight: 850;
+            cursor: pointer;
+            transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+        }
+
+        .liked-play-button {
+            color: #171126;
+            background: linear-gradient(135deg, #e0ccff, #a9eaff);
+            box-shadow: 0 8px 22px rgba(151, 129, 238, .24);
+        }
+
+        .liked-shuffle-button,
+        .liked-empty-action {
+            color: #f5efff;
+            border-color: rgba(220, 207, 255, .22);
+            background: rgba(255, 255, 255, .055);
+        }
+
+        .liked-play-button:hover,
+        .liked-shuffle-button:hover,
+        .liked-empty-action:hover {
+            transform: translateY(-2px);
+        }
+
+        .liked-shuffle-button:hover,
+        .liked-empty-action:hover {
+            border-color: rgba(220, 207, 255, .42);
+            background: rgba(255, 255, 255, .1);
+        }
+
+        .liked-play-button .lucide,
+        .liked-shuffle-button .lucide,
+        .liked-empty-action .lucide {
+            width: 16px;
+            height: 16px;
+        }
+
+        .liked-record-stage {
+            position: relative;
+            z-index: 0;
+            display: grid;
+            width: 270px;
+            height: 270px;
+            place-items: center;
+            justify-self: center;
+        }
+
+        .liked-record {
+            position: relative;
+            display: grid;
+            width: 228px;
+            aspect-ratio: 1;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, .18);
+            border-radius: 50%;
+            background: repeating-radial-gradient(circle at center, rgba(255, 255, 255, .09) 0 1px, rgba(10, 11, 20, .1) 2px 6px, rgba(0, 0, 0, .28) 7px 8px), radial-gradient(circle, #524080, #1d1b32 66%);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, .42), inset 0 0 22px rgba(0, 0, 0, .55), 0 0 42px rgba(151, 104, 238, .14);
+            animation: liked-record-spin 36s linear infinite;
+        }
+
+        .liked-record::before,
+        .liked-record::after {
+            content: '';
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, .09);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .liked-record::before {
+            inset: 14px;
+        }
+
+        .liked-record::after {
+            inset: 29px;
+            border-color: rgba(255, 255, 255, .055);
+        }
+
+        .liked-record-label {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            width: 78px;
+            height: 78px;
+            place-items: center;
+            overflow: hidden;
+            border: 3px solid rgba(244, 235, 255, .78);
+            border-radius: 50%;
+            color: #fff;
+            background: linear-gradient(145deg, #b995ff, #52cde2);
+            box-shadow: 0 0 0 7px rgba(19, 17, 33, .78), 0 0 30px rgba(170, 140, 255, .36);
+        }
+
+        .liked-record-label img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .liked-record-label .lucide {
+            width: 28px;
+            height: 28px;
+            fill: rgba(255, 255, 255, .18);
+            stroke-width: 1.8;
+        }
+
+        .liked-record-orbit {
+            position: absolute;
+            inset: 6px 11px;
+            border: 1px solid rgba(214, 194, 255, .28);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .liked-record-orbit-one {
+            transform: rotate(-24deg);
+        }
+
+        .liked-record-orbit-two {
+            inset: 19px -5px;
+            border-color: rgba(133, 220, 238, .28);
+            transform: rotate(31deg);
+        }
+
+        .liked-record-spark {
+            position: absolute;
+            top: 24px;
+            right: 32px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #d7c2ff;
+            box-shadow: 0 0 18px 4px rgba(185, 157, 255, .56);
+        }
+
+        .liked-library {
+            padding: 0 4px;
+        }
+
+        .liked-library-heading {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 14px;
+        }
+
+        .liked-library-kicker {
+            color: rgba(190, 170, 236, .72);
+            font-size: .58rem;
+            letter-spacing: 1.6px;
+        }
+
+        .liked-library-heading h2 {
+            margin: 5px 0 0;
+            color: #f6f1ff;
+            font-size: 1.5rem;
+            font-weight: 880;
+            letter-spacing: -.55px;
+        }
+
+        .liked-library-heading p {
+            margin: 4px 0 0;
+            color: var(--text2);
+            font-size: .78rem;
+        }
+
+        .liked-track-count {
+            flex-shrink: 0;
+            padding: 7px 11px;
+            border: 1px solid rgba(191, 170, 239, .17);
+            border-radius: 999px;
+            color: rgba(229, 218, 255, .78);
+            background: rgba(160, 126, 228, .07);
+            font-size: .68rem;
+            font-weight: 800;
+        }
+
+        .liked-library > .sort-control-row {
+            justify-content: space-between;
+            gap: 12px;
+            padding: 4px 0 16px;
+        }
+
+        .liked-page .fav-download-all {
+            border-color: rgba(185, 156, 255, .34);
+            background: linear-gradient(135deg, rgba(169, 135, 255, .16), rgba(78, 196, 221, .07));
+        }
+
+        .liked-page .fav-download-all:not(:disabled):hover {
+            border-color: rgba(185, 156, 255, .58);
+            background: linear-gradient(135deg, rgba(169, 135, 255, .24), rgba(78, 196, 221, .12));
+        }
+
+        .liked-page .fav-download-icon {
+            border-color: #b99cff;
+            color: #181126;
+            background: linear-gradient(135deg, #d9c6ff, #9ce8f5);
+        }
+
+        .liked-page .fav-download-all.is-complete .fav-download-icon {
+            border-color: #a6e8ef;
+            color: #14232b;
+            background: #a6e8ef;
+        }
+
+        .liked-page .sort-trigger,
+        .liked-page .sort-trigger:hover,
+        .liked-page .sort-trigger[aria-expanded="true"] {
+            border-color: rgba(185, 156, 255, .28);
+            background: linear-gradient(135deg, rgba(169, 135, 255, .12), rgba(255, 255, 255, .035));
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .07), 0 8px 20px rgba(0, 0, 0, .16);
+        }
+
+        .liked-row-header {
+            display: grid;
+            grid-template-columns: 52px minmax(0, 1fr) auto;
+            padding: 0 16px 9px;
+            border-bottom: 1px solid rgba(206, 189, 238, .14);
+            color: rgba(191, 180, 218, .68);
+            font-size: .62rem;
+            font-weight: 800;
+            letter-spacing: 1.25px;
+            text-transform: uppercase;
+        }
+
+        .liked-row-header span:last-child {
+            padding-right: 5px;
+        }
+
+        .liked-track-list {
+            display: flex;
+            flex-direction: column;
+            border-top: 0;
+        }
+
+        .liked-page .song-row:not(.playing),
+        .liked-page .fav-song-row:not(.playing) {
+            min-width: 0;
+            min-height: 68px;
+            padding: 10px 12px;
+            border: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .065);
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+
+        .liked-page .song-row:hover:not(.playing),
+        .liked-page .fav-song-row:hover:not(.playing) {
+            background: linear-gradient(90deg, rgba(157, 125, 223, .1), rgba(92, 175, 198, .035), transparent);
+        }
+
+        .liked-page .song-row-info img,
+        .liked-page .fav-song-info img {
+            width: 46px;
+            height: 46px;
+            border: 1px solid rgba(226, 218, 244, .12);
+            border-radius: 11px;
+            box-shadow: 0 5px 14px rgba(0, 0, 0, .26);
+        }
+
+        .liked-page .song-num,
+        .liked-page .fav-song-num {
+            color: rgba(198, 185, 222, .68);
+            font-size: .75rem;
+            font-weight: 800;
+        }
+
+        .liked-page .song-row-text h4,
+        .liked-page .fav-song-text h4 {
+            color: #f0ecf7;
+            font-size: .88rem;
+            font-weight: 760;
+        }
+
+        .liked-page .song-row-text p,
+        .liked-page .fav-song-text p {
+            color: rgba(195, 188, 210, .68);
+            font-size: .72rem;
+        }
+
+        .liked-page .fav-icon-btn.liked,
+        .liked-page .fav-icon-btn.downloaded,
+        .liked-page .like-btn.liked,
+        .liked-page .dl-btn.downloaded {
+            color: #c9b0ff;
+            border-color: rgba(185, 156, 255, .3);
+            background: rgba(153, 117, 223, .1);
+            box-shadow: 0 0 12px rgba(153, 117, 223, .08);
+        }
+
+        .liked-empty {
+            display: grid;
+            grid-template-columns: 56px minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 16px;
+            margin-top: 12px;
+            padding: 22px;
+            border: 1px dashed rgba(190, 170, 236, .2);
+            border-radius: 18px;
+            background: linear-gradient(110deg, rgba(130, 100, 188, .08), rgba(49, 139, 158, .035));
+        }
+
+        .liked-empty-mark {
+            display: grid;
+            width: 52px;
+            height: 52px;
+            place-items: center;
+            border: 1px solid rgba(200, 176, 255, .2);
+            border-radius: 16px;
+            color: #d4bdff;
+            background: rgba(160, 125, 220, .12);
+        }
+
+        .liked-empty-mark .lucide {
+            width: 22px;
+            height: 22px;
+        }
+
+        .liked-empty h3 {
+            margin: 0;
+            color: #f4efff;
+            font-size: .95rem;
+            font-weight: 850;
+        }
+
+        .liked-empty p {
+            margin: 5px 0 0;
+            color: var(--text2);
+            font-size: .76rem;
+            line-height: 1.45;
+        }
+
+        .liked-empty-action {
+            min-height: 38px;
+            padding: 0 13px;
+            white-space: nowrap;
+        }
+
+        @keyframes liked-record-spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .liked-page {
+                padding: 14px 14px calc(168px + var(--safe-bottom));
+            }
+
+            .liked-hero {
+                grid-template-columns: minmax(0, 1fr) 132px;
+                gap: 4px;
+                min-height: 226px;
+                margin-bottom: 23px;
+                padding: 22px 17px;
+                border-radius: 23px;
+            }
+
+            .liked-hero-copy {
+                max-width: none;
+            }
+
+            .liked-kicker {
+                gap: 6px;
+                font-size: .51rem;
+                letter-spacing: 1.2px;
+            }
+
+            .liked-kicker-dot {
+                width: 6px;
+                height: 6px;
+            }
+
+            .liked-hero h1 {
+                margin-top: 10px;
+                font-size: clamp(1.72rem, 7vw, 2.45rem);
+                letter-spacing: -1.15px;
+            }
+
+            .liked-intro {
+                max-width: 230px;
+                margin-top: 7px;
+                font-size: .68rem;
+                line-height: 1.4;
+            }
+
+            .liked-metrics {
+                gap: 8px;
+                margin-top: 12px;
+                font-size: .61rem;
+            }
+
+            .liked-metrics strong {
+                font-size: .82rem;
+            }
+
+            .liked-metric-divider {
+                height: 15px;
+            }
+
+            .liked-hero-actions {
+                gap: 6px;
+                margin-top: 13px;
+            }
+
+            .liked-play-button,
+            .liked-shuffle-button {
+                min-height: 34px;
+                gap: 5px;
+                padding: 0 10px;
+                font-size: .64rem;
+            }
+
+            .liked-play-button .lucide,
+            .liked-shuffle-button .lucide {
+                width: 13px;
+                height: 13px;
+            }
+
+            .liked-record-stage {
+                width: 128px;
+                height: 142px;
+                transform: translateX(2px);
+            }
+
+            .liked-record {
+                width: 116px;
+            }
+
+            .liked-record-label {
+                width: 48px;
+                height: 48px;
+                border-width: 2px;
+                box-shadow: 0 0 0 5px rgba(19, 17, 33, .78), 0 0 20px rgba(170, 140, 255, .32);
+            }
+
+            .liked-record-label .lucide {
+                width: 19px;
+                height: 19px;
+            }
+
+            .liked-record-orbit {
+                inset: 11px 6px;
+            }
+
+            .liked-record-orbit-two {
+                inset: 23px -3px;
+            }
+
+            .liked-record-spark {
+                top: 13px;
+                right: 12px;
+                width: 6px;
+                height: 6px;
+            }
+
+            .liked-library {
+                padding: 0 1px;
+            }
+
+            .liked-library-heading {
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 10px;
+            }
+
+            .liked-library-kicker {
+                font-size: .52rem;
+            }
+
+            .liked-library-heading h2 {
+                margin-top: 3px;
+                font-size: 1.14rem;
+            }
+
+            .liked-library-heading p {
+                font-size: .65rem;
+            }
+
+            .liked-track-count {
+                padding: 6px 8px;
+                font-size: .59rem;
+            }
+
+            .liked-library > .sort-control-row {
+                align-items: stretch;
+                gap: 8px;
+                padding: 2px 0 12px;
+            }
+
+            .liked-library .fav-download-all {
+                flex: 1 1 185px;
+                min-height: 40px;
+                gap: 7px;
+                padding-right: 9px;
+            }
+
+            .liked-library .fav-download-icon {
+                width: 32px;
+                height: 32px;
+                flex-basis: 32px;
+                border-width: 1px;
+            }
+
+            .liked-library .fav-download-icon .lucide {
+                width: 16px;
+                height: 16px;
+            }
+
+            .liked-library .fav-download-copy strong {
+                font-size: .68rem;
+            }
+
+            .liked-library .fav-download-copy small {
+                max-width: 155px;
+                font-size: .55rem;
+            }
+
+            .liked-library .sort-trigger {
+                min-height: 40px;
+                padding: 7px 10px;
+                font-size: .66rem;
+            }
+
+            .liked-row-header {
+                grid-template-columns: 34px minmax(0, 1fr) auto;
+                padding: 0 9px 7px;
+                font-size: .53rem;
+                letter-spacing: 1px;
+            }
+
+            .liked-page .fav-song-row:not(.playing) {
+                grid-template-columns: 26px minmax(0, 1fr) auto;
+                min-height: 58px;
+                gap: 7px;
+                padding: 7px 5px;
+            }
+
+            .liked-page .fav-song-info {
+                gap: 9px;
+            }
+
+            .liked-page .fav-song-info img {
+                width: 40px;
+                height: 40px;
+                border-radius: 9px;
+            }
+
+            .liked-page .fav-song-text h4 {
+                font-size: .75rem;
+            }
+
+            .liked-page .fav-song-text p {
+                font-size: .62rem;
+            }
+
+            .liked-page .fav-song-actions {
+                gap: 3px;
+            }
+
+            .liked-page .fav-icon-btn {
+                width: 27px;
+                height: 27px;
+                font-size: .68rem;
+            }
+
+            .liked-empty {
+                grid-template-columns: 42px minmax(0, 1fr);
+                gap: 10px;
+                padding: 15px;
+                border-radius: 15px;
+            }
+
+            .liked-empty-mark {
+                width: 40px;
+                height: 40px;
+                border-radius: 13px;
+            }
+
+            .liked-empty-mark .lucide {
+                width: 18px;
+                height: 18px;
+            }
+
+            .liked-empty h3 {
+                font-size: .78rem;
+            }
+
+            .liked-empty p {
+                font-size: .64rem;
+            }
+
+            .liked-empty-action {
+                grid-column: 2;
+                justify-self: start;
+                min-height: 34px;
+                margin-top: 2px;
+                font-size: .65rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .liked-page {
+                padding-right: 10px;
+                padding-left: 10px;
+            }
+
+            .liked-hero {
+                grid-template-columns: minmax(0, 1fr) 100px;
+                padding-right: 12px;
+                padding-left: 14px;
+            }
+
+            .liked-kicker {
+                font-size: .46rem;
+                letter-spacing: 1px;
+            }
+
+            .liked-hero h1 {
+                font-size: 1.65rem;
+            }
+
+            .liked-intro {
+                max-width: 190px;
+                font-size: .63rem;
+            }
+
+            .liked-record-stage {
+                width: 102px;
+                height: 118px;
+            }
+
+            .liked-record {
+                width: 94px;
+            }
+
+            .liked-library .fav-download-all {
+                flex-basis: 160px;
+            }
+
+            .liked-library .sort-trigger {
+                padding-right: 8px;
+                padding-left: 8px;
+            }
+
+            .liked-library .sort-pill-icon {
+                display: none;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .liked-record {
+                animation: none;
+            }
+        }
+
     </style>
 </head>
 
@@ -28534,37 +29321,54 @@ title: "Bore",
             const likedBase = getLikedSongsBase();
             const likedCount = likedBase.length;
             const isMobile = window.matchMedia('(max-width: 768px)').matches;
+            const artistCount = new Set(likedBase.map((song) => song.artistKey || song.artistName || song.artist).filter(Boolean)).size;
+            const cover = likedBase[0]?.poster || '';
             const mainArea = document.getElementById('mainArea');
-            if (isMobile) {
-                const cover = likedBase[0]?.poster || '';
-                mainArea.innerHTML = `
-                <div class="fav-mobile-shell">
-                    <div class="fav-mobile-header">
-                        <div class="fav-mobile-cover">${cover ? `<img src="${escH(cover)}" onerror="this.style.background='#282828'" loading="lazy">` : uiIcon('heart')}</div>
-                        <div class="fav-mobile-meta">
-                            <div class="fav-mobile-kicker">Collection</div>
-                            <div class="fav-mobile-title">Liked Songs</div>
-                            <div class="fav-mobile-sub">${likedCount} song${likedCount !== 1 ? 's' : ''} • Personal Mix</div>
+            const desktopTopbar = isMobile ? '' : `<div class="main-topbar"><div class="nav-arrows"><button class="nav-arrow-btn" onclick="loadArtists()">${uiIcon('chevron-left')}</button></div><div style="flex:1"><div style="font-size:1.2rem;font-weight:800">Favorites</div><div style="font-size:.72rem;color:var(--text2)">${likedCount} liked songs</div></div><div class="topbar-actions"><button class="topbar-menu-btn" onclick="openMobileDrawer()" title="Menu">${uiIcon('menu')}</button></div></div>`;
+            mainArea.innerHTML = `${desktopTopbar}
+            <div class="liked-page">
+                <section class="liked-hero" aria-labelledby="likedPageTitle">
+                    <div class="liked-hero-copy">
+                        <div class="liked-kicker"><span class="liked-kicker-dot"></span>YOUR MUSIC, ON REPEAT</div>
+                        <h1 id="likedPageTitle">Liked Songs</h1>
+                        <p class="liked-intro">The tracks that stayed with you, all in one place.</p>
+                        <div class="liked-metrics">
+                            <span><strong>${likedCount}</strong> song${likedCount === 1 ? '' : 's'}</span>
+                            <span class="liked-metric-divider"></span>
+                            <span><strong>${artistCount}</strong> artist${artistCount === 1 ? '' : 's'}</span>
                         </div>
+                        ${likedCount ? `<div class="liked-hero-actions">
+                            <button class="liked-play-button" type="button" onclick="playLikedSong(0)">${uiIcon('play')}<span>Play all</span></button>
+                            <button class="liked-shuffle-button" type="button" onclick="playLikedSong(Math.floor(Math.random() * window.__likedList.length))">${uiIcon('shuffle')}<span>Surprise me</span></button>
+                        </div>` : ''}
                     </div>
-                    ${likedCount ? sortControlHTML('liked', currentFavSortType, SORT_SECTION_OPTIONS.liked, 'Sort Liked Songs', likedDownloadAllButtonHTML(likedBase)) : ''}
-                    <div class="fav-song-list">
-                        ${likedCount ? '<div class="fav-song-header"><span>#</span><span>Title</span><span></span></div><div id="favSongsList" class="sort-song-list" data-compact="1"></div>' : `<div class="empty-state" style="padding:40px 0"><div class="emoji">${uiIcon('list-music')}</div><p>No favorites yet.</p></div>`}
+                    <div class="liked-record-stage" aria-hidden="true">
+                        <div class="liked-record">
+                            <div class="liked-record-label">${cover ? `<img src="${escH(cover)}" onerror="this.style.background='#34245a'" alt="">` : uiIcon('heart')}</div>
+                        </div>
+                        <span class="liked-record-orbit liked-record-orbit-one"></span>
+                        <span class="liked-record-orbit liked-record-orbit-two"></span>
+                        <span class="liked-record-spark"></span>
                     </div>
-                </div>`;
-                renderLucideIcons(mainArea);
-                if (likedCount) {
-                    renderMobileLikedSongList(true);
-                    syncFavoritesPlaybackSource();
-                }
-                return;
-            }
-            const html = `
-            <div class="main-topbar"><div class="nav-arrows"><button class="nav-arrow-btn" onclick="loadArtists()">${uiIcon('chevron-left')}</button></div><div style="flex:1"><div style="font-size:1.2rem;font-weight:800">Favorites</div><div style="font-size:.72rem;color:var(--text2)">${likedCount} liked songs</div></div><div class="topbar-actions"><button class="topbar-menu-btn" onclick="openMobileDrawer()" title="Menu">${uiIcon('menu')}</button></div></div>
-            <div class="songs-section" style="padding-top:20px">
-                ${likedCount===0?`<div class="empty-state"><div class="emoji">${uiIcon('list-music')}</div><p>No favorites yet.</p></div>`:`${sortControlHTML('liked', currentFavSortType, SORT_SECTION_OPTIONS.liked, 'Sort Liked Songs', likedDownloadAllButtonHTML(likedBase))}<div class="songs-table-header"><span class="th">#</span><span class="th">Title</span><span class="th"></span></div><div id="favSongsList" class="sort-song-list" data-compact="0"></div>`}
+                </section>
+                <section class="liked-library" aria-labelledby="likedTracksTitle">
+                    <div class="liked-library-heading">
+                        <div>
+                            <span class="liked-library-kicker">THE ROTATION</span>
+                            <h2 id="likedTracksTitle">Your tracks</h2>
+                            <p>A little collection of songs you love.</p>
+                        </div>
+                        <span class="liked-track-count">${likedCount} saved</span>
+                    </div>
+                    ${likedCount ? `${sortControlHTML('liked', currentFavSortType, SORT_SECTION_OPTIONS.liked, 'Sort Liked Songs', likedDownloadAllButtonHTML(likedBase))}
+                    <div class="liked-row-header"><span>#</span><span>Track</span><span>Actions</span></div>
+                    <div id="favSongsList" class="liked-track-list sort-song-list" data-compact="${isMobile ? '1' : '0'}"></div>` : `<div class="liked-empty">
+                        <div class="liked-empty-mark">${uiIcon('heart')}</div>
+                        <div><h3>No songs in your orbit yet</h3><p>Like a track while you explore and it will find a home here.</p></div>
+                        <button class="liked-empty-action" type="button" onclick="loadArtists()">${uiIcon('compass')}<span>Explore music</span></button>
+                    </div>`}
+                </section>
             </div>`;
-            mainArea.innerHTML = html;
             renderLucideIcons(mainArea);
             if (likedCount) {
                 renderMobileLikedSongList(true);
