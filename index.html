@@ -6581,6 +6581,39 @@
             pointer-events: none;
             filter: drop-shadow(0 14px 24px rgba(0, 0, 0, .46));
         }
+
+        #fullscreenPlayer .mfp-viz-mode-switch {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 4px;
+            border: 1px solid rgba(255, 255, 255, .13);
+            border-radius: 999px;
+            background: rgba(8, 13, 24, .58);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        #fullscreenPlayer .mfp-viz-mode-btn {
+            min-width: 62px;
+            min-height: 30px;
+            padding: 0 11px;
+            border: 0;
+            border-radius: 999px;
+            background: transparent;
+            color: rgba(255, 255, 255, .68);
+            font: inherit;
+            font-size: .66rem;
+            font-weight: 750;
+            cursor: pointer;
+            transition: color .2s ease, background .2s ease, box-shadow .2s ease;
+        }
+
+        #fullscreenPlayer .mfp-viz-mode-btn.active {
+            color: rgb(var(--fs-accent-rgb));
+            background: rgba(var(--fs-accent-rgb), .16);
+            box-shadow: inset 0 0 0 1px rgba(var(--fs-accent-rgb), .3);
+        }
         
         #fullscreenPlayer .mfp-artwork-glow {
             position: absolute;
@@ -8191,10 +8224,7 @@
                 width: 40px;
                 height: 40px;
             }
-            .player {
-                cursor: pointer;
-            }
-            .player-song {
+            .player-poster {
                 cursor: pointer;
             }
         }
@@ -14973,7 +15003,7 @@
                 /* Keep full-player actions reachable on short mobile viewports. */
                 @media (max-width: 768px) and (max-height: 650px) {
                     #fullscreenPlayer .mfp-sheet {
-                        grid-template-rows: auto minmax(0, 1fr);
+                        grid-template-rows: auto auto minmax(0, 1fr);
                         gap: 6px;
                         padding: calc(5px + var(--safe-top)) 9px calc(6px + var(--safe-bottom));
                         overflow: hidden;
@@ -15027,8 +15057,9 @@
                     }
 
                     #fullscreenPlayer .mfp-lyrics-panel {
-                        min-height: 54px;
-                        max-height: none;
+                        min-height: 0;
+                        max-height: 100%;
+                        height: 100%;
                         border-radius: 12px;
                     }
 
@@ -21282,6 +21313,799 @@
             }
         }
 
+        #fullscreenPlayer.mfp-redesign {
+            --mfp-ink: #07090c;
+            --mfp-panel: rgba(15, 19, 25, .92);
+            --mfp-line: rgba(255, 255, 255, .1);
+            --mfp-muted: rgba(226, 232, 240, .54);
+            display: block;
+            background: var(--mfp-ink);
+            color: #f5f7fa;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-bg-layer {
+            background:
+                radial-gradient(ellipse at 2% 12%, rgba(var(--fs-accent-rgb), .17), transparent 34%),
+                radial-gradient(ellipse at 100% 88%, rgba(var(--fs-secondary-rgb), .12), transparent 40%),
+                #07090c;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-bg-gradient {
+            background: linear-gradient(115deg, rgba(7, 9, 12, .18), rgba(7, 9, 12, .72) 58%, rgba(7, 9, 12, .38));
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-bg-grain,
+        #fullscreenPlayer.mfp-redesign .mfp-aura {
+            display: none;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-sheet {
+            width: min(1480px, 100%);
+            height: 100%;
+            margin: 0 auto;
+            padding: max(18px, var(--safe-top)) clamp(16px, 3.2vw, 48px) max(18px, var(--safe-bottom));
+            grid-template-rows: 62px minmax(0, 1fr);
+            gap: clamp(12px, 2vh, 20px);
+            transform: translateY(24px);
+        }
+
+        #fullscreenPlayer.mfp-redesign.active .mfp-sheet {
+            transform: translateY(0);
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-grabber {
+            display: none;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-header {
+            grid-row: 1;
+            grid-template-columns: 42px minmax(0, 1fr) 42px;
+            min-width: 0;
+            padding: 8px 12px;
+            border: 1px solid var(--mfp-line);
+            border-radius: 17px;
+            background: rgba(12, 15, 20, .84);
+            box-shadow: none;
+            backdrop-filter: blur(18px);
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-back-btn,
+        #fullscreenPlayer.mfp-redesign .mfp-header-action {
+            width: 38px;
+            height: 38px;
+            border: 0;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, .06);
+            color: #f5f7fa;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-header-title {
+            align-items: flex-start;
+            gap: 1px;
+            text-align: left;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-header-eyebrow,
+        #fullscreenPlayer.mfp-redesign .mfp-section-kicker {
+            display: block;
+            color: var(--mfp-muted);
+            font-size: .58rem;
+            font-weight: 800;
+            letter-spacing: .18em;
+            line-height: 1.2;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-header-song-line {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            width: 100%;
+            min-width: 0;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-header-song {
+            color: #fff;
+            font-size: .78rem;
+            letter-spacing: .01em;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-header-artist {
+            color: var(--mfp-muted);
+            font-size: .61rem;
+            letter-spacing: .02em;
+            text-transform: none;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-stage {
+            grid-row: 2;
+            min-height: 0;
+            grid-template-columns: minmax(245px, .76fr) minmax(0, 1.34fr);
+            grid-template-rows: minmax(0, 1fr);
+            gap: clamp(12px, 2vw, 22px);
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-center-stack {
+            position: relative;
+            min-width: 0;
+            min-height: 0;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 17px;
+            padding: clamp(18px, 3vw, 38px);
+            overflow: hidden;
+            border: 1px solid var(--mfp-line);
+            border-radius: 28px;
+            background:
+                radial-gradient(ellipse at 45% 28%, rgba(var(--fs-accent-rgb), .13), transparent 52%),
+                linear-gradient(155deg, rgba(22, 27, 35, .9), rgba(10, 13, 17, .96) 68%);
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-center-stack::after {
+            content: '';
+            position: absolute;
+            z-index: 0;
+            inset: 14px;
+            border: 1px solid rgba(255, 255, 255, .045);
+            border-radius: 20px;
+            pointer-events: none;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-center-stack > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-artwork-wrap {
+            width: min(100%, 360px);
+            max-width: 100%;
+            margin: 0 auto;
+            aspect-ratio: 1;
+            animation: none;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-artwork-frame {
+            position: absolute;
+            inset: -9px;
+            border: 1px solid rgba(var(--fs-accent-rgb), .3);
+            border-radius: 27px;
+            transform: rotate(-3deg);
+            box-shadow: 0 0 42px rgba(var(--fs-accent-rgb), calc(var(--fs-energy) * .16));
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-artwork {
+            position: relative;
+            display: block;
+            border: 1px solid rgba(255, 255, 255, .13);
+            border-radius: 20px;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, .48);
+            animation: none;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-song-info {
+            width: 100%;
+            max-width: 100%;
+            padding: 0;
+            text-align: left;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-song-title {
+            margin-top: 8px;
+            overflow: hidden;
+            color: #fff;
+            font-size: clamp(1.45rem, 3vw, 2.45rem);
+            line-height: 1.08;
+            text-overflow: ellipsis;
+            text-wrap: balance;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-song-artist {
+            margin-top: 9px;
+            color: var(--mfp-muted);
+            font-size: .94rem;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-bottom-stack {
+            width: 100%;
+            max-height: 100%;
+            min-width: 0;
+            min-height: 0;
+            margin: 0;
+            grid-template-rows: minmax(170px, .86fr) minmax(110px, 1fr) auto auto;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-viz-panel,
+        #fullscreenPlayer.mfp-redesign .mfp-lyrics-panel,
+        #fullscreenPlayer.mfp-redesign .mfp-progress-section {
+            min-width: 0;
+            min-height: 0;
+            border: 1px solid var(--mfp-line);
+            border-radius: 20px;
+            background: var(--mfp-panel);
+            box-shadow: 0 16px 42px rgba(0, 0, 0, .18);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-viz-panel {
+            display: grid;
+            grid-template-rows: auto minmax(80px, 1fr) auto;
+            gap: 8px;
+            padding: 13px 15px 11px;
+            overflow: hidden;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-viz-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-viz-head h2 {
+            margin: 4px 0 0;
+            color: #f6f7f8;
+            font-size: .94rem;
+            font-weight: 750;
+            letter-spacing: .01em;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-viz-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 9px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 999px;
+            color: var(--mfp-muted);
+            font-size: .55rem;
+            font-weight: 800;
+            letter-spacing: .12em;
+            white-space: nowrap;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-viz-status i {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .3);
+        }
+
+        #fullscreenPlayer.mfp-redesign.viz-live .mfp-viz-status {
+            color: #d7f68b;
+        }
+
+        #fullscreenPlayer.mfp-redesign.viz-live .mfp-viz-status i {
+            background: #b6f35d;
+            box-shadow: 0 0 12px rgba(182, 243, 93, .8);
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-viz-canvas-wrap {
+            position: relative;
+            min-width: 0;
+            min-height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            background:
+                linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px),
+                radial-gradient(ellipse at 50% 100%, rgba(var(--fs-accent-rgb), .09), transparent 65%),
+                rgba(5, 7, 10, .72);
+            background-size: 30px 30px, 30px 30px, auto, auto;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-visualizer {
+            position: absolute;
+            inset: 0;
+            display: block;
+            width: 100%;
+            height: 100%;
+            transform: none;
+            opacity: 1;
+            filter: none;
+            pointer-events: none;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-viz-mode-switch {
+            display: flex;
+            justify-content: flex-start;
+            gap: 5px;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            backdrop-filter: none;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-viz-mode-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-width: 0;
+            min-height: 31px;
+            padding: 0 11px;
+            border: 1px solid transparent;
+            border-radius: 9px;
+            color: rgba(235, 239, 244, .56);
+            font-size: .62rem;
+            letter-spacing: .02em;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-viz-mode-btn .lucide {
+            width: 13px;
+            height: 13px;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-viz-mode-btn.active {
+            border-color: rgba(var(--fs-accent-rgb), .28);
+            background: rgba(var(--fs-accent-rgb), .11);
+            color: rgb(var(--fs-accent-rgb));
+            box-shadow: none;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-lyrics-panel {
+            display: flex;
+            height: auto;
+            max-height: none;
+            flex-direction: column;
+            overflow: hidden;
+            border-radius: 18px;
+            transition: opacity .2s ease, border-color .2s ease;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-lyrics-head {
+            min-height: 42px;
+            padding: 8px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, .07);
+            color: #fff;
+            font-size: .72rem;
+            letter-spacing: 0;
+            text-transform: none;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-lyrics-head > div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-lyrics-head strong {
+            font-size: .75rem;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-lyrics-head > span:last-child {
+            color: var(--mfp-muted);
+            font-size: .62rem;
+            letter-spacing: .08em;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-lyrics-scroll {
+            min-height: 0;
+            padding: 0 14px;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-lyrics-scroll::before,
+        #fullscreenPlayer.mfp-redesign .mfp-lyrics-scroll::after {
+            height: 34px;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-lyrics-scroll::before {
+            background: linear-gradient(180deg, rgba(12, 15, 20, .98), transparent);
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-lyrics-scroll::after {
+            background: linear-gradient(0deg, rgba(12, 15, 20, .98), transparent);
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-lyrics-list {
+            gap: 8px;
+            padding-top: var(--fs-lyrics-pad);
+            padding-bottom: var(--fs-lyrics-pad);
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-lyric-line {
+            color: rgba(233, 238, 244, .34);
+            font-size: clamp(.82rem, 1.2vw, 1rem);
+            line-height: 1.36;
+            text-align: center;
+            transform-origin: center;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-lyric-line.active {
+            color: #efffbd;
+            text-shadow: 0 0 20px rgba(var(--fs-accent-rgb), .3);
+            animation: none;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-lyric-line.active .mfp-lyric-text {
+            filter: drop-shadow(0 0 9px rgba(var(--fs-accent-rgb), .22));
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-progress-section {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 8px;
+            padding: 10px 13px;
+            border-radius: 15px;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-progress-track {
+            height: 5px;
+            background: rgba(255, 255, 255, .13);
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-progress-track:active,
+        #fullscreenPlayer.mfp-redesign .mfp-progress-track.dragging {
+            height: 7px;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-progress-fill {
+            background: linear-gradient(90deg, rgb(var(--fs-accent-rgb)), rgb(var(--fs-secondary-rgb)));
+            box-shadow: 0 0 16px rgba(var(--fs-accent-rgb), .35);
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-time-display {
+            display: grid;
+            grid-template-columns: auto minmax(90px, 1fr) auto auto;
+            align-items: center;
+            gap: 11px;
+            color: rgba(239, 243, 248, .62);
+            font-size: .62rem;
+            letter-spacing: .04em;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-volume-control {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-width: 0;
+            color: rgba(239, 243, 248, .7);
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-volume-btn,
+        #fullscreenPlayer.mfp-redesign .mfp-speed-btn {
+            display: inline-grid;
+            place-items: center;
+            width: 28px;
+            height: 26px;
+            flex: 0 0 auto;
+            border: 0;
+            border-radius: 7px;
+            background: rgba(255, 255, 255, .055);
+            color: rgba(239, 243, 248, .72);
+            cursor: pointer;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-volume-btn .lucide {
+            width: 14px;
+            height: 14px;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-volume-control input {
+            width: min(100%, 118px);
+            height: 4px;
+            accent-color: rgb(var(--fs-accent-rgb));
+            cursor: pointer;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-speed-btn {
+            width: auto;
+            min-width: 35px;
+            padding: 0 7px;
+            font-size: .62rem;
+            font-weight: 800;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-controls-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 10px;
+            justify-content: stretch;
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-controls {
+            max-width: none;
+            gap: clamp(3px, .8vw, 12px);
+            justify-content: center;
+            padding: 5px 9px;
+            border: 1px solid var(--mfp-line);
+            border-radius: 16px;
+            background: rgba(15, 19, 25, .92);
+            box-shadow: none;
+            backdrop-filter: blur(18px);
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-ctrl-btn,
+        #fullscreenPlayer.mfp-redesign .mfp-prev-btn,
+        #fullscreenPlayer.mfp-redesign .mfp-next-btn,
+        #fullscreenPlayer.mfp-redesign .mfp-action-btn {
+            width: 38px;
+            height: 38px;
+            flex: 0 1 38px;
+            color: rgba(244, 246, 249, .74);
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-ctrl-btn.active {
+            color: rgb(var(--fs-accent-rgb));
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-play-btn {
+            width: 48px;
+            height: 48px;
+            flex: 0 0 48px;
+            border: 0;
+            background: rgb(var(--fs-accent-rgb));
+            color: #10130b;
+            box-shadow: 0 7px 22px rgba(var(--fs-accent-rgb), .26);
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-actions {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            padding: 4px;
+            border: 1px solid var(--mfp-line);
+            border-radius: 16px;
+            background: rgba(15, 19, 25, .92);
+        }
+
+        #fullscreenPlayer.mfp-redesign .mfp-action-btn.liked,
+        #fullscreenPlayer.mfp-redesign .mfp-action-btn.downloaded,
+        #fullscreenPlayer.mfp-redesign .mfp-action-btn.active {
+            color: rgb(var(--fs-accent-rgb));
+            background: rgba(var(--fs-accent-rgb), .11);
+        }
+
+        #fullscreenPlayer.mfp-redesign:not(.lyrics-open) .mfp-lyrics-panel {
+            min-height: 42px;
+            max-height: 42px;
+        }
+
+        #fullscreenPlayer.mfp-redesign:not(.lyrics-open) .mfp-lyrics-scroll {
+            display: none;
+        }
+
+        @media (max-width: 900px) {
+            #fullscreenPlayer.mfp-redesign .mfp-sheet {
+                padding: max(12px, var(--safe-top)) clamp(10px, 3vw, 20px) max(12px, var(--safe-bottom));
+                grid-template-rows: 54px minmax(0, 1fr);
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-stage {
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-rows: auto minmax(0, 1fr);
+                gap: 10px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-center-stack {
+                display: grid;
+                grid-template-columns: auto minmax(0, 1fr);
+                grid-template-rows: auto 1fr;
+                align-items: center;
+                column-gap: 16px;
+                row-gap: 0;
+                padding: 13px 16px;
+                border-radius: 19px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-center-stack::after {
+                inset: 7px;
+                border-radius: 14px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-center-stack > .mfp-section-kicker {
+                grid-column: 2;
+                align-self: end;
+                padding-bottom: 5px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-artwork-wrap {
+                grid-column: 1;
+                grid-row: 1 / span 2;
+                width: clamp(76px, 17vw, 112px);
+                margin: 0;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-artwork-frame {
+                inset: -4px;
+                border-radius: 14px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-artwork {
+                border-radius: 11px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-song-info {
+                grid-column: 2;
+                align-self: start;
+                min-width: 0;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-song-title {
+                display: -webkit-box;
+                overflow: hidden;
+                font-size: clamp(1.08rem, 4vw, 1.55rem);
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-song-artist {
+                margin-top: 5px;
+                font-size: .78rem;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-bottom-stack {
+                grid-template-rows: clamp(128px, 23vh, 190px) minmax(70px, 1fr) auto auto;
+                gap: 8px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-viz-panel {
+                grid-template-rows: auto minmax(36px, 1fr) auto;
+                gap: 5px;
+                padding: 9px 11px 7px;
+                border-radius: 16px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-viz-head h2 {
+                margin-top: 2px;
+                font-size: .78rem;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-viz-status {
+                padding: 5px 7px;
+                font-size: .5rem;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-viz-mode-btn {
+                min-height: 27px;
+                padding: 0 9px;
+                font-size: .58rem;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-lyrics-panel {
+                border-radius: 15px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-lyrics-head {
+                min-height: 36px;
+                padding: 6px 11px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-lyrics-scroll {
+                padding: 0 11px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-lyrics-list {
+                gap: 6px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-progress-section {
+                gap: 6px;
+                padding: 8px 10px;
+                border-radius: 12px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-time-display {
+                gap: 7px;
+                font-size: .58rem;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-volume-control {
+                gap: 5px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-volume-control input {
+                width: clamp(45px, 17vw, 100px);
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-controls-row {
+                gap: 6px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-controls {
+                gap: clamp(1px, 1vw, 8px);
+                padding: 3px 5px;
+                border-radius: 13px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-ctrl-btn,
+            #fullscreenPlayer.mfp-redesign .mfp-prev-btn,
+            #fullscreenPlayer.mfp-redesign .mfp-next-btn,
+            #fullscreenPlayer.mfp-redesign .mfp-action-btn {
+                width: clamp(30px, 9vw, 38px);
+                height: clamp(30px, 9vw, 38px);
+                flex-basis: clamp(30px, 9vw, 38px);
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-play-btn {
+                width: clamp(42px, 12vw, 50px);
+                height: clamp(42px, 12vw, 50px);
+                flex-basis: clamp(42px, 12vw, 50px);
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-actions {
+                gap: 0;
+                padding: 3px;
+                border-radius: 13px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            #fullscreenPlayer.mfp-redesign .mfp-sheet {
+                padding-right: 8px;
+                padding-left: 8px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-center-stack {
+                padding: 10px 12px;
+                column-gap: 12px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-viz-mode-btn {
+                gap: 4px;
+                padding: 0 7px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-viz-mode-btn .lucide {
+                width: 12px;
+                height: 12px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-actions .mfp-action-btn {
+                width: 29px;
+                height: 32px;
+                flex-basis: 29px;
+            }
+        }
+
+        @media (max-height: 680px) {
+            #fullscreenPlayer.mfp-redesign .mfp-sheet {
+                padding-top: max(6px, var(--safe-top));
+                padding-bottom: max(6px, var(--safe-bottom));
+                grid-template-rows: 46px minmax(0, 1fr);
+                gap: 7px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-header {
+                padding-top: 4px;
+                padding-bottom: 4px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-back-btn,
+            #fullscreenPlayer.mfp-redesign .mfp-header-action {
+                width: 32px;
+                height: 32px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-bottom-stack {
+                grid-template-rows: clamp(112px, 22vh, 140px) minmax(52px, 1fr) auto auto;
+                gap: 5px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-center-stack {
+                padding-top: 8px;
+                padding-bottom: 8px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-progress-section {
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-controls {
+                padding-top: 2px;
+                padding-bottom: 2px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #fullscreenPlayer.mfp-redesign .mfp-sheet,
+            #fullscreenPlayer.mfp-redesign .mfp-artwork-frame {
+                transition-duration: .01ms;
+            }
+        }
+
     </style>
 </head>
 
@@ -21595,7 +22419,7 @@
     <div id="toast"></div>
 
 
-    <div id="fullscreenPlayer" class="mobile-fullscreen-player" aria-hidden="true">
+    <div id="fullscreenPlayer" class="mobile-fullscreen-player mfp-redesign" aria-hidden="true">
         <div class="mfp-bg-layer" aria-hidden="true">
             <div class="mfp-bg-gradient"></div>
             <div class="mfp-bg-grain"></div>
@@ -21607,6 +22431,7 @@
             <div class="mfp-header">
                 <button onclick="closeFullPlayer()" id="closePlayer" class="mfp-back-btn" aria-label="Close now playing"><i data-lucide="chevron-down" aria-hidden="true"></i></button>
                 <div class="mfp-header-title">
+                    <span class="mfp-header-eyebrow">FALCONX / NOW PLAYING</span>
                     <div class="mfp-header-song-line">
                         <p class="mfp-header-song" id="fsHeaderSong">Song Name</p><span class="explicit-badge hidden" id="fsHeaderExplicitBadge" title="Explicit" aria-label="Explicit content">E</span></div>
                     <p class="mfp-header-artist" id="fsHeaderArtist">Artist</p>
@@ -21615,8 +22440,9 @@
             </div>
             <div class="mfp-stage" id="fsStage">
                 <div class="mfp-center-stack">
+                    <span class="mfp-section-kicker">ON THE DECK</span>
                     <div class="mfp-artwork-wrap">
-                        <canvas class="mfp-visualizer" id="fsVisualizer" width="380" height="110" aria-hidden="true"></canvas>
+                        <div class="mfp-artwork-frame" aria-hidden="true"></div>
                         <img id="fsPoster" class="mfp-artwork" alt="Now playing cover">
                     </div>
                     <div class="mfp-song-info">
@@ -21626,9 +22452,26 @@
                     </div>
                 </div>
                 <div class="mfp-bottom-stack">
+                    <section class="mfp-viz-panel" aria-label="Live audio visualizer">
+                        <div class="mfp-viz-head">
+                            <div>
+                                <span class="mfp-section-kicker">AUDIO REACTOR</span>
+                                <h2>Live visualizer</h2>
+                            </div>
+                            <span class="mfp-viz-status" id="fsVizStatus"><i aria-hidden="true"></i><span>READY</span></span>
+                        </div>
+                        <div class="mfp-viz-canvas-wrap">
+                            <canvas class="mfp-visualizer" id="fsVisualizer" width="900" height="260" aria-label="Audio visualizer"></canvas>
+                        </div>
+                        <div class="mfp-viz-mode-switch" role="group" aria-label="Visualizer style">
+                            <button class="mfp-viz-mode-btn active" type="button" data-fs-viz-mode="bars" aria-label="Spectrum bars" aria-pressed="true" onclick="setFullPlayerVizMode('bars')"><i data-lucide="audio-lines" aria-hidden="true"></i><span>Spectrum</span></button>
+                            <button class="mfp-viz-mode-btn" type="button" data-fs-viz-mode="wave" aria-label="Waveform" aria-pressed="false" onclick="setFullPlayerVizMode('wave')"><i data-lucide="activity" aria-hidden="true"></i><span>Wave</span></button>
+                            <button class="mfp-viz-mode-btn" type="button" data-fs-viz-mode="circle" aria-label="Circular visualizer" aria-pressed="false" onclick="setFullPlayerVizMode('circle')"><i data-lucide="orbit" aria-hidden="true"></i><span>Orbit</span></button>
+                        </div>
+                    </section>
                     <section class="mfp-lyrics-panel" id="fsLyricsPanel" aria-label="Synchronized lyrics">
                         <div class="mfp-lyrics-head">
-                            <span>Lyrics</span>
+                            <div><span class="mfp-section-kicker">SING ALONG</span><strong>Lyrics</strong></div>
                             <span id="fsLyricTimestamp">0:00</span>
                         </div>
                         <div class="mfp-lyrics-scroll" id="fsLyricsScroll">
@@ -21643,21 +22486,26 @@
                         </div>
                         <div class="mfp-time-display">
                             <span id="fsCurrentTime">0:00</span>
+                            <label class="mfp-volume-control" aria-label="Volume">
+                                <button class="mfp-volume-btn" type="button" data-volume-mute onclick="toggleMute()" aria-label="Mute"><i data-lucide="volume-2" aria-hidden="true"></i></button>
+                                <input id="fsVolumeSlider" type="range" min="0" max="1" step="0.01" value="1" data-playback-volume aria-label="Volume" oninput="setPlaybackVolume(this.value)">
+                            </label>
+                            <button class="mfp-speed-btn" id="fsSpeedBtn" type="button" onclick="cyclePlaybackRate()" title="Playback speed" aria-label="Change playback speed" data-playback-rate-value>1×</button>
                             <span id="fsDuration">0:00</span>
                         </div>
                     </div>
                     <div class="mfp-controls-row">
                         <div class="mfp-controls">
-                            <button class="mfp-ctrl-btn" id="fsShuffle" onclick="toggleShuffle()" title="Shuffle"><i data-lucide="shuffle" aria-hidden="true"></i></button>
-                            <button class="mfp-prev-btn" onclick="previous()" title="Previous"><i data-lucide="skip-back" aria-hidden="true"></i></button>
-                            <button class="mfp-play-btn" id="fsPlay" onclick="togglePlay()"><i data-lucide="play" aria-hidden="true"></i></button>
-                            <button class="mfp-next-btn" onclick="next()" title="Next"><i data-lucide="skip-forward" aria-hidden="true"></i></button>
-                            <button class="mfp-ctrl-btn" id="fsRepeat" onclick="toggleRepeat()" title="Repeat"><i data-lucide="repeat" aria-hidden="true"></i></button>
+                            <button class="mfp-ctrl-btn" id="fsShuffle" onclick="toggleShuffle()" title="Shuffle" aria-label="Shuffle"><i data-lucide="shuffle" aria-hidden="true"></i></button>
+                            <button class="mfp-prev-btn" onclick="previous()" title="Previous track" aria-label="Previous track"><i data-lucide="skip-back" aria-hidden="true"></i></button>
+                            <button class="mfp-play-btn" id="fsPlay" onclick="togglePlay()" aria-label="Play or pause"><i data-lucide="play" aria-hidden="true"></i></button>
+                            <button class="mfp-next-btn" onclick="next()" title="Next track" aria-label="Next track"><i data-lucide="skip-forward" aria-hidden="true"></i></button>
+                            <button class="mfp-ctrl-btn" id="fsRepeat" onclick="toggleRepeat()" title="Repeat" aria-label="Repeat"><i data-lucide="repeat" aria-hidden="true"></i></button>
                         </div>
                         <div class="mfp-actions">
-                            <button class="mfp-action-btn" id="fsLikeBtn" onclick="toggleFullPlayerLike()" title="Like"><i data-lucide="heart" aria-hidden="true"></i></button>
+                            <button class="mfp-action-btn" id="fsLikeBtn" onclick="toggleFullPlayerLike()" title="Like" aria-label="Like current song"><i data-lucide="heart" aria-hidden="true"></i></button>
                             <button class="mfp-action-btn" id="fsDlBtn" onclick="downloadCurrentSong()" title="Download" aria-label="Download current song"><i data-lucide="download" aria-hidden="true"></i></button>
-                            <button class="mfp-action-btn" id="fsQueueBtn" onclick="toggleQueuePanel()" title="Queue"><i data-lucide="list-music" aria-hidden="true"></i></button>
+                            <button class="mfp-action-btn" id="fsQueueBtn" onclick="toggleQueuePanel()" title="Queue" aria-label="Open queue"><i data-lucide="list-music" aria-hidden="true"></i></button>
                         </div>
                     </div>
                 </div>
@@ -27349,6 +28197,11 @@ title: "Bore",
             document.querySelectorAll('[data-playback-volume-value]').forEach((label) => {
                 label.textContent = `${Math.round(volume * 100)}%`;
             });
+            document.querySelectorAll('[data-volume-mute]').forEach((button) => {
+                setElementIcon(button, isMuted ? 'volume-x' : 'volume-2');
+                button.setAttribute('aria-label', isMuted ? 'Unmute' : 'Mute');
+                button.title = isMuted ? 'Unmute' : 'Mute';
+            });
         }
 
         function setPlaybackVolume(value) {
@@ -28360,6 +29213,8 @@ title: "Bore",
     
         let isDragging = false;
         let activeDragTrack = null;
+        let activeDragStartX = 0;
+        let activeDragDidMove = false;
         let lastPlaybackSaveAt = 0;
 
         function updateNowPlayingIndicator() {
@@ -28399,22 +29254,29 @@ title: "Bore",
             if (!track) return;
             isDragging = true;
             activeDragTrack = track;
+            activeDragStartX = getClientX(e);
+            activeDragDidMove = false;
             track.classList.add('dragging');
             track.setPointerCapture?.(e.pointerId);
-            seekFromClientX(track, getClientX(e));
+            seekFromClientX(track, activeDragStartX);
             if (e.cancelable) e.preventDefault();
         }
 
         function updateProgressFromEvent(e) {
             if (!isDragging || !activeDragTrack) return;
-            seekFromClientX(activeDragTrack, getClientX(e));
+            const clientX = getClientX(e);
+            if (Math.abs(clientX - activeDragStartX) > 6) activeDragDidMove = true;
+            seekFromClientX(activeDragTrack, clientX);
         }
 
-        function endDrag() {
+        function endDrag(e) {
+            const openPlayerOnTap = e?.type === 'pointerup' && activeDragTrack === document.getElementById('progressTrack') && !activeDragDidMove;
             isDragging = false;
             document.getElementById('progressTrack')?.classList.remove('dragging');
             document.getElementById('fsProgressTrack')?.classList.remove('dragging');
             activeDragTrack = null;
+            activeDragDidMove = false;
+            if (openPlayerOnTap) openFullPlayer();
         }
 
         window.addEventListener('pointermove', (e) => { if (isDragging) updateProgressFromEvent(e); }, { passive: true });
@@ -29696,6 +30558,7 @@ title: "Bore",
         let visualizerWaveData = null;
         let visualizerFrame = 0;
         let visualizerReady = false;
+        let fullPlayerVisualizerStatus = '';
         const fullPlayerSwipe = {
             tracking: false,
             startY: 0,
@@ -30693,42 +31556,64 @@ title: "Bore",
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                 if (!fullPlayerOpen) return;
-                if (!visualizerReady || !visualizerAnalyser || !visualizerFreqData || !visualizerWaveData) return;
-                if (visualizerCtx?.state === 'suspended' && !audio.paused) {
-                    visualizerCtx.resume().catch(() => {});
+                let hasLiveSignal = false;
+                if (visualizerReady && visualizerAnalyser && visualizerFreqData && visualizerWaveData && !audio.paused) {
+                    try {
+                        visualizerAnalyser.getByteFrequencyData(visualizerFreqData);
+                        visualizerAnalyser.getByteTimeDomainData(visualizerWaveData);
+                        hasLiveSignal = visualizerCtx?.state === 'running';
+                    } catch (error) {
+                        console.warn('Fullscreen visualizer could not read audio data:', error);
+                    }
                 }
-
-                visualizerAnalyser.getByteFrequencyData(visualizerFreqData);
-                visualizerAnalyser.getByteTimeDomainData(visualizerWaveData);
+                if (visualizerCtx?.state === 'suspended' && !audio.paused) {
+                    visualizerCtx.resume().catch((error) => console.warn('Fullscreen visualizer audio context resume failed:', error));
+                }
 
                 const w = canvas.width;
                 const h = canvas.height;
-                const midY = h * 0.58;
                 const bars = 40;
                 const barW = w / bars;
-                const barGradient = ctx.createLinearGradient(0, midY - (h * 0.66), 0, midY + 8);
+                const now = performance.now() / 1000;
+                const barGradient = ctx.createLinearGradient(0, 0, 0, h);
                 barGradient.addColorStop(0, `rgba(${ambientCssPrimary}, .92)`);
-                barGradient.addColorStop(1, `rgba(${ambientCssSecondary}, .16)`);
+                barGradient.addColorStop(1, `rgba(${ambientCssSecondary}, .3)`);
+                const getLevel = (index, count = bars) => {
+                    if (hasLiveSignal && visualizerFreqData) {
+                        const bin = Math.floor((index / count) * visualizerFreqData.length);
+                        return visualizerFreqData[bin] / 255;
+                    }
+                    if (audio.paused) return .025 + (Math.sin(now + index * .7) + 1) * .009;
+                    const pulse = (Math.sin(now * (2.1 + (index % 7) * .16) + index * .72) + 1) / 2;
+                    return .045 + pulse * .32;
+                };
+                const getWaveSample = (index, count) => {
+                    if (hasLiveSignal && visualizerWaveData) {
+                        const dataIndex = Math.floor((index / (count - 1)) * (visualizerWaveData.length - 1));
+                        return (visualizerWaveData[dataIndex] - 128) / 128;
+                    }
+                    const amount = audio.paused ? .018 : .2 + (Math.sin(now * 2) + 1) * .09;
+                    const x = index / (count - 1);
+                    return Math.sin((x * 7.5 + now * 1.4) * Math.PI) * amount
+                        + Math.sin((x * 3.2 - now * .8) * Math.PI) * amount * .32;
+                };
 
                 let energy = 0;
                 for (let i = 0; i < bars; i += 1) {
-                    const idx = Math.floor((i / bars) * visualizerFreqData.length);
-                    const v = visualizerFreqData[idx] / 255;
-                    energy += v;
-                    const eased = Math.pow(v, 1.4);
-                    const barH = (h * 0.66) * eased;
-                    const x = i * barW + (barW * 0.14);
-                    const y = midY - barH;
-                    ctx.fillStyle = barGradient;
-                    const bw = Math.max(2, barW * 0.7);
-                    ctx.fillRect(x, y, bw, barH + 2);
+                    energy += getLevel(i);
                 }
-
                 energy /= bars;
                 fullscreenPlayer?.style.setProperty('--fs-energy', clampNumber(0.18 + energy * 0.9, 0.18, 0.98).toFixed(3));
+                const status = hasLiveSignal ? 'SIGNAL LOCKED' : audio.paused ? 'PAUSED' : 'VISUAL MODE';
+                if (status !== fullPlayerVisualizerStatus) {
+                    fullPlayerVisualizerStatus = status;
+                    const statusLabel = document.querySelector('#fsVizStatus span');
+                    if (statusLabel) statusLabel.textContent = status;
+                    fullscreenPlayer?.classList.toggle('viz-live', hasLiveSignal);
+                }
 
                 // Update EQ meter bars
-                if (eqPanelOpen) {
+                if (eqPanelOpen && hasLiveSignal && visualizerFreqData) {
                     meterBars.forEach((span, i) => {
                         const idx = Math.floor((i / meterBars.length) * visualizerFreqData.length);
                         const v = (visualizerFreqData[idx] || 0) / 255;
@@ -30737,17 +31622,71 @@ title: "Bore",
                     });
                 }
 
-                ctx.beginPath();
-                for (let i = 0; i < visualizerWaveData.length; i += 1) {
-                    const x = (i / (visualizerWaveData.length - 1)) * w;
-                    const sample = (visualizerWaveData[i] - 128) / 128;
-                    const y = midY + sample * (h * 0.12);
-                    if (i === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
+                if (audioEngine.vizMode === 'wave') {
+                    const midY = h * .5;
+                    ctx.beginPath();
+                    const points = Math.max(96, Math.min(visualizerWaveData?.length || 256, Math.floor(w / 2)));
+                    for (let i = 0; i < points; i += 1) {
+                        const x = (i / (points - 1)) * w;
+                        const sample = getWaveSample(i, points);
+                        const y = midY + sample * (h * .38);
+                        if (i === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    ctx.strokeStyle = `rgba(${ambientCssPrimary}, .96)`;
+                    ctx.lineWidth = Math.max(1.8, dpr * 1.5);
+                    ctx.shadowColor = `rgba(${ambientCssPrimary}, .6)`;
+                    ctx.shadowBlur = 12 * dpr;
+                    ctx.lineJoin = 'round';
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+                } else if (audioEngine.vizMode === 'circle') {
+                    const points = 96;
+                    const centerX = w * .5;
+                    const centerY = h * .5;
+                    const baseRadius = Math.min(h * .3, w * .18);
+                    ctx.lineWidth = Math.max(1.3, dpr * 1.1);
+                    ctx.lineCap = 'round';
+                    ctx.shadowColor = `rgba(${ambientCssPrimary}, .62)`;
+                    ctx.shadowBlur = 9 * dpr;
+                    for (let i = 0; i < points; i += 1) {
+                        const angle = (i / points) * Math.PI * 2;
+                        const magnitude = Math.pow(getLevel(i, points), .72);
+                        const innerRadius = baseRadius * 1.03;
+                        const outerRadius = innerRadius + (h * .34) * magnitude;
+                        ctx.beginPath();
+                        ctx.moveTo(centerX + Math.cos(angle) * innerRadius, centerY + Math.sin(angle) * innerRadius);
+                        ctx.lineTo(centerX + Math.cos(angle) * outerRadius, centerY + Math.sin(angle) * outerRadius);
+                        ctx.strokeStyle = `rgba(${ambientCssPrimary}, ${.34 + magnitude * .66})`;
+                        ctx.stroke();
+                    }
+                    ctx.shadowBlur = 0;
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, baseRadius, 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(${ambientCssSecondary}, .78)`;
+                    ctx.lineWidth = Math.max(1.6, dpr * 1.4);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, baseRadius * .72, 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(${ambientCssPrimary}, .18)`;
+                    ctx.lineWidth = Math.max(1, dpr);
+                    ctx.stroke();
+                } else {
+                    const baseline = h * .92;
+                    const gap = Math.max(2, barW * .24);
+                    const width = Math.max(2, barW - gap);
+                    ctx.fillStyle = barGradient;
+                    ctx.shadowColor = `rgba(${ambientCssPrimary}, .34)`;
+                    ctx.shadowBlur = 10 * dpr;
+                    for (let i = 0; i < bars; i += 1) {
+                        const magnitude = getLevel(i);
+                        const barHeight = Math.max(3 * dpr, h * .78 * Math.pow(magnitude, 1.2));
+                        const x = i * barW + gap / 2;
+                        ctx.fillRect(x, baseline - barHeight, width, barHeight);
+                        ctx.fillRect(x, baseline + Math.min(h * .025, 5 * dpr), width, barHeight * .17);
+                    }
+                    ctx.shadowBlur = 0;
                 }
-                ctx.strokeStyle = `rgba(${ambientCssPrimary}, .62)`;
-                ctx.lineWidth = Math.max(1.2, dpr * 1.05);
-                ctx.stroke();
             };
 
             visualizerFrame = requestAnimationFrame(draw);
@@ -30899,6 +31838,18 @@ title: "Bore",
             setFullPlayerEnergy();
         }
 
+        function syncFullPlayerVizMode() {
+            document.querySelectorAll('#fullscreenPlayer [data-fs-viz-mode]').forEach((button) => {
+                const active = button.dataset.fsVizMode === audioEngine.vizMode;
+                button.classList.toggle('active', active);
+                button.setAttribute('aria-pressed', String(active));
+            });
+        }
+
+        window.setFullPlayerVizMode = (mode) => {
+            setVizMode(mode);
+        };
+
         if (fsLyricsScroll && fsLyricsScroll.dataset.motionBound !== '1') {
             fsLyricsScroll.dataset.motionBound = '1';
             fsLyricsScroll.addEventListener('touchstart', () => pauseFullPlayerLyricMotion(2200), {
@@ -30943,8 +31894,10 @@ title: "Bore",
             fullscreenPlayer.classList.add('active');
             fullscreenPlayer.classList.toggle('lyrics-open', fullPlayerLyricsOpen);
             fullscreenPlayer.setAttribute('aria-hidden', 'false');
+            syncFullPlayerVizMode();
             document.body.classList.add('fs-player-open');
             fullPlayerOpen = true;
+            updatePlaybackSettingsUI();
             updateFullPlayerUI();
             scheduleFullPlayerLyricsMeasure(true);
             startFullPlayerLyricMotion();
@@ -31497,10 +32450,12 @@ title: "Bore",
         }
 
         function setVizMode(mode) {
+            if (!['bars', 'wave', 'circle'].includes(mode)) return;
             audioEngine.vizMode = mode;
-            document.querySelectorAll('#as-visualizer .as-card').forEach(c => {
-                c.classList.toggle('active', c.textContent.toLowerCase().includes(mode));
+            document.querySelectorAll('#as-visualizer [data-as-viz-mode]').forEach(button => {
+                button.classList.toggle('active', button.dataset.asVizMode === mode);
             });
+            syncFullPlayerVizMode();
         }
 
         function updateEffect(effect, val) {
@@ -31764,7 +32719,7 @@ title: "Bore",
                     <div class="as-content active" id="as-eq"><div class="eq-grid">${audioEngine.bands.map((freq, i) => `<div class="eq-band"><input type="range" class="eq-slider-vertical" min="-15" max="15" step="0.5" value="${audioEngine.filters[i]?.gain.value || 0}" oninput="updateEQBand(${i}, this.value)"><span class="eq-label-freq">${freq >= 1000 ? (freq/1000) + 'kHz' : freq + 'Hz'}</span><span class="eq-label-db" id="eq-db-${i}">${(audioEngine.filters[i]?.gain.value || 0).toFixed(1)}dB</span></div>`).join('')}</div><div style="display:flex; gap:15px; justify-content:center;"><button class="btn btn-outline" onclick="resetEQ()">Reset EQ</button><button class="btn btn-accent" onclick="saveCustomPreset()">Save Custom</button></div></div>
                     <div class="as-content" id="as-presets"><div class="as-grid">${Object.keys(allPresets).map(name => `<div class="as-card ${localStorage.getItem('as_active_preset') === name ? 'active' : ''}" onclick="applyAudioPreset('${name}')"><div class="as-card-icon">${uiIcon('music')}</div><div class="as-card-title">${name}</div></div>`).join('')}</div></div>
                     <div class="as-content" id="as-effects"><div class="as-grid"><div class="as-card"><div class="as-card-title">Preamp (Gain)</div><input type="range" min="0" max="2" step="0.05" value="${audioEngine.preamp?.gain.value || 1}" oninput="updatePreamp(this.value)"><span id="preamp-val">${(audioEngine.preamp?.gain.value || 1).toFixed(2)}x</span></div><div class="as-card"><div class="as-card-title">Stereo Pan</div><input type="range" min="-1" max="1" step="0.1" value="${audioEngine.panner?.pan.value || 0}" oninput="updatePan(this.value)"><span id="pan-val">${(audioEngine.panner?.pan.value || 0).toFixed(1)}</span></div><div class="as-card"><div class="as-card-title">Reverb (Space)</div><input type="range" min="0" max="1" step="0.05" value="${localStorage.getItem('as_reverb') || 0}" oninput="updateEffect('reverb', this.value)"></div><div class="as-card"><div class="as-card-title">Delay (Echo)</div><input type="range" min="0" max="1" step="0.05" value="${localStorage.getItem('as_delay') || 0}" oninput="updateEffect('delay', this.value)"></div></div></div>
-                    <div class="as-content" id="as-visualizer"><div class="viz-container"><canvas id="as-viz-canvas"></canvas></div><div class="as-grid" style="margin-top:20px"><div class="as-card ${audioEngine.vizMode==='bars'?'active':''}" onclick="setVizMode('bars')">Spectrum Bars</div><div class="as-card ${audioEngine.vizMode==='wave'?'active':''}" onclick="setVizMode('wave')">Waveform</div><div class="as-card ${audioEngine.vizMode==='circle'?'active':''}" onclick="setVizMode('circle')">Circular</div></div></div>
+                    <div class="as-content" id="as-visualizer"><div class="viz-container"><canvas id="as-viz-canvas"></canvas></div><div class="as-grid" style="margin-top:20px"><div class="as-card ${audioEngine.vizMode==='bars'?'active':''}" data-as-viz-mode="bars" onclick="setVizMode('bars')">Spectrum Bars</div><div class="as-card ${audioEngine.vizMode==='wave'?'active':''}" data-as-viz-mode="wave" onclick="setVizMode('wave')">Waveform</div><div class="as-card ${audioEngine.vizMode==='circle'?'active':''}" data-as-viz-mode="circle" onclick="setVizMode('circle')">Circular</div></div></div>
                     <div class="as-content" id="as-advanced"><div class="as-grid"><div class="as-card"><div class="as-card-title">Compressor Threshold</div><input type="range" min="-60" max="0" step="1" value="${audioEngine.compressor?.threshold.value || -24}" oninput="updateCompressor('threshold', this.value)"></div><div class="as-card"><div class="as-card-title">Compressor Ratio</div><input type="range" min="1" max="20" step="1" value="${audioEngine.compressor?.ratio.value || 12}" oninput="updateCompressor('ratio', this.value)"></div></div></div>
                     <div class="as-content" id="as-stats"><div class="stats-box"><div class="stats-row"><span class="stats-label">Sample Rate</span><span class="stats-value" id="stat-sr">44100 Hz</span></div><div class="stats-row"><span class="stats-label">Channels</span><span class="stats-value">2 (Stereo)</span></div><div class="stats-row"><span class="stats-label">Context State</span><span class="stats-value" id="stat-state">Running</span></div><div class="stats-row"><span class="stats-label">Audio Latency</span><span class="stats-value" id="stat-latency">0ms</span></div><div class="stats-row"><span class="stats-label">Peak Level</span><span class="stats-value" id="stat-peak">0.00</span></div><div class="stats-row"><span class="stats-label">Audio Engine</span><span class="stats-value">FalconX Pro v3.0</span></div></div></div>
                     ${creatorCreditHTML('page-creator-credit')}
@@ -31902,17 +32857,6 @@ title: "Bore",
 
         if(!('caches' in window)){ console.warn('Cache API not available.'); document.querySelectorAll('.dl-btn,.player-dl-btn,.dl-queue-btn').forEach(el=>el.style.display='none'); }
 
-        const playerSongEl = document.querySelector('.player-song');
-        if (playerSongEl && playerSongEl.dataset.fullscreenBound !== '1') {
-            playerSongEl.dataset.fullscreenBound = '1';
-            playerSongEl.addEventListener('click', (e) => {
-                if (!(e.target instanceof Element)) return;
-                if (e.target.closest('button, input, .player-poster, .player-mobile-actions')) return;
-                if (currentSong) openFullPlayer();
-            });
-        }
-
-      
         document.addEventListener('keydown', (e) => {
             if (e.key !== 'Escape') return;
             if (lyricsPanelOpen) closeLyricsPanel();
