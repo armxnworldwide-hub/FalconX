@@ -15548,12 +15548,12 @@
 
                 .splash-mark {
                     position: relative;
-                    width: 92px;
-                    height: 92px;
+                    width: 112px;
+                    height: 148px;
                     display: grid;
                     place-items: center;
                     border: 1px solid rgba(215, 183, 101, .42);
-                    border-radius: 27px;
+                    border-radius: 28px;
                     background: linear-gradient(145deg, rgba(215, 183, 101, .18), rgba(255, 255, 255, .035));
                     box-shadow: 0 18px 48px rgba(0, 0, 0, .48), 0 0 36px rgba(215, 183, 101, .14), inset 0 1px 0 rgba(255, 255, 255, .16);
                     opacity: 0;
@@ -15583,10 +15583,11 @@
                 }
 
                 .splash-mark img {
-                    width: 72px;
-                    height: 72px;
-                    border-radius: 20px;
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 27px;
                     object-fit: cover;
+                    object-position: center 68%;
                     box-shadow: 0 8px 20px rgba(0, 0, 0, .42);
                 }
 
@@ -15720,8 +15721,8 @@
 
                 @media (max-width: 520px) {
                     #splash.fx-minimal-intro .splash-inner { gap: 16px; }
-                    .splash-mark { width: 82px; height: 82px; border-radius: 24px; }
-                    .splash-mark img { width: 64px; height: 64px; border-radius: 17px; }
+                    .splash-mark { width: 100px; height: 134px; border-radius: 25px; }
+                    .splash-mark img { border-radius: 24px; }
                     .splash-wordmark { font-size: clamp(2.55rem, 16vw, 4rem); }
                 }
 
@@ -18624,7 +18625,7 @@
     <div id="splash" class="fx-minimal-intro" role="status" aria-label="FalconX is loading">
         <div class="splash-inner">
             <div class="splash-mark" aria-hidden="true">
-                <img src="images/falconn.jpeg" alt="">
+                <img src="images/armaan.jpg" alt="">
             </div>
             <div class="splash-wordmark" aria-label="FalconX">
                 <span>Falcon</span><span class="splash-wordmark-x">X</span>
