@@ -23674,6 +23674,7 @@ title: "Bore",
         let shuffleHistory = [],
             continueListening = [];
         let crossfadeTimer = null,
+            crossfadeFadeOutTimer = null,
             crossfadeInTimer = null,
             crossfadeFallbackTimers = new Set(),
             crossfadeSeconds = USE_IOS_NATIVE_PLAYBACK ? 0 : Math.max(0, Math.min(12, parseInt(localStorage.getItem('eq_crossfade_seconds') || '0', 10) || 0)),
@@ -25416,20 +25417,29 @@ title: "Bore",
         function primeCrossfadeOutgoingAudio() {
             if (USE_IOS_NATIVE_PLAYBACK || crossfadeSeconds <= 0 || sleepTimerMode === 'end' || !isAutoplayNextEnabled() || isRepeat || crossfadeTransitionActive || !audio.src) return;
             const source = audio.currentSrc || audio.src;
-            if (!source || audioFade.src === source || audioFade.currentSrc === source) return;
-            const seekToCrossfadeStart = () => {
-                if (!audioFade.src || !Number.isFinite(audio.duration) || !Number.isFinite(audioFade.duration)) return;
-                const crossfadeStart = Math.max(0, audio.duration - crossfadeSeconds);
-                if (Math.abs(audioFade.currentTime - crossfadeStart) > .75) audioFade.currentTime = crossfadeStart;
-            };
+            if (!source) return;
+            if (audioFade.src === source || audioFade.currentSrc === source) {
+                if (audioFade.paused && crossfadeEngineReady) {
+                    audioFade.currentTime = audio.currentTime;
+                    audioFade.volume = 0;
+                    audioFade.playbackRate = playbackRate;
+                    setCrossfadeGain(crossfadeFadeGain, 0);
+                    audioFade.play().catch((error) => console.warn('Unable to prime crossfade audio:', error));
+                }
+                return;
+            }
             try {
                 releaseAudioObjectUrl(audioFade.src);
                 audioFade.pause();
                 audioFade.preload = 'auto';
-                audioFade.addEventListener('loadedmetadata', seekToCrossfadeStart, { once: true });
                 audioFade.src = source;
                 audioFade.load();
-                if (audioFade.readyState >= HTMLMediaElement.HAVE_METADATA) seekToCrossfadeStart();
+                if (!crossfadeEngineReady) return;
+                audioFade.currentTime = audio.currentTime;
+                audioFade.volume = 0;
+                audioFade.playbackRate = playbackRate;
+                setCrossfadeGain(crossfadeFadeGain, 0);
+                audioFade.play().catch((error) => console.warn('Unable to prime crossfade audio:', error));
             } catch (e) {}
         }
 
@@ -25437,6 +25447,10 @@ title: "Bore",
             if (crossfadeTimer) {
                 clearTimeout(crossfadeTimer);
                 crossfadeTimer = null;
+            }
+            if (crossfadeFadeOutTimer) {
+                clearTimeout(crossfadeFadeOutTimer);
+                crossfadeFadeOutTimer = null;
             }
             if (crossfadeInTimer) {
                 clearTimeout(crossfadeInTimer);
@@ -25841,12 +25855,12 @@ title: "Bore",
                     audioFade.removeAttribute('src');
                     audioFade.load();
                     releaseAudioObjectUrl(fadingObjectUrl);
-                    crossfadeTimer = null;
+                    crossfadeFadeOutTimer = null;
                     crossfadeTransitionActive = false;
                     setCrossfadeGain(crossfadeFadeGain, 0);
                     primeCrossfadeOutgoingAudio();
                 };
-                crossfadeTimer = crossfadeEngineReady ? rampCrossfadeGain(crossfadeFadeGain, 1, 0, fadeMs, finishFadeOut) : animateAudioVolume(audioFade, targetVol, 0, fadeMs, finishFadeOut);
+                crossfadeFadeOutTimer = crossfadeEngineReady ? rampCrossfadeGain(crossfadeFadeGain, 1, 0, fadeMs, finishFadeOut) : animateAudioVolume(audioFade, targetVol, 0, fadeMs, finishFadeOut);
             } else {
                 crossfadeTransitionActive = false;
                 releaseAudioObjectUrl(audioFade.src);
@@ -28866,6 +28880,9 @@ title: "Bore",
         audio.addEventListener('ratechange', updateMediaSessionPosition);
         audio.addEventListener('seeked', () => {
             updateMediaSessionPosition();
+            if (!crossfadeTransitionActive && !audioFade.paused && audioFade.currentSrc === (audio.currentSrc || audio.src)) {
+                audioFade.currentTime = audio.currentTime;
+            }
             scheduleCrossfadeAuto('seeked');
         });
         audio.addEventListener('seeking', () => {
