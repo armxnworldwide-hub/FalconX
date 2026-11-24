@@ -23203,6 +23203,55 @@
             }
         }
 
+        @media (min-width: 769px) {
+            .player .time-label {
+                padding: 0 2px;
+                color: rgba(255, 255, 255, .58);
+                font-size: .62rem;
+                border: 0;
+                border-radius: 0;
+                background: transparent;
+            }
+
+            .player .progress-track {
+                height: 4px;
+                min-height: 4px;
+                border: 0;
+                background: rgba(255, 255, 255, .14);
+                box-shadow: inset 0 1px 2px rgba(0, 0, 0, .48);
+            }
+
+            .player .progress-track::after {
+                inset: 1px 2px;
+                background: repeating-linear-gradient(90deg, transparent 0 13px, rgba(var(--progress-primary-rgb), .22) 13px 14px);
+                opacity: .42;
+            }
+
+            .player .progress-track:hover,
+            .player .progress-track:active,
+            .player .progress-track.dragging {
+                height: 5px;
+            }
+
+            .player .progress-fill::after {
+                right: -5px;
+                width: 10px;
+                height: 10px;
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-progress-track {
+                height: 6px;
+                border: 0;
+                background: rgba(255, 255, 255, .14);
+            }
+
+            #fullscreenPlayer.mfp-redesign .mfp-progress-fill::after {
+                right: -5px;
+                width: 11px;
+                height: 11px;
+            }
+        }
+
     </style>
 </head>
 
