@@ -22106,6 +22106,979 @@
             }
         }
 
+        .fx-home-v2 {
+            --fx2-panel: #111713;
+            --fx2-panel-2: #151d17;
+            --fx2-line: rgba(195, 255, 91, .16);
+            --fx2-soft: rgba(231, 238, 229, .58);
+            --fx2-gold: #c3ff5b;
+            width: 100%;
+            padding: 18px clamp(16px, 2.4vw, 36px) 40px;
+            gap: 18px;
+            background: linear-gradient(180deg, #0d130f, #080b09 460px);
+        }
+
+        .fx-home-intro {
+            min-height: 72px;
+            padding: 0 2px;
+            align-items: center;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+
+        .fx-home-intro-copy > span,
+        .fx-home-v2 .home-eyebrow,
+        .fx-home-v2 .home-section-kicker {
+            color: #c3ff5b;
+        }
+
+        .fx-home-intro-copy > span {
+            margin-bottom: 4px;
+            font-size: .58rem;
+            letter-spacing: .16em;
+        }
+
+        .fx-home-intro-copy h1 {
+            max-width: none;
+            font-size: clamp(1.45rem, 2.5vw, 2.25rem);
+            line-height: 1;
+            letter-spacing: -.045em;
+        }
+
+        .fx-home-intro-copy p {
+            margin-top: 6px;
+            font-size: .74rem;
+        }
+
+        .fx-home-metrics {
+            gap: 18px;
+        }
+
+        .fx-home-metrics > div {
+            min-width: 54px;
+            padding: 5px 0 5px 12px;
+            gap: 3px;
+            background: transparent;
+            border: 0;
+            border-left: 1px solid rgba(195, 255, 91, .22);
+            border-radius: 0;
+        }
+
+        .fx-home-metrics strong {
+            font-size: 1rem;
+        }
+
+        .fx-home-metrics span {
+            color: rgba(231, 238, 229, .48);
+            font-size: .52rem;
+        }
+
+        .fx-home-v2 .hx-stage {
+            min-height: 0;
+            grid-template-columns: minmax(0, 1fr) minmax(270px, .34fr);
+            gap: 12px;
+        }
+
+        .fx-home-v2 .hx-feature-card {
+            min-height: 292px;
+            padding: clamp(22px, 2.6vw, 36px);
+            grid-template-columns: minmax(0, 1fr) clamp(176px, 19vw, 228px);
+            gap: 24px;
+            border: 1px solid rgba(195, 255, 91, .18);
+            border-left: 3px solid #c3ff5b;
+            border-radius: 14px;
+            background:
+                radial-gradient(ellipse at 82% 48%, rgba(119, 164, 47, .2), transparent 42%),
+                linear-gradient(112deg, #151d17 0%, #0e1410 58%, #101812 100%);
+        }
+
+        .fx-home-v2 .hx-feature-card::before {
+            content: none;
+        }
+
+        .fx-home-v2 .hx-feature-card::after {
+            display: none;
+        }
+
+        .fx-home-v2 .hx-feature-copy h1 {
+            max-width: 15ch;
+            margin: 11px 0 8px;
+            font-size: clamp(2rem, 4vw, 4.2rem);
+            line-height: .96;
+            letter-spacing: -.055em;
+        }
+
+        .fx-home-v2 .hx-feature-copy > p {
+            max-width: 48ch;
+            font-size: .78rem;
+        }
+
+        .fx-home-v2 .hx-feature-meta {
+            margin-top: 13px;
+        }
+
+        .fx-home-v2 .hx-feature-meta span {
+            color: rgba(231, 238, 229, .72);
+            background: rgba(255, 255, 255, .035);
+            border-color: rgba(255, 255, 255, .09);
+        }
+
+        .fx-home-v2 .hx-feature-art {
+            max-width: 220px;
+            border: 0;
+            border-radius: 12px;
+            box-shadow: 12px 12px 0 -7px rgba(195, 255, 91, .65);
+            transform: rotate(2deg);
+        }
+
+        .fx-home-v2 .hx-feature-art img {
+            border-radius: 12px;
+        }
+
+        .fx-home-v2 .home-play-primary {
+            color: #11170b;
+            background: #c3ff5b;
+            border-color: #c3ff5b;
+        }
+
+        .fx-home-v2 .home-action-ghost {
+            background: rgba(255, 255, 255, .035);
+            border-color: rgba(255, 255, 255, .14);
+        }
+
+        .fx-home-v2 .hx-now-card,
+        .fx-home-v2 .hx-chart-panel,
+        .fx-home-v2 .hx-station-panel,
+        .fx-home-v2 > .home-section:not(.hx-command-strip):not(.hx-grid-block) {
+            border: 1px solid rgba(255, 255, 255, .075);
+            border-radius: 14px;
+            background: #101511;
+        }
+
+        .fx-home-v2 .hx-now-card {
+            height: 292px;
+            min-height: 0;
+            padding: 17px 14px 13px;
+        }
+
+        .fx-home-v2 .hx-now-list {
+            min-height: 0;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        .fx-home-v2 .hx-now-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        .fx-home-v2 .home-section-title {
+            color: #f2f5ef;
+            letter-spacing: -.035em;
+        }
+
+        .fx-home-v2 .home-section-meta,
+        .fx-home-v2 .home-meta {
+            color: rgba(231, 238, 229, .48);
+        }
+
+        .fx-home-v2 .home-mini-row {
+            min-height: 43px;
+            padding: 5px 7px;
+            border: 1px solid rgba(255, 255, 255, .06);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, .025);
+        }
+
+        .fx-home-v2 .home-mini-row img {
+            border-radius: 6px;
+        }
+
+        .fx-home-v2 .home-icon-action {
+            color: #c3ff5b;
+        }
+
+        .fx-home-v2 .hx-command-strip {
+            gap: 9px;
+        }
+
+        .fx-home-v2 .hx-action-tile {
+            min-height: 64px;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, .075);
+            border-radius: 11px;
+            background: #101511;
+        }
+
+        .fx-home-v2 .hx-action-tile > span {
+            color: #c3ff5b;
+            background: rgba(195, 255, 91, .1);
+        }
+
+        .fx-home-v2 .hx-chart-panel,
+        .fx-home-v2 .hx-station-panel,
+        .fx-home-v2 > .home-section:not(.hx-command-strip):not(.hx-grid-block) {
+            padding: 17px;
+        }
+
+        .fx-home-v2 .hx-trend-card,
+        .fx-home-v2 .hx-station-card,
+        .fx-home-v2 .hx-rec-card,
+        .fx-home-v2 .home-album-card,
+        .fx-home-v2 .hx-artist-card {
+            border-radius: 11px;
+            background: #141a15;
+            border-color: rgba(255, 255, 255, .07);
+        }
+
+        .fx-home-v2 .hx-trend-rank {
+            color: #c3ff5b;
+        }
+
+        .fx-home-v2 .artist-card-img-wrap {
+            border: 1px solid rgba(195, 255, 91, .13);
+        }
+
+        @media (max-width: 768px) {
+            .fx-home-v2 {
+                padding: 11px 11px 30px;
+                gap: 11px;
+            }
+
+            .fx-home-intro {
+                min-height: 0;
+                padding: 0 2px;
+            }
+
+            .fx-home-intro-copy > span {
+                margin-bottom: 3px;
+                font-size: .5rem;
+            }
+
+            .fx-home-intro-copy h1 {
+                max-width: none;
+                font-size: clamp(1.1rem, 5.2vw, 1.35rem);
+                line-height: 1.05;
+                white-space: nowrap;
+            }
+
+            .fx-home-intro-copy p,
+            .fx-home-metrics {
+                display: none;
+            }
+
+            .fx-home-v2 .hx-stage {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .fx-home-v2 .hx-feature-card {
+                min-height: 154px;
+                padding: 12px 13px;
+                grid-template-columns: minmax(0, 1fr) 82px;
+                gap: 10px;
+                border-radius: 12px;
+            }
+
+            .fx-home-v2 .home-eyebrow {
+                font-size: .48rem;
+            }
+
+            .fx-home-v2 .hx-feature-copy h1 {
+                margin: 7px 0 5px;
+                font-size: clamp(1.28rem, 6vw, 1.58rem);
+                line-height: .98;
+            }
+
+            .fx-home-v2 .hx-feature-copy > p {
+                display: -webkit-box;
+                margin: 0;
+                overflow: hidden;
+                font-size: .6rem;
+                line-height: 1.3;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+            }
+
+            .fx-home-v2 .hx-feature-meta {
+                display: none;
+            }
+
+            .fx-home-v2 .home-hero-actions {
+                margin-top: 8px;
+                gap: 6px;
+            }
+
+            .fx-home-v2 .home-play-primary,
+            .fx-home-v2 .home-action-ghost {
+                min-height: 29px;
+                padding: 0 9px;
+                gap: 5px;
+                font-size: .56rem;
+            }
+
+            .fx-home-v2 .hx-feature-art {
+                width: 78px;
+                max-width: none;
+                padding: 0;
+                border-radius: 9px;
+                box-shadow: 7px 7px 0 -4px rgba(195, 255, 91, .7);
+                transform: rotate(3deg);
+            }
+
+            .fx-home-v2 .hx-feature-art img {
+                border-radius: 9px;
+            }
+
+            .fx-home-v2 .hx-now-card {
+                height: auto;
+                min-height: 0;
+                padding: 9px;
+                border-radius: 11px;
+            }
+
+            .fx-home-v2 .home-section-headline {
+                margin-bottom: 7px;
+            }
+
+            .fx-home-v2 .home-section-title {
+                margin-top: 2px;
+                font-size: .87rem;
+            }
+
+            .fx-home-v2 .home-section-kicker,
+            .fx-home-v2 .home-section-meta {
+                font-size: .47rem;
+            }
+
+            .fx-home-v2 .hx-now-list {
+                gap: 6px;
+            }
+
+            .fx-home-v2 .home-mini-row {
+                min-width: 185px;
+                min-height: 42px;
+                padding: 4px 6px;
+                gap: 7px;
+            }
+
+            .fx-home-v2 .home-mini-row img {
+                width: 32px;
+                height: 32px;
+            }
+
+            .fx-home-v2 .home-title {
+                font-size: .65rem;
+            }
+
+            .fx-home-v2 .home-meta {
+                font-size: .53rem;
+            }
+
+            .fx-home-v2 .home-icon-action {
+                width: 27px;
+                height: 27px;
+            }
+
+            .fx-home-v2 .hx-command-strip {
+                gap: 7px;
+            }
+
+            .fx-home-v2 .hx-action-tile {
+                min-width: 118px;
+                min-height: 56px;
+                padding: 8px;
+                grid-template-columns: 30px minmax(0, 1fr);
+                gap: 7px;
+                border-radius: 10px;
+            }
+
+            .fx-home-v2 .hx-action-tile > span {
+                width: 30px;
+                height: 30px;
+                border-radius: 8px;
+            }
+
+            .fx-home-v2 .hx-action-tile strong {
+                font-size: .58rem;
+            }
+
+            .fx-home-v2 .hx-action-tile em {
+                font-size: .48rem;
+            }
+
+            .fx-home-v2 .hx-chart-panel,
+            .fx-home-v2 .hx-station-panel,
+            .fx-home-v2 > .home-section:not(.hx-command-strip):not(.hx-grid-block) {
+                padding: 12px;
+                border-radius: 11px;
+            }
+
+            .fx-home-v2 .hx-rec-card,
+            .fx-home-v2 .home-album-card,
+            .fx-home-v2 .hx-artist-card {
+                border-radius: 9px;
+            }
+
+            .fx-home-v2 .home-artists .hx-artist-card {
+                background: #111713;
+                border-color: rgba(195, 255, 91, .1);
+            }
+        }
+
+        @media (max-width: 370px) {
+            .fx-home-v2 .hx-feature-card {
+                grid-template-columns: minmax(0, 1fr) 70px;
+            }
+
+            .fx-home-v2 .hx-feature-art {
+                width: 68px;
+            }
+
+            .fx-home-v2 .home-action-ghost {
+                display: none;
+            }
+        }
+
+        .fx-home-v2 {
+            padding: 12px clamp(12px, 2vw, 26px) 28px;
+            gap: 10px;
+        }
+
+        .fx-home-intro {
+            min-height: 42px;
+        }
+
+        .fx-home-intro-copy > span {
+            margin: 0 0 3px;
+            font-size: .5rem;
+        }
+
+        .fx-home-intro-copy h1 {
+            font-size: clamp(1.05rem, 1.7vw, 1.45rem);
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        .fx-home-intro-copy {
+            display: grid;
+            grid-template-columns: max-content max-content;
+            align-items: center;
+            column-gap: 9px;
+            row-gap: 2px;
+        }
+
+        .fx-home-intro-copy > span {
+            grid-column: 1 / -1;
+        }
+
+        .fx-home-intro-copy h1 {
+            grid-column: 1;
+        }
+
+        .fx-home-intro .home-creator-credit {
+            grid-column: 2;
+            margin: 0;
+            padding: 4px 7px;
+            border-color: rgba(195, 255, 91, .14);
+            border-radius: 999px;
+            background: rgba(195, 255, 91, .035);
+            font-size: .5rem;
+        }
+
+        .fx-home-intro .home-creator-credit strong {
+            gap: 3px;
+        }
+
+        .fx-home-intro .home-creator-credit .creator-instagram-icon {
+            width: 11px;
+            height: 11px;
+            flex-basis: 11px;
+        }
+
+        .fx-home-metrics {
+            gap: 10px;
+        }
+
+        .fx-home-metrics > div {
+            min-width: 43px;
+            padding-left: 8px;
+        }
+
+        .fx-home-metrics strong {
+            font-size: .82rem;
+        }
+
+        .fx-home-v2 .fx-listening-stage {
+            min-height: 0;
+            grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+            align-items: stretch;
+            gap: 8px;
+        }
+
+        .fx-home-v2 .hx-feature-card {
+            min-width: 0;
+            min-height: 92px;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: 64px minmax(0, 1fr);
+            align-content: center;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(195, 255, 91, .16);
+            border-left: 2px solid #c3ff5b;
+            border-radius: 12px;
+            background: #111713;
+        }
+
+        .fx-home-v2 .hx-feature-art {
+            width: 64px;
+            max-width: none;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .fx-home-v2 .hx-feature-art img {
+            border-radius: 8px;
+        }
+
+        .fx-home-v2 .hx-feature-copy {
+            min-width: 0;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            column-gap: 8px;
+        }
+
+        .fx-home-v2 .home-eyebrow {
+            grid-column: 1 / -1;
+            font-size: .48rem;
+            letter-spacing: .1em;
+        }
+
+        .fx-home-v2 .hx-feature-copy h1 {
+            min-width: 0;
+            max-width: none;
+            margin: 4px 0 0;
+            overflow: hidden;
+            font-size: 1rem;
+            line-height: 1.1;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .fx-home-v2 .hx-feature-copy > p {
+            grid-column: 1;
+            margin: 2px 0 0;
+            overflow: hidden;
+            font-size: .62rem;
+            line-height: 1.2;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .fx-home-v2 .hx-feature-meta {
+            display: none;
+        }
+
+        .fx-home-v2 .home-hero-actions {
+            grid-column: 2;
+            grid-row: 2 / span 2;
+            margin: 0;
+            gap: 5px;
+        }
+
+        .fx-home-v2 .home-play-primary,
+        .fx-home-v2 .home-action-ghost {
+            min-width: 30px;
+            min-height: 30px;
+            padding: 0 8px;
+            gap: 5px;
+            border-radius: 8px;
+            font-size: .6rem;
+        }
+
+        .fx-home-v2 .hx-now-card {
+            min-width: 0;
+            height: 92px;
+            min-height: 0;
+            padding: 8px;
+            display: grid;
+            grid-template-columns: minmax(100px, .42fr) minmax(0, 1fr);
+            align-items: center;
+            gap: 8px;
+            border-radius: 12px;
+        }
+
+        .fx-home-v2 .home-section-headline {
+            min-width: 0;
+            margin: 0;
+        }
+
+        .fx-home-v2 .home-section-kicker {
+            font-size: .46rem;
+            letter-spacing: .08em;
+        }
+
+        .fx-home-v2 .home-section-title {
+            margin-top: 3px;
+            font-size: .78rem;
+            line-height: 1.1;
+        }
+
+        .fx-home-v2 .home-section-meta {
+            margin-top: 3px;
+            font-size: .48rem;
+        }
+
+        .fx-home-v2 .hx-now-list {
+            min-width: 0;
+            display: flex;
+            flex-direction: row;
+            gap: 6px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: none;
+        }
+
+        .fx-home-v2 .hx-now-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        .fx-home-v2 .home-mini-row {
+            min-width: 168px;
+            min-height: 48px;
+            flex: 0 0 168px;
+            padding: 5px;
+            gap: 6px;
+            border-radius: 8px;
+        }
+
+        .fx-home-v2 .home-mini-row img {
+            width: 36px;
+            height: 36px;
+        }
+
+        .fx-home-v2 .home-title {
+            font-size: .62rem;
+        }
+
+        .fx-home-v2 .home-meta {
+            font-size: .5rem;
+        }
+
+        .fx-home-v2 .home-icon-action {
+            width: 25px;
+            height: 25px;
+        }
+
+        .fx-home-v2 .hx-command-strip {
+            display: flex;
+            gap: 6px;
+        }
+
+        .fx-home-v2 .hx-action-tile {
+            min-width: 0;
+            min-height: 40px;
+            flex: 1 1 0;
+            padding: 6px 9px;
+            grid-template-columns: 24px minmax(0, 1fr);
+            gap: 6px;
+            border-radius: 9px;
+        }
+
+        .fx-home-v2 .hx-action-tile > span {
+            width: 24px;
+            height: 24px;
+            border-radius: 7px;
+        }
+
+        .fx-home-v2 .hx-action-tile strong {
+            font-size: .61rem;
+        }
+
+        .fx-home-v2 .hx-action-tile em {
+            display: none;
+        }
+
+        .fx-home-v2 .hx-grid-block {
+            gap: 8px;
+        }
+
+        .fx-home-v2 .hx-chart-panel,
+        .fx-home-v2 .hx-station-panel,
+        .fx-home-v2 > .home-section:not(.hx-command-strip):not(.hx-grid-block) {
+            padding: 12px;
+            border-radius: 12px;
+        }
+
+        .fx-home-v2 .home-section-headline {
+            margin-bottom: 8px;
+        }
+
+        .fx-home-v2 .hx-trend-card {
+            min-width: 0;
+            min-height: 48px;
+            padding: 5px 7px;
+            border-radius: 8px;
+        }
+
+        .fx-home-v2 .hx-station-card {
+            min-height: 68px;
+            border-radius: 8px;
+        }
+
+        .fx-home-v2 .hx-rec-card,
+        .fx-home-v2 .home-album-card {
+            min-width: 112px;
+        }
+
+        .fx-home-v2 .home-artists .artists-grid {
+            grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+            gap: 6px;
+        }
+
+        .fx-home-v2 .hx-artist-card {
+            padding: 4px;
+        }
+
+        @media (max-width: 1100px) {
+            .fx-home-v2 .fx-listening-stage {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .fx-home-v2 {
+                padding: 8px 10px 24px;
+                gap: 8px;
+            }
+
+            .fx-home-intro {
+                min-height: 32px;
+                padding: 0 2px;
+            }
+
+            .fx-home-intro-copy h1 {
+                font-size: 1rem;
+            }
+
+            .fx-home-intro .home-creator-credit {
+                padding: 3px 5px;
+                gap: 4px;
+                font-size: .44rem;
+            }
+
+            .fx-home-metrics {
+                display: none;
+            }
+
+            .fx-home-v2 .fx-listening-stage {
+                gap: 6px;
+            }
+
+            .fx-home-v2 .hx-feature-card {
+                min-height: 80px;
+                padding: 8px;
+                grid-template-columns: 56px minmax(0, 1fr);
+                gap: 8px;
+                border-radius: 10px;
+            }
+
+            .fx-home-v2 .hx-feature-art {
+                width: 56px;
+                border-radius: 7px;
+            }
+
+            .fx-home-v2 .hx-feature-art img {
+                border-radius: 7px;
+            }
+
+            .fx-home-v2 .hx-feature-copy h1 {
+                font-size: .88rem;
+            }
+
+            .fx-home-v2 .hx-feature-copy > p {
+                font-size: .56rem;
+            }
+
+            .fx-home-v2 .home-play-primary,
+            .fx-home-v2 .home-action-ghost {
+                min-width: 27px;
+                min-height: 27px;
+                padding: 0 7px;
+                font-size: .55rem;
+            }
+
+            .fx-home-v2 .hx-now-card {
+                height: auto;
+                min-height: 76px;
+                display: block;
+                padding: 6px;
+                border-radius: 10px;
+            }
+
+            .fx-home-v2 .home-section-headline {
+                margin: 0 0 5px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+            }
+
+            .fx-home-v2 .home-section-kicker {
+                display: none;
+            }
+
+            .fx-home-v2 .home-section-title {
+                margin: 0;
+                font-size: .72rem;
+                white-space: nowrap;
+            }
+
+            .fx-home-v2 .home-section-meta {
+                margin: 0;
+                font-size: .44rem;
+            }
+
+            .fx-home-v2 .home-mini-row {
+                min-width: 152px;
+                min-height: 44px;
+                flex-basis: 152px;
+                padding: 4px;
+            }
+
+            .fx-home-v2 .home-mini-row img {
+                width: 34px;
+                height: 34px;
+            }
+
+            .fx-home-v2 .home-title {
+                font-size: .57rem;
+            }
+
+            .fx-home-v2 .home-meta {
+                font-size: .46rem;
+            }
+
+            .fx-home-v2 .hx-action-tile {
+                min-width: 88px;
+                min-height: 38px;
+                flex: 0 0 auto;
+                padding: 5px 7px;
+                grid-template-columns: 20px auto;
+                gap: 5px;
+            }
+
+            .fx-home-v2 .hx-action-tile > span {
+                width: 20px;
+                height: 20px;
+            }
+
+            .fx-home-v2 .hx-action-tile strong {
+                font-size: .55rem;
+            }
+
+            .fx-home-v2 .hx-grid-block {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .fx-home-v2 .hx-chart-panel,
+            .fx-home-v2 .hx-station-panel,
+            .fx-home-v2 > .home-section:not(.hx-command-strip):not(.hx-grid-block) {
+                padding: 10px;
+                border-radius: 10px;
+            }
+
+            .fx-home-v2 .hx-trend-list {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 5px;
+                overflow: visible;
+            }
+
+            .fx-home-v2 .hx-trend-card {
+                min-height: 42px;
+                padding: 4px;
+                gap: 5px;
+            }
+
+            .fx-home-v2 .hx-trend-card > img {
+                width: 30px;
+                height: 30px;
+            }
+
+            .fx-home-v2 .hx-trend-rank {
+                font-size: .55rem;
+            }
+
+            .fx-home-v2 .hx-trend-card .home-icon-action {
+                display: none;
+            }
+
+            .fx-home-v2 .hx-station-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 5px;
+            }
+
+            .fx-home-v2 .hx-station-card {
+                min-height: 56px;
+                grid-template-columns: 38px minmax(0, 1fr);
+                padding: 5px;
+                gap: 6px;
+            }
+
+            .fx-home-v2 .hx-station-card img {
+                width: 38px;
+                height: 38px;
+            }
+
+            .fx-home-v2 .home-artists .artists-grid {
+                grid-template-columns: repeat(6, minmax(0, 1fr));
+                gap: 4px;
+            }
+
+            .fx-home-v2 .home-artists .hx-artist-card {
+                padding: 3px 2px 4px;
+            }
+
+            .fx-home-v2 .home-artists .artist-card-name {
+                margin-top: 4px;
+                font-size: .52rem;
+            }
+
+            .fx-home-v2 .home-artists .artist-card-count {
+                font-size: .42rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .fx-home-intro-copy {
+                grid-template-columns: 1fr;
+                gap: 2px;
+            }
+
+            .fx-home-intro-copy > span {
+                grid-column: 1;
+            }
+
+            .fx-home-intro .home-creator-credit {
+                grid-column: 1;
+                justify-self: start;
+            }
+
+            .fx-home-v2 .home-artists .artists-grid {
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+            }
+
+            .fx-home-v2 .home-artists .artist-card-count {
+                display: none;
+            }
+        }
+
     </style>
 </head>
 
@@ -23402,7 +24375,7 @@
                     file: "Navaan Sandhu/Deewane.mp3",
                     poster: "images/Navior.jpeg"
                 },{
-                    title: "Deewane(Cinematic Version)",
+                    title: "Deewane(Cinematic)",
                     file: "Navaan Sandhu/Deewane (Cinematic Version).mp3",
                     poster: "images/Deewane.jpeg"
                 }, {
@@ -24859,8 +25832,6 @@ title: "Bore",
             const stationSongs = leadSongs.filter((song, index, arr) => arr.findIndex((item) => item.file === song.file) === index).slice(0, 4);
             const recListSongs = recommendSongs.length ? recommendSongs : trendingSongs.slice(0, 6);
             const libraryTrackCount = songPool.length;
-            const totalPlays = songPool.reduce((sum, song) => sum + (song.plays || song.playCount || 0), 0);
-            const heroSubtitle = featuredSong ? `${deps.escH(featuredSong.artistName || 'FalconX Curated')} sets the tone for a cinematic black-and-gold listening session.` : 'A cinematic launchpad for new music, favorites, and deep cuts.';
             const playClick = (song) => `playSongByFile('${deps.escA(song.file)}')`;
             const historyClick = (song) => `playFromHistory('${deps.escA(song.file)}','${deps.escA(song.artistKey || '')}')`;
             const miniRowHTML = (song, useHistory = false, icon = 'plus') => `<div class="home-mini-row hx-row" onclick="${useHistory ? historyClick(song) : playClick(song)}"><img src="${deps.escH(song.poster)}" onerror="this.style.background='var(--surface3)'" loading="lazy"><div class="home-text"><div class="home-title">${deps.songTitleHTML(song)}</div><div class="home-meta">${deps.escH(song.artistName || '')}</div></div><button class="home-icon-action" onclick="event.stopPropagation();addSongToQueueByFile('${deps.escA(song.file)}', false)" title="Add to queue">${deps.uiIcon(icon)}</button></div>`;
@@ -24868,30 +25839,28 @@ title: "Bore",
             const recCardHTML = (song, i) => `<div class="hx-rec-card" onclick="${playClick(song)}"><div class="hx-rec-art"><img src="${deps.escH(song.poster)}" onerror="this.style.background='var(--surface3)'" loading="lazy"><button class="card-play-btn" onclick="event.stopPropagation();${playClick(song)}">${deps.uiIcon('play')}</button></div><div class="home-title">${deps.songTitleHTML(song)}</div><div class="home-meta">${deps.escH(song.artistName || '')}${i === 0 ? ' - Prime pick' : ''}</div></div>`;
             const albumCardHTML = (album) => `<div class="home-album-card hx-album-card" onclick="${playClick(album.songs[0])}"><img src="${deps.escH(album.poster)}" onerror="this.style.background='var(--surface3)'" loading="lazy"><div class="home-album-title"><span class="title-with-badge"><span class="title-text">${deps.escH(album.album)}</span>${deps.collectionNewBadgeHTML(album.songs)}</span></div><div class="home-album-meta">${deps.escH(album.artistName)} - ${album.songs.length} track${album.songs.length !== 1 ? 's' : ''}</div></div>`;
             const moodTilesHTML = [
-                { icon: 'heart', title: 'Gold Favorites', meta: `<span data-home-liked-count>${likedSongs.size}</span> saved tracks`, action: 'showLikedSongs()' },
-                { icon: 'list-music', title: 'Private Playlists', meta: `${Object.keys(deps.getPlaylists() || {}).length} collections`, action: 'showPlaylists()' },
-                { icon: 'download', title: 'Offline Vault', meta: `${deps.getDownloadedFiles().size} downloads`, action: 'showDownloads()' },
-                { icon: 'sliders-horizontal', title: 'Audio Suite', meta: 'Shape the sound', action: 'renderAudioPage()' }
+                { icon: 'heart', title: 'Favorites', meta: `<span data-home-liked-count>${likedSongs.size}</span> saved`, action: 'showLikedSongs()' },
+                { icon: 'list-music', title: 'Playlists', meta: `${Object.keys(deps.getPlaylists() || {}).length} collections`, action: 'showPlaylists()' },
+                { icon: 'download', title: 'Downloads', meta: `${deps.getDownloadedFiles().size} offline`, action: 'showDownloads()' },
+                { icon: 'sliders-horizontal', title: 'Audio', meta: 'Tune sound', action: 'renderAudioPage()' }
             ].map((tile) => `<button class="hx-action-tile" onclick="${tile.action}"><span>${deps.uiIcon(tile.icon)}</span><div><strong>${tile.title}</strong><em>${tile.meta}</em></div></button>`).join('');
-            const featuredHTML = featuredSong ? `<section class="hx-stage">
-                <div class="hx-feature-card">
-                    <div class="hx-feature-orbit" aria-hidden="true"></div>
-                    <div class="hx-feature-copy">
-                        <div class="home-eyebrow">${deps.uiIcon('sparkles')}<span>FalconX Signature</span></div>
-                        <h1>${deps.songTitleHTML(featuredSong, 'Featured Sound')}</h1>
-                        <p>${heroSubtitle}</p>
-                        <div class="hx-feature-meta"><span>${deps.escH(featuredSong.artistName || 'FalconX')}</span><span>${libraryTrackCount} tracks</span><span>${totalPlays} plays</span></div>
-                        <div class="home-hero-actions">
-                            <button class="home-play-primary" onclick="${playClick(featuredSong)}">${deps.uiIcon('play')}<span>Play Feature</span></button>
-                            <button class="home-action-ghost" onclick="addSongToQueueByFile('${deps.escA(featuredSong.file)}', true)">${deps.uiIcon('list-plus')}<span>Play Next</span></button>
-                        </div>
-                    </div>
+            const featuredHTML = featuredSong ? `<section class="hx-stage fx-listening-stage" aria-label="Featured music and continue listening">
+                <article class="hx-feature-card">
                     <div class="hx-feature-art">
                         <img src="${deps.escH(featuredSong.poster || '')}" alt="${deps.escH(featuredSong.title || 'Featured song')}" onerror="this.style.background='var(--surface3)'" decoding="async" fetchpriority="high">
                     </div>
-                </div>
+                    <div class="hx-feature-copy">
+                        <div class="home-eyebrow">${deps.uiIcon('audio-lines')}<span>Picked for you</span></div>
+                        <h1>${deps.songTitleHTML(featuredSong, 'Featured Sound')}</h1>
+                        <p>${deps.escH(featuredSong.artistName || 'FalconX')}</p>
+                        <div class="home-hero-actions">
+                            <button class="home-play-primary" onclick="${playClick(featuredSong)}">${deps.uiIcon('play')}<span>Play</span></button>
+                            <button class="home-action-ghost" onclick="addSongToQueueByFile('${deps.escA(featuredSong.file)}', true)" aria-label="Play next">${deps.uiIcon('list-plus')}</button>
+                        </div>
+                    </div>
+                </article>
                 <aside class="hx-now-card">
-                    <div class="home-section-headline"><div><div class="home-section-kicker">${deps.uiIcon(recentSongs.length ? 'history' : 'radio')}<span>${recentSongs.length ? 'Resume' : 'On Deck'}</span></div><div class="home-section-title">${recentSongs.length ? 'Continue Listening' : 'Start Your Session'}</div></div><div class="home-section-meta">${onDeckSongs.length} Picks</div></div>
+                    <div class="home-section-headline"><div><div class="home-section-kicker">${deps.uiIcon(recentSongs.length ? 'history' : 'radio')}<span>${recentSongs.length ? 'Pick up where you left off' : 'Up next'}</span></div><div class="home-section-title">${recentSongs.length ? 'Continue listening' : 'Start a session'}</div></div><div class="home-section-meta">${onDeckSongs.length} tracks</div></div>
                     <div class="hx-now-list home-rail">${onDeckSongs.map((song) => miniRowHTML(song, !!recentSongs.length, recentSongs.length ? 'plus' : 'list-plus')).join('')}</div>
                 </aside>
             </section>` : '';
@@ -24914,9 +25883,8 @@ title: "Bore",
             <div class="home-shell hx-home fx-home-v2">
                 <section class="fx-home-intro" aria-label="FalconX library overview">
                     <div class="fx-home-intro-copy">
-                        <span>FalconX / Home</span>
-                        <h1>Your sound. Your space.</h1>
-                        <p>Jump back in, discover a new favorite, or explore your complete library.</p>
+                        <span>FALCONX / YOUR LIBRARY</span>
+                        <h1>Find your next repeat.</h1>
                         <a class="home-creator-credit" href="https://www.instagram.com/armxnworldwide/" target="_blank" rel="noopener noreferrer" aria-label="Created by @armxnworldwide on Instagram">
                             <span>Created by</span>
                             <strong><span class="creator-instagram-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1.1"></circle></svg></span>@armxnworldwide</strong>
